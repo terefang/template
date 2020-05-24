@@ -24,7 +24,7 @@ public class ThymeleafTemplateMojo extends AbstractTemplateMojo {
     {
         FileTemplateResolver templateResolver = new FileTemplateResolver();
         templateResolver.setSuffix("");
-        templateResolver.setPrefix(_template.getParent()+"/");
+        templateResolver.setPrefix("");
         templateResolver.addTemplateAlias("main", _template.getAbsolutePath());
         templateEngine.setTemplateResolver(templateResolver);
 
