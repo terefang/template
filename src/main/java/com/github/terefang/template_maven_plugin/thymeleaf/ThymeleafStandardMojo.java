@@ -31,7 +31,7 @@ public class ThymeleafStandardMojo extends AbstractStandardMojo {
     public String process(File _template, Map<String, Object> _context)
     {
         FileTemplateResolver templateResolver = new FileTemplateResolver();
-        templateResolver.setSuffix(".tl");
+        templateResolver.setSuffix("");
         templateResolver.setPrefix(_template.getParent()+"/");
         templateResolver.addTemplateAlias("main", _template.getAbsolutePath());
         templateEngine.setTemplateResolver(templateResolver);
