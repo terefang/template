@@ -1,4 +1,4 @@
-# jinjava-maven-plugin
+# template-maven-plugin
 
 use the jitpack repository
 
