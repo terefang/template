@@ -16,12 +16,13 @@ import java.util.Map;
 @Mojo(name = "thymeleaf-template", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class ThymeleafTemplateMojo extends AbstractTemplateMojo {
 
-    TemplateEngine templateEngine = new TemplateEngine();
 
     @Override
     @SneakyThrows
     public String process(File _template, Map<String, Object> _context)
     {
+        TemplateEngine templateEngine = new TemplateEngine();
+
         FileTemplateResolver templateResolver = new FileTemplateResolver();
         templateResolver.setSuffix("");
         templateResolver.setPrefix("");
