@@ -30,7 +30,7 @@ eg. render many templates with one data context
             <configuration>
                 <additionalContext>test.hson</additionalContext>
                 <resourcesDirectory>${project.basedir}/src/main/templates</resourcesDirectory>
-                <resourcesOutput>${project.build.outputDirectory}/jinjava-resources</resourcesOutput>
+                <resourcesOutput>${project.build.outputDirectory}/resources</resourcesOutput>
                 <processLocalContext>true</processLocalContext>
             </configuration>
         </execution>
@@ -58,7 +58,7 @@ eg. render one template against many data contexts
                 <templateFile>${project.basedir}/src/main/resources/base.j2</templateFile>
                 <resourcesDirectory>${project.basedir}/src/main/resources</resourcesDirectory>
                 <includes>**/*.hson</includes>
-                <resourcesOutput>${project.build.outputDirectory}/jinjava-resources</resourcesOutput>
+                <resourcesOutput>${project.build.outputDirectory}/resources</resourcesOutput>
                 <destinationExtension>.md</destinationExtension>
             </configuration>
         </execution>
