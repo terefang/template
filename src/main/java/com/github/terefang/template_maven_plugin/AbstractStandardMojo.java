@@ -125,8 +125,8 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
                         }
                     }
                     getLog().info(MessageFormat.format("start processing template {0}", key));
-                    String sourceContent = FileUtils.fileRead(new File(resourcesDirectory, key));
-                    String targetContent = this.process(sourceContent, context);
+
+                    String targetContent = this.process(new File(resourcesDirectory, key), context);
 
                     file.getParentFile().mkdirs();
 
