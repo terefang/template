@@ -6,7 +6,7 @@
 
     <groupId>com.github.terefang</groupId>
     <artifactId>template-maven-plugin</artifactId>
-    <version>2020.5.4</version>
+    <version>2020.5.5</version>
 
 
     <packaging>maven-plugin</packaging>
@@ -43,6 +43,11 @@
             <version>1.25</version>
         </dependency>
         <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.10</version>
+        </dependency>
+        <dependency>
             <groupId>com.hubspot.jinjava</groupId>
             <artifactId>jinjava</artifactId>
             <version>2.4.8</version>
@@ -56,6 +61,11 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>2.3.30</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-templates</artifactId>
+            <version>3.0.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>

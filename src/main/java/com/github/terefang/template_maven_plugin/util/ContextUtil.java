@@ -1,6 +1,8 @@
 package com.github.terefang.template_maven_plugin.util;
 
 import lombok.SneakyThrows;
+import org.apache.commons.configuration.ConfigurationConverter;
+import org.apache.commons.configuration.plist.PropertyListConfiguration;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.util.IOUtil;
 import org.hjson.JsonValue;
@@ -37,6 +39,11 @@ public class ContextUtil {
             _ret.putAll(loadContextFromProperties(_fh));
         }
         else
+        if(_file.getName().endsWith(".plist"))
+        {
+            _ret.putAll(loadContextFromPList(_fh));
+        }
+        else
         {
             throw new MojoExecutionException(MessageFormat.format("Context file '{0}' is unknown format", _file.getName()));
         }
@@ -68,6 +75,22 @@ public class ContextUtil {
         for(Map.Entry<String, Object> _entry : hjsonToMap(_hson).entrySet())
         {
             _obj.put(_entry.getKey(), _entry.getValue());
+        }
+        return _obj;
+    }
+
+    @SneakyThrows
+    public static Map<String, Object> loadContextFromPList(Reader _source)
+    {
+        HashMap<String, Object> _obj = new HashMap<>();
+
+        PropertyListConfiguration _config = new PropertyListConfiguration();
+        _config.load(_source);
+
+        Map<Object, Object> _map = ConfigurationConverter.getMap(_config);
+        for(Map.Entry<Object, Object> _entry : _map.entrySet())
+        {
+            _obj.put(_entry.getKey().toString(), _entry.getValue());
         }
         return _obj;
     }

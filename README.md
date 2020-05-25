@@ -66,6 +66,15 @@ eg. render one template against many data contexts
 </plugin>
 ```
 
+### template engines
+
+the following template engines are supported:
+
+* jinjava
+* thymeleaf
+* freemarker
+* gsimple -- ie. groovy simple-template-engine
+
 ### context data files
 
 the following file formats are supported:
@@ -73,4 +82,5 @@ the following file formats are supported:
 * yaml/yml -- ie. YAML 1.1 -- https://yaml.org/spec/1.1/current.html
 * json -- ie. JSON -- https://www.json.org/json-en.html
 * hson/hjson -- ie. human JSON -- https://hjson.github.io/
+* plist -- ie. ASCII plist files, NeXT / OpenStep style configuration
 
