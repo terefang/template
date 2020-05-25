@@ -1,5 +1,6 @@
 package com.github.terefang.template_maven_plugin.util;
 
+import com.moandjiezana.toml.Toml;
 import lombok.SneakyThrows;
 
 import org.apache.commons.configuration.ConfigurationConverter;
@@ -38,6 +39,12 @@ public class ContextUtil {
             _ret.putAll(loadContextFromHjson(_fh));
         }
         else
+        if(_file.getName().endsWith(".tml")
+                || _file.getName().endsWith(".toml"))
+        {
+            _ret.putAll(loadContextFromToml(_fh));
+        }
+        else
         if(_file.getName().endsWith(".properties"))
         {
             _ret.putAll(loadContextFromProperties(_fh));
@@ -74,6 +81,14 @@ public class ContextUtil {
         Yaml _y = new Yaml();
         HashMap<String, Object> _obj = _y.loadAs(_source, HashMap.class);
         return _obj;
+    }
+
+    @SneakyThrows
+    public static Map<String, Object> loadContextFromToml(Reader _source)
+    {
+        Toml _toml = new Toml();
+        _toml.read(_source);
+        return _toml.toMap();
     }
 
     @SneakyThrows

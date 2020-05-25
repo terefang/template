@@ -6,7 +6,7 @@
 
     <groupId>com.github.terefang</groupId>
     <artifactId>template-maven-plugin</artifactId>
-    <version>2020.5.10</version>
+    <version>2020.5.11</version>
 
     <packaging>maven-plugin</packaging>
 
@@ -40,6 +40,11 @@
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>1.25</version>
+        </dependency>
+        <dependency>
+            <groupId>com.moandjiezana.toml</groupId>
+            <artifactId>toml4j</artifactId>
+            <version>0.7.2</version>
         </dependency>
         <dependency>
             <groupId>commons-configuration</groupId>
