@@ -49,7 +49,7 @@ public class ContextUtil {
         else
         if(_file.getName().endsWith(".ini"))
         {
-            _ret.putAll(loadContextFromPList(_fh));
+            _ret.putAll(loadContextFromIni(_fh));
         }
         else
         {
