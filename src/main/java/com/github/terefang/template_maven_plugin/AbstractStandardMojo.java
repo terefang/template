@@ -39,7 +39,7 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
     /**
      * local context extensions
      */
-    @Parameter(defaultValue = ".yaml .yml .json .hson .hjson .tml .toml .plist .ini .properties")
+    @Parameter(defaultValue = ".yaml .yml .json .hson .hjson .toml .tml")
     protected String localContextExtensions;
 
     /**
