@@ -6,7 +6,7 @@
 
     <groupId>com.github.terefang</groupId>
     <artifactId>template-maven-plugin</artifactId>
-    <version>2020.5.7</version>
+    <version>2020.5.8</version>
 
     <packaging>maven-plugin</packaging>
 
