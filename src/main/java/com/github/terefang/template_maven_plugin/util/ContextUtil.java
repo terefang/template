@@ -3,6 +3,7 @@ package com.github.terefang.template_maven_plugin.util;
 import lombok.SneakyThrows;
 
 import org.apache.commons.configuration.ConfigurationConverter;
+import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.configuration.INIConfiguration;
 import org.apache.commons.configuration.plist.PropertyListConfiguration;
 
@@ -108,7 +109,7 @@ public class ContextUtil {
     {
         HashMap<String, Object> _obj = new HashMap<>();
 
-        INIConfiguration _config = new INIConfiguration();
+        HierarchicalINIConfiguration _config = new HierarchicalINIConfiguration();
         _config.load(_source);
 
         Map<Object, Object> _map = ConfigurationConverter.getMap(_config);
