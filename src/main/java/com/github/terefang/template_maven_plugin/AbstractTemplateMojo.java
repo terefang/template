@@ -96,7 +96,7 @@ public abstract class AbstractTemplateMojo extends AbstractTmpMojo
                     getLog().info(MessageFormat.format("loading data from {0}", localContext.getName()));
                     _tcontext.putAll(ContextUtil.loadContextFrom(localContext));
 
-                    getLog().info(MessageFormat.format("start processing jinja template {0}", templateFile));
+                    getLog().info(MessageFormat.format("start processing template {0}", templateFile));
                     String targetContent = this.process(templateFile, _tcontext);
 
                     file.getParentFile().mkdirs();

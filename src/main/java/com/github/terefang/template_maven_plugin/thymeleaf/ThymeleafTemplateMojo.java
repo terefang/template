@@ -16,24 +16,10 @@ import java.util.Map;
 @Mojo(name = "thymeleaf-template", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class ThymeleafTemplateMojo extends AbstractTemplateMojo {
 
-
     @Override
     @SneakyThrows
     public String process(File _template, Map<String, Object> _context)
     {
-        TemplateEngine templateEngine = new TemplateEngine();
-
-        FileTemplateResolver templateResolver = new FileTemplateResolver();
-        templateResolver.setSuffix("");
-        templateResolver.setPrefix("");
-        templateResolver.addTemplateAlias("main", _template.getAbsolutePath());
-        templateEngine.setTemplateResolver(templateResolver);
-
-        TemplateSpec _ts = new TemplateSpec("main", TemplateMode.valueOf(this.outputType.toUpperCase()));
-
-        final Context _tc = new Context();
-        _tc.setVariables(_context);
-
-        return templateEngine.process(_ts, _tc);
+        return ThymeleafUtil.process(_template, _context, this.outputType);
     }
 }
