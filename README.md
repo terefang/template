@@ -83,5 +83,4 @@ the following file formats are supported:
 * toml/tml -- ie. TOML 0.4 -- https://github.com/toml-lang/toml/blob/master/versions/en/toml-v0.4.0.md
 * json -- ie. JSON -- https://www.json.org/json-en.html
 * hson/hjson -- ie. human JSON -- https://hjson.github.io/
-* plist -- ie. ASCII plist files, NeXT / OpenStep style configuration
 

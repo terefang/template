@@ -8,6 +8,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -34,12 +35,27 @@ public abstract class AbstractTmpMojo extends AbstractMojo
     @Parameter(defaultValue = "context")
     protected String additionalContextRoot;
 
+    /**
+     * additional global variable
+     */
+    @Parameter(defaultValue = "")
+    protected String additionalVariables;
+
     @SneakyThrows
     public void prepareAdditionalContext(Map<String, Object> context) {
         if(additionalContext.exists())
         {
             getLog().info(MessageFormat.format("loading context {0} from {1}", additionalContextRoot, additionalContext.getName()));
             context.put(additionalContextRoot, ContextUtil.loadContextFrom(additionalContext));
+        }
+        if(StringUtils.isNotEmpty(additionalVariables))
+        {
+            String[] entries = StringUtils.split(additionalVariables);
+            for(String entry : entries)
+            {
+                String[] keyValue = StringUtils.split(entry, "=");
+                context.put(keyValue[0], keyValue[1]);
+            }
         }
     }
 
