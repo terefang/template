@@ -1,6 +1,7 @@
 package com.github.terefang.template_maven_plugin.jinjava;
 
 import com.github.terefang.template_maven_plugin.AbstractTemplateMojo;
+import com.github.terefang.template_maven_plugin.TemplateContext;
 import com.github.terefang.template_maven_plugin.util.ContextUtil;
 import com.google.common.collect.Maps;
 import com.hubspot.jinjava.Jinjava;
@@ -27,9 +28,9 @@ public class JinjavaTemplateMojo extends AbstractTemplateMojo
 
     @Override
     @SneakyThrows
-    public String process(File _template, Map<String, Object> _context)
+    public String process(TemplateContext _context)
     {
-        String sourceContent = FileUtils.fileRead(_template);
-        return jinjava.render(sourceContent, _context);
+        String sourceContent = FileUtils.fileRead(_context.processFile);
+        return jinjava.render(sourceContent, _context.processContext);
     }
 }

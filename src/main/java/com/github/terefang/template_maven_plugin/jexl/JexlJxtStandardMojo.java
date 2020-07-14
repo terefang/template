@@ -1,4 +1,4 @@
-package com.github.terefang.template_maven_plugin.freemarker;
+package com.github.terefang.template_maven_plugin.jexl;
 
 import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
 import com.github.terefang.template_maven_plugin.TemplateContext;
@@ -6,10 +6,10 @@ import lombok.SneakyThrows;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
-@Mojo(name = "freemarker-standard", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
-public class FreeMarkerStandardMojo extends AbstractStandardMojo {
+@Mojo(name = "jxlt-standard", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
+public class JexlJxtStandardMojo extends AbstractStandardMojo {
 
-    private static final String[] DEFAULT_INCLUDES = new String[]{"**/*.fm"};
+    private static final String[] DEFAULT_INCLUDES = new String[]{"**/*.jxt"};
 
     public String[] getDefaultIncludes()
     {
@@ -20,6 +20,6 @@ public class FreeMarkerStandardMojo extends AbstractStandardMojo {
     @SneakyThrows
     public String process(TemplateContext _context)
     {
-        return FreeMarkerUtil.process(_context, this.outputType);
+        return JexlJxtUtil.process(_context, "");
     }
 }

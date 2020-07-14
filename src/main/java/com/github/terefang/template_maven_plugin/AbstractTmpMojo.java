@@ -1,5 +1,6 @@
 package com.github.terefang.template_maven_plugin;
 
+import com.github.terefang.template_maven_plugin.util.ContextHelper;
 import com.github.terefang.template_maven_plugin.util.ContextUtil;
 import lombok.SneakyThrows;
 import org.apache.maven.model.Dependency;
@@ -98,5 +99,17 @@ public abstract class AbstractTmpMojo extends AbstractMojo
         context.put("properties", properties);
     }
 
-    public abstract String process(File _template, Map<String, Object> _context);
+    public final String process(File _template, Map<String, Object> _context)
+    {
+        TemplateContext _tc = new TemplateContext();
+        _tc.processFile = _template;
+        _tc.processParent = _template.getParentFile();
+        _tc.processContext = _context;
+        _tc.processContextHelper = ContextHelper.from(_tc);
+        return process(_tc);
+    }
+
+    public abstract String process(TemplateContext _context);
+
+
 }

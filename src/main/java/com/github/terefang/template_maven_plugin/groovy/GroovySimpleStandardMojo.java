@@ -1,6 +1,7 @@
 package com.github.terefang.template_maven_plugin.groovy;
 
 import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
+import com.github.terefang.template_maven_plugin.TemplateContext;
 import lombok.SneakyThrows;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -20,8 +21,8 @@ public class GroovySimpleStandardMojo extends AbstractStandardMojo {
 
     @Override
     @SneakyThrows
-    public String process(File _template, Map<String, Object> _context)
+    public String process(TemplateContext _context)
     {
-        return GroovyUtil.processSimple(_template, _context);
+        return GroovyUtil.processSimple(_context);
     }
 }

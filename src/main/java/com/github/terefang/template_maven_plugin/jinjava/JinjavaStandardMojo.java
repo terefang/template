@@ -1,6 +1,7 @@
 package com.github.terefang.template_maven_plugin.jinjava;
 
 import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
+import com.github.terefang.template_maven_plugin.TemplateContext;
 import com.hubspot.jinjava.Jinjava;
 import lombok.SneakyThrows;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -25,9 +26,9 @@ public class JinjavaStandardMojo extends AbstractStandardMojo {
 
     @Override
     @SneakyThrows
-    public String process(File _template, Map<String, Object> _context)
+    public String process(TemplateContext _context)
     {
-        String sourceContent = FileUtils.fileRead(_template);
-        return jinjava.render(sourceContent, _context);
+        String sourceContent = FileUtils.fileRead(_context.processFile);
+        return jinjava.render(sourceContent, _context.processContext);
     }
 }
