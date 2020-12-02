@@ -105,16 +105,11 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
                         File localContext = null;
                         for(String _ext : StringUtils.split(localContextExtensions, " "))
                         {
-                            //getLog().info(MessageFormat.format("checking extension {0}", _ext));
                             File _localContext = new File(resourcesDirectory, key+_ext);
                             if(_localContext.exists())
                             {
                                 localContext = _localContext;
                                 break;
-                            }
-                            else
-                            {
-                                //getLog().info(MessageFormat.format("context not found: {0}", _localContext.getName()));
                             }
                         }
 
@@ -136,7 +131,8 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
                     getLog().info(MessageFormat.format("finished processed to {0}", file.getAbsolutePath()));
 
                 } catch (IOException e) {
-                    throw new MojoExecutionException("Unable to process template file", e);
+                    getLog().error(MessageFormat.format("Unable to process template file {0}", file.getAbsolutePath()), e);
+                    throw new MojoExecutionException(MessageFormat.format("Unable to process template file {0}", file.getAbsolutePath()), e);
                 }
             }
         }

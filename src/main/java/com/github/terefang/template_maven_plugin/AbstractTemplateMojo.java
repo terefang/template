@@ -3,6 +3,7 @@ package com.github.terefang.template_maven_plugin;
 import com.github.terefang.template_maven_plugin.util.ContextUtil;
 import com.google.common.collect.Maps;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
@@ -61,6 +62,8 @@ public abstract class AbstractTemplateMojo extends AbstractTmpMojo
             throw new MojoExecutionException(MessageFormat.format("template {0} not found", templateFile.getAbsolutePath()));
         }
 
+        getLog().info(MessageFormat.format("executing for template {0}.", templateFile.getAbsolutePath()));
+
         Map<String, Object> context = Maps.newHashMap();
 
         prepareAdditionalContext(context);
@@ -105,10 +108,10 @@ public abstract class AbstractTemplateMojo extends AbstractTmpMojo
                     out.print(targetContent);
                     out.close();
                     getLog().info(MessageFormat.format("finished processed to {0}", file.getAbsolutePath()));
-
                 }
                 catch (IOException e)
                 {
+                    getLog().error(MessageFormat.format("Unable to process data file {0}", key), e);
                     throw new MojoExecutionException(MessageFormat.format("Unable to process data file {0}", key), e);
                 }
             }
