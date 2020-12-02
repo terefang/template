@@ -11,9 +11,9 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="template" target="8" />
       <module name="template-cli" target="1.8" />
       <module name="template-maven-plugin" target="8" />
-      <module name="template-parent" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>

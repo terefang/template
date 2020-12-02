@@ -18,7 +18,7 @@ eg. render many templates with one data context
 ```
 <plugin>
     <artifactId>template-maven-plugin</artifactId>
-    <groupId>com.github.terefang</groupId>
+    <groupId>com.github.terefang.template</groupId>
     <version>${template.maven.plugin.version}</version>
     <executions>
         <execution>
@@ -45,7 +45,7 @@ eg. render one template against many data contexts
 ```
 <plugin>
     <artifactId>template-maven-plugin</artifactId>
-    <groupId>com.github.terefang</groupId>
+    <groupId>com.github.terefang.template</groupId>
     <version>${template.maven.plugin.version}</version>
     <executions>
         <execution>

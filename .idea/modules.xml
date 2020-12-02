@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/template.iml" filepath="$PROJECT_DIR$/template.iml" />
       <module fileurl="file://$PROJECT_DIR$/template-cli/template-cli.iml" filepath="$PROJECT_DIR$/template-cli/template-cli.iml" />
       <module fileurl="file://$PROJECT_DIR$/template-maven-plugin/template-maven-plugin.iml" filepath="$PROJECT_DIR$/template-maven-plugin/template-maven-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/template-parent.iml" filepath="$PROJECT_DIR$/template-parent.iml" />
     </modules>
   </component>
 </project>
