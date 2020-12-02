@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.terefang</groupId>
-    <artifactId>template-parent</artifactId>
+    <artifactId>template</artifactId>
     <version>2020.12.1</version>
     <modules>
         <module>template-cli</module>
@@ -14,9 +14,9 @@
 
     <packaging>pom</packaging>
 
-    <name>template-maven-plugin Maven Plugin</name>
+    <name>template</name>
 
-    <url>https://github.com/terefang/template-maven-plugin</url>
+    <url>https://github.com/terefang/template</url>
 
     <prerequisites>
         <maven>${maven.version}</maven>
