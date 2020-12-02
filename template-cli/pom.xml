@@ -13,7 +13,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.terefang</groupId>
+            <groupId>com.github.terefang.template</groupId>
             <artifactId>template-maven-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
