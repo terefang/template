@@ -1,1 +1,3 @@
 /target/
+/template-cli/target/
+/template-maven-plugin/target/

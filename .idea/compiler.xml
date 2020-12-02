@@ -2,13 +2,18 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="template-cli" />
         <module name="template-maven-plugin" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="template-cli" target="1.8" />
+      <module name="template-maven-plugin" target="8" />
+      <module name="template-parent" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
