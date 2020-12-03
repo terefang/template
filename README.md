@@ -5,11 +5,11 @@ various template files using various data files.
 
 **Template Engines**
 
-* jinjava
-* thymeleaf
-* freemarker
-* jexl -- ie. apache commons jexl jxt
-* gsimple -- ie. groovy simple-template-engine
+* jinjava (.j2)
+* thymeleaf (.tl)
+* freemarker (.fm)
+* jexl -- ie. apache commons jexl jxt (.jxt)
+* gsimple -- ie. groovy simple-template-engine (.gst)
 
 **Data Formats**
 
@@ -29,7 +29,7 @@ eg. render many templates with one data context with optional local context data
 --additional-context-file FILE
 --additional-context-root context
 --source-directory DIR
---include [**/*.tl, **/*.j2, **/*.jx, **/*.gst, **/*.fm]
+--include [**/*.tl, **/*.j2, **/*.jxt, **/*.gst, **/*.fm]
 --destination-directory DIR
 --process-local-context
 --local-context-extensions ".yaml .yml .json .hson .hjson .toml .tml"
