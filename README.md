@@ -53,6 +53,10 @@ eg. render one template against many data contexts
 --destination-extension EXTENSION
 ```
 
+## Examples
+
+a number of examples will be growing within the examples directory.
+
 # template-maven-plugin
 
 the maven plugin allows the same functionality as the cli tool
