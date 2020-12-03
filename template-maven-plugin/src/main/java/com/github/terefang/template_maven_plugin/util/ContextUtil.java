@@ -78,7 +78,14 @@ public class ContextUtil {
     static Map<String, Object> hjsonToMap(JsonValue _v)
     {
         Map<String, Object> _ret = new HashMap<>();
-        _v.asObject().forEach(m -> _ret.put(m.getName(), hjsonToValue(m.getValue())));
+        if(_v.isObject())
+        {
+            _v.asObject().forEach(m -> _ret.put(m.getName(), hjsonToValue(m.getValue())));
+        }
+        else
+        {
+            _ret.put("data", hjsonToValue(_v));
+        }
         return _ret;
     }
 
