@@ -7,12 +7,16 @@ import com.github.terefang.template_maven_plugin.freemarker.FreeMarkerStandardMo
 import com.github.terefang.template_maven_plugin.freemarker.FreeMarkerTemplateMojo;
 import com.github.terefang.template_maven_plugin.groovy.GroovySimpleStandardMojo;
 import com.github.terefang.template_maven_plugin.groovy.GroovySimpleTemplateMojo;
+import com.github.terefang.template_maven_plugin.handlebars.HandlebarsStandardMojo;
+import com.github.terefang.template_maven_plugin.handlebars.HandlebarsTemplateMojo;
 import com.github.terefang.template_maven_plugin.jexl.JexlJxtStandardMojo;
 import com.github.terefang.template_maven_plugin.jexl.JexlJxtTemplateMojo;
 import com.github.terefang.template_maven_plugin.jinjava.JinjavaStandardMojo;
 import com.github.terefang.template_maven_plugin.jinjava.JinjavaTemplateMojo;
 import com.github.terefang.template_maven_plugin.thymeleaf.ThymeleafStandardMojo;
 import com.github.terefang.template_maven_plugin.thymeleaf.ThymeleafTemplateMojo;
+import com.github.terefang.template_maven_plugin.trimou.TrimouStandardMojo;
+import com.github.terefang.template_maven_plugin.trimou.TrimouTemplateMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import picocli.CommandLine;
 
@@ -98,6 +102,32 @@ public class TemplateCliMain
             else
             {
                 _tmojo = new FreeMarkerTemplateMojo();
+            }
+        }
+        else
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.TRIMOU))
+        {
+            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
+                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
+            {
+                _smojo = new TrimouStandardMojo();
+            }
+            else
+            {
+                _tmojo = new TrimouTemplateMojo();
+            }
+        }
+        else
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.HANDLEBARS))
+        {
+            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
+                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
+            {
+                _smojo = new HandlebarsStandardMojo();
+            }
+            else
+            {
+                _tmojo = new HandlebarsTemplateMojo();
             }
         }
 
