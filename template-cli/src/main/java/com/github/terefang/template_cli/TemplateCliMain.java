@@ -1,5 +1,7 @@
 package com.github.terefang.template_cli;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
 import com.github.terefang.template_maven_plugin.AbstractTemplateMojo;
 import com.github.terefang.template_maven_plugin.AbstractTmpMojo;
@@ -17,10 +19,15 @@ import com.github.terefang.template_maven_plugin.thymeleaf.ThymeleafStandardMojo
 import com.github.terefang.template_maven_plugin.thymeleaf.ThymeleafTemplateMojo;
 import com.github.terefang.template_maven_plugin.trimou.TrimouStandardMojo;
 import com.github.terefang.template_maven_plugin.trimou.TrimouTemplateMojo;
+import com.github.terefang.template_maven_plugin.util.ContextUtil;
 import com.github.terefang.template_maven_plugin.velocity.VelocityStandardMojo;
 import com.github.terefang.template_maven_plugin.velocity.VelocityTemplateMojo;
+import lombok.SneakyThrows;
 import org.apache.maven.plugin.MojoExecutionException;
 import picocli.CommandLine;
+
+import java.io.File;
+import java.util.Map;
 
 public class TemplateCliMain
 {
@@ -33,6 +40,18 @@ public class TemplateCliMain
         {
             _cmd.usage(System.out);
             System.exit(-1);
+        }
+        else
+        if(_args.length == 3 && "--to-json".equalsIgnoreCase(_args[0]))
+        {
+            executeJsonDump(_args[1], _args[2]);
+            System.exit(0);
+        }
+        else
+        if(_args.length == 2 && "--to-json".equalsIgnoreCase(_args[0]))
+        {
+            executeJsonDump(_args[1], null);
+            System.exit(0);
         }
 
         _cmd.parseArgs(_args);
@@ -150,12 +169,12 @@ public class TemplateCliMain
                 || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
         {
             _smojo.setLog(_log);
-            executTemplateStandardMojo(_smojo, _opts);
+            executeTemplateStandardMojo(_smojo, _opts);
         }
         else
         {
             _tmojo.setLog(_log);
-            executTemplateTemplateMojo(_tmojo, _opts);
+            executeTemplateTemplateMojo(_tmojo, _opts);
         }
     }
 
@@ -181,7 +200,7 @@ public class TemplateCliMain
         }
     }
 
-    public static void executTemplateTemplateMojo(AbstractTemplateMojo _mojo, TemplateCliOptions _opts)
+    public static void executeTemplateTemplateMojo(AbstractTemplateMojo _mojo, TemplateCliOptions _opts)
     {
         try
         {
@@ -198,7 +217,7 @@ public class TemplateCliMain
         }
     }
 
-    public static void executTemplateStandardMojo(AbstractStandardMojo _mojo, TemplateCliOptions _opts)
+    public static void executeTemplateStandardMojo(AbstractStandardMojo _mojo, TemplateCliOptions _opts)
     {
         try
         {
@@ -215,4 +234,20 @@ public class TemplateCliMain
             _mojo.getLog().error(_me.getMessage(), _me);
         }
     }
+
+    @SneakyThrows
+    public static void executeJsonDump(String _from, String _to)
+    {
+        Map<String, Object> _data = ContextUtil.loadContextFrom(new File(_from));
+        ObjectMapper _om = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        if(_to == null)
+        {
+            _om.writeValue(System.out, _data);
+        }
+        else
+        {
+            _om.writeValue(new File(_to), _data);
+        }
+    }
+
 }

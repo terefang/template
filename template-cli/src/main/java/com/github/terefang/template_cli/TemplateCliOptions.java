@@ -61,7 +61,7 @@ public class TemplateCliOptions
     @CommandLine.Option(order = 130, names = {"-L", "--process-local-context"}, description = "option to process local context files for templates for standard mode, default false", required = false, defaultValue = "false")
     protected boolean processLocalContext;
 
-    @CommandLine.Option(order = 140, names = {"-l", "--local-context-extensions"}, paramLabel = "EXT-list", description = "local context file extension to check for standard mode, default: .yaml .yml .json .hson .hjson .toml .tml", required = false, defaultValue = ".yaml .yml .json .hson .hjson .toml .tml")
+    @CommandLine.Option(order = 140, names = {"-l", "--local-context-extensions"}, paramLabel = "EXT-list", description = "local context file extension to check for standard mode, default: .yaml .yml .json .hson .hjson .toml .tml .ini .scsv .csv .tsv .list .pdx .pdata", required = false, defaultValue = ".yaml .yml .json .hson .hjson .toml .tml .ini .scsv .csv .tsv .list .pdx .pdata")
     protected String localContextExtensions;
 
     @CommandLine.Option(order = 150, names = {"--local-context-root"}, paramLabel = "ROOT", description = "root-tag of local context, default: 'local'", defaultValue = "local", required = false)

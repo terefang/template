@@ -37,7 +37,7 @@ public class VelocityStandardMojo extends AbstractStandardMojo {
             _vcontext.put(_entry.getKey(), _entry.getValue());
         }
         StringWriter _writer = new StringWriter();
-        engine.getTemplate(_context.processFile.getAbsolutePath()).merge(_vcontext, _writer);
+        engine.evaluate(_vcontext, _writer, "["+_context.getProcessFile().getName()+"]", sourceContent);
         return _writer.getBuffer().toString();
     }
 }
