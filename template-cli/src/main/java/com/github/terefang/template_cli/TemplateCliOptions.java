@@ -6,7 +6,7 @@ import java.io.File;
 
 public class TemplateCliOptions
 {
-    public static enum TemplateEngineName { THYMELEAF, JINJAVA, JEXL, GROOVY, FREEMARKER, TRIMOU, HANDLEBARS }
+    public static enum TemplateEngineName { THYMELEAF, JINJAVA, JEXL, GROOVY, FREEMARKER, TRIMOU, HANDLEBARS, VELOCITY }
 
     @CommandLine.Option(order = 10, names = {"-T", "--template-engine"}, paramLabel = "ENGINE", description = "name of the templating engine, ${COMPLETION-CANDIDATES}", required = true)
     public TemplateEngineName doEngine;

@@ -17,6 +17,8 @@ import com.github.terefang.template_maven_plugin.thymeleaf.ThymeleafStandardMojo
 import com.github.terefang.template_maven_plugin.thymeleaf.ThymeleafTemplateMojo;
 import com.github.terefang.template_maven_plugin.trimou.TrimouStandardMojo;
 import com.github.terefang.template_maven_plugin.trimou.TrimouTemplateMojo;
+import com.github.terefang.template_maven_plugin.velocity.VelocityStandardMojo;
+import com.github.terefang.template_maven_plugin.velocity.VelocityTemplateMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import picocli.CommandLine;
 
@@ -128,6 +130,19 @@ public class TemplateCliMain
             else
             {
                 _tmojo = new HandlebarsTemplateMojo();
+            }
+        }
+        else
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.VELOCITY))
+        {
+            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
+                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
+            {
+                _smojo = new VelocityStandardMojo();
+            }
+            else
+            {
+                _tmojo = new VelocityTemplateMojo();
             }
         }
 
