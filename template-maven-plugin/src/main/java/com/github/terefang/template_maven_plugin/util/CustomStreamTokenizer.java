@@ -24,6 +24,7 @@ package com.github.terefang.template_maven_plugin.util;
  *
  */
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -123,6 +124,10 @@ public class CustomStreamTokenizer {
     private boolean slashStarComments;
 
     private boolean slashSlashComments;
+
+    private boolean tripleQuotes;
+
+    private boolean hexLiterals;
 
     private boolean pushBackToken;
 
@@ -255,6 +260,7 @@ public class CustomStreamTokenizer {
      * @throws IOException
      *             if an I/O error occurs while parsing the next token.
      */
+    public static final String HEX_SET = "0123456789abcdefABCDEF";
     public int nextToken() throws IOException {
         if (pushBackToken) {
             pushBackToken = false;
@@ -313,16 +319,74 @@ public class CustomStreamTokenizer {
          */
         if ((currentType & TOKEN_DIGIT) != 0) {
             StringBuilder digits = new StringBuilder(20);
-            boolean haveDecimal = false, checkJustNegative = currentChar == '-';
+            boolean haveDecimal = false, checkJustNegative = currentChar == '-', isHex = false, isBinary = false;
             while (true) {
-                if (currentChar == '.') {
-                    haveDecimal = true;
+                if(hexLiterals && (digits.length() == 0) && (currentChar == '0'))
+                {
+                    // should we detect hex-literals starting with '0x' and switch parsing ?
+                    // actually we can discard the zero here
+                    currentChar = read();
+                    if(currentChar == 'x')
+                    {
+                        isHex = true;
+                        currentChar = read();
+                        if (!(HEX_SET.indexOf(currentChar)>=0)) {
+                            break;
+                        }
+                    }
+                    else
+                    if(currentChar == 'b')
+                    {
+                        isBinary = true;
+                        currentChar = read();
+                        if ((currentChar < '0') || (currentChar > '1')) {
+                            break;
+                        }
+                    }
+                    else
+                    // alternative would be to have a float-literal starting with '0.'.
+                    if (currentChar == '.')
+                    {
+                        haveDecimal = true;
+                    }
+                    else
+                    if ((currentChar < '0') || (currentChar > '9'))
+                    {
+                        digits.append("0");
+                        break;
+                    }
                 }
-                digits.append((char) currentChar);
-                currentChar = read();
-                if ((currentChar < '0' || currentChar > '9')
-                        && (haveDecimal || currentChar != '.')) {
-                    break;
+
+                if(isBinary)
+                {
+                    if(currentChar != '_') digits.append((char) currentChar);
+                    currentChar = read();
+                    if (((currentChar < '0') || (currentChar > '1'))
+                            && (currentChar != '_')) {
+                        break;
+                    }
+                }
+                else
+                if(isHex)
+                {
+                    if(currentChar != '_') digits.append((char) currentChar);
+                    currentChar = read();
+                    if ((!(HEX_SET.indexOf(currentChar)>=0))
+                            && (currentChar != '_')) {
+                        break;
+                    }
+                }
+                else
+                {
+                    if (currentChar == '.') {
+                        haveDecimal = true;
+                    }
+                    if(currentChar != '_') digits.append((char) currentChar);
+                    currentChar = read();
+                    if ((currentChar < '0' || currentChar > '9')
+                            && (haveDecimal || currentChar != '.') && (currentChar != '_')) {
+                        break;
+                    }
                 }
             }
             peekChar = currentChar;
@@ -331,13 +395,23 @@ public class CustomStreamTokenizer {
                 return (ttype = '-');
             }
             try {
+                if(isHex)
+                {
+                    cardinalValue = Long.valueOf(digits.toString(), 16).longValue();
+                }
+                else
+                if(isBinary)
+                {
+                    cardinalValue = Long.valueOf(digits.toString(), 2).longValue();
+                }
+                else
                 if(haveDecimal)
                 {
                     numValue = Double.valueOf(digits.toString()).doubleValue();
                 }
                 else
                 {
-                    this.cardinalValue = Long.valueOf(digits.toString()).longValue();
+                    cardinalValue = Long.valueOf(digits.toString()).longValue();
                 }
             } catch (NumberFormatException e) {
                 // Unsure what to do, will write test.
@@ -427,8 +501,15 @@ public class CustomStreamTokenizer {
                     peekOne = read();
                 }
             }
+
             if (peekOne == matchQuote) {
                 peekOne = read();
+                if(tripleQuotes && (quoteString.length() == 0) && (peekOne == matchQuote))
+                {
+                    // found start of QQQ
+                    // should we parse it or return error?
+                    peekOne = readTripleQuoted(matchQuote,quoteString);
+                }
             }
             peekChar = peekOne;
             ttype = matchQuote;
@@ -485,6 +566,79 @@ public class CustomStreamTokenizer {
 
         peekChar = read();
         return (ttype = currentChar);
+    }
+
+    private int readTripleQuoted(int matchQuote, StringBuilder quoteString) throws IOException
+    {
+        int _c1,_c2,_c3,_c4;
+        String _qqq = new String(new char[] {(char) matchQuote, (char) matchQuote, (char) matchQuote});
+        while(!quoteString.toString().endsWith(_qqq))
+        {
+            int _c = read();
+            if(_c == '\n') lineNumber++;
+            if(_c<0) throw new EOFException();
+            if(_c == '\\')
+            {
+                _c = read();
+                switch (_c) {
+                    case 'a':
+                        _c = 0x7;
+                        break;
+                    case 'b':
+                        _c = 0x8;
+                        break;
+                    case 'f':
+                        _c = 0xc;
+                        break;
+                    case 'n':
+                        _c = 0xA;
+                        break;
+                    case 'r':
+                        _c = 0xD;
+                        break;
+                    case 't':
+                        _c = 0x9;
+                        break;
+                    case 'v':
+                        _c = 0xB;
+                        break;
+                    case 'x':
+                        _c1 = read();
+                        _c2 = read();
+                        _c = Integer.parseInt(new String(new char[]{(char) _c1, (char) _c2}), 16);
+                        break;
+                    case 'u':
+                        _c1 = read();
+                        _c2 = read();
+                        _c3 = read();
+                        _c4 = read();
+                        _c = Integer.parseInt(new String(new char[]{(char) _c1, (char) _c2, (char) _c3, (char) _c4}), 16);
+                        break;
+                    default:
+                        // IGNORE
+                }
+            }
+            quoteString.append((char) _c);
+        }
+        quoteString.setLength(quoteString.length()-3);
+        // text blocks remove all the incidental indentations and keep only essential indentations.
+        int _i=0;
+        String [] _parts = quoteString.toString().split("\\n");
+        // eat whitespaced lines
+        while((_i<_parts.length) && _parts[_i].trim().length()==0) _i++;
+        int _j=0;
+        // find incidential whitespace
+        while((_j<_parts[_i].length()) && Character.isWhitespace(_parts[_i].charAt(_j))) _j++;
+        quoteString.setLength(0);
+        for(int _k=_i; _k<_parts.length; _k++)
+        {
+            int _l = 0;
+            // eat incidential whitespace
+            while((_l<_j) && (_l<_parts[_k].length()) && Character.isWhitespace(_parts[_k].charAt(_l))) _l++;
+            quoteString.append(_parts[_k].substring(_l));
+            if(_k!=_parts.length-1) quoteString.append("\n");
+        }
+        return -2;
     }
 
     /**
@@ -594,6 +748,12 @@ public class CustomStreamTokenizer {
     public void slashStarComments(boolean flag) {
         slashStarComments = flag;
     }
+
+    public void tripleQuotes(boolean flag) {
+        tripleQuotes = flag;
+    }
+
+    public void hexLiterals(boolean flag) { hexLiterals = flag; }
 
     /**
      * Returns the state of this tokenizer in a readable format.

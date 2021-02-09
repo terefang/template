@@ -46,7 +46,8 @@ public class TemplateCliOptions
     @CommandLine.Option(order = 100, names = {"-D", "--dest-dir", "--destination-directory"}, paramLabel = "DIR", description = "destination directory", required = false)
     private File resourcesOutput;
 
-
+    @CommandLine.Option(order = 101, names = {"--flatten"}, paramLabel = "DIR", description = "flatten destination directories", required = false)
+    private boolean flattenOutput;
     /* Template Variables */
 
     @CommandLine.Option(order = 110, names = {"-E", "--dest-ext", "--destination-extension"}, paramLabel = "EXTENSION", description = "destination extension for template mode, default .txt", required = false, defaultValue = ".txt")
@@ -125,5 +126,9 @@ public class TemplateCliOptions
 
     public String getLocalContextRoot() {
         return localContextRoot;
+    }
+
+    public boolean isFlattenOutput() {
+        return flattenOutput;
     }
 }

@@ -190,6 +190,7 @@ public class TemplateCliMain
             ((AbstractTemplateMojo)_mojo).setExcludes(_opts.getExcludes());
             ((AbstractTemplateMojo)_mojo).setResourcesDirectory(_opts.getResourcesDirectory());
             ((AbstractTemplateMojo)_mojo).setResourcesOutput(_opts.getResourcesOutput());
+            ((AbstractTemplateMojo)_mojo).setFlattenOutput(_opts.isFlattenOutput());
         }
         else
         {
@@ -197,6 +198,7 @@ public class TemplateCliMain
             ((AbstractStandardMojo)_mojo).setExcludes(_opts.getExcludes());
             ((AbstractStandardMojo)_mojo).setResourcesDirectory(_opts.getResourcesDirectory());
             ((AbstractStandardMojo)_mojo).setResourcesOutput(_opts.getResourcesOutput());
+            ((AbstractStandardMojo)_mojo).setFlattenOutput(_opts.isFlattenOutput());
         }
     }
 
@@ -239,7 +241,9 @@ public class TemplateCliMain
     public static void executeJsonDump(String _from, String _to)
     {
         Map<String, Object> _data = ContextUtil.loadContextFrom(new File(_from));
-        ObjectMapper _om = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        ObjectMapper _om = new ObjectMapper()
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
         if(_to == null)
         {
             _om.writeValue(System.out, _data);

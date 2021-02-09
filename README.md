@@ -10,6 +10,8 @@ various template files using various data files.
 * freemarker (.fm)
 * jexl -- ie. apache commons jexl jxt (.jxt)
 * gsimple -- ie. groovy simple-template-engine (.gst)
+* handlebars -- (.hbs)
+* trimou -- ie. advanced handlebars (.tri)
 
 **Data Formats**
 
@@ -17,6 +19,53 @@ various template files using various data files.
 * toml/tml -- ie. TOML 0.4 -- https://github.com/toml-lang/toml/blob/master/versions/en/toml-v0.4.0.md
 * json -- ie. JSON -- https://www.json.org/json-en.html
 * hson/hjson -- ie. human JSON -- https://hjson.github.io/
+* ini -- simple windows ini file format
+* pdx/pdata -- Paradox Config Format (Clausewitz Engine) with some quality of life extensions
+
+```
+#One struct
+struct1 = {
+    id = test_1
+    desc = "test description"
+}
+#Another struct
+struct2 = {
+    id = test_2
+    desc = "test 2 description"
+}
+#complex struct
+struct2 = {
+    string_array = [ one two "three" ]
+    int_array = [  1 2 3 ]
+    float_array = [ 0.1 0.2 0.3 ]
+    long_text = """ 
+                    very long text
+    """
+    struct_array = [
+        {
+            hex1_key = 0xdeadbeef
+            hex2_key = 0xcafeaffe
+            hex3_key = 0xf
+            hex4_key = 0xff
+            hex5_key = 0xfff
+        }
+        {
+            dec1_key = 0
+            dec2_key = 01
+        } 
+        {
+            float1_key = 0.1
+            float2_key = .1
+        }
+        {
+            1 = "one"
+            2 = "two"
+            "3" = "three"
+        }
+    ]
+    complex_array = [ 1 .2 "three" 0x4 five ]
+}
+```
 
 ### standard mode 
 
@@ -32,7 +81,7 @@ eg. render many templates with one data context with optional local context data
 --include [**/*.tl, **/*.j2, **/*.jxt, **/*.gst, **/*.fm]
 --destination-directory DIR
 --process-local-context
---local-context-extensions ".yaml .yml .json .hson .hjson .toml .tml"
+--local-context-extensions ".yaml .yml .json .hson .hjson .toml .tml .ini .pdx .pdata"
 --local-context-root local
 ```
 
@@ -47,7 +96,7 @@ eg. render one template against many data contexts
 --additional-context-file FILE
 --additional-context-root context
 --source-directory DIR
---include [**/*.yaml, **/*.yml, **/*.json, **/*.hson, **/*.hjson, **/*.toml, **/*.tml]
+--include [**/*.yaml, **/*.yml, **/*.json, **/*.hson, **/*.hjson, **/*.toml, **/*.tml, **/*.pdx, **/*.pdata]
 --destination-directory DIR
 --template-file FILE
 --destination-extension EXTENSION

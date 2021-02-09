@@ -13,11 +13,13 @@ public class PdxParser {
         CustomStreamTokenizer _tokener = new CustomStreamTokenizer(_file);
 
         _tokener.quoteChar('"');
+        _tokener.tripleQuotes(true);
         _tokener.slashSlashComments(true);
         _tokener.slashStarComments(true);
         _tokener.commentChar('#');
         _tokener.whitespaceChars(0, 32);
         _tokener.wordChar('_', ':', '@', '\'');
+        _tokener.hexLiterals(true);
 
         int _token = _tokener.nextToken();
         // check for unicode marker !

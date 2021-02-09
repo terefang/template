@@ -32,6 +32,8 @@ public abstract class AbstractTemplateMojo extends AbstractTmpMojo
     @Parameter(defaultValue = "${project.build.directory}/generated-resources")
     private File resourcesOutput;
 
+    @Parameter(defaultValue = "false")
+    private boolean flattenOutput;
 
     /**
      * the extension used by the destination files
@@ -93,7 +95,15 @@ public abstract class AbstractTemplateMojo extends AbstractTmpMojo
 
             for (String key : scanner.getIncludedFiles())
             {
-                File file = new File(resourcesOutput, key.substring(0, key.lastIndexOf(".")).concat(destinationExtension));
+                String keybase = key.substring(0, key.lastIndexOf("."));
+
+                File file = new File(resourcesOutput, keybase.concat(destinationExtension));
+
+                if(flattenOutput)
+                {
+                    file = new File(resourcesOutput, file.getName());
+                }
+
                 try
                 {
                     Map<String, Object> _tcontext = Maps.newHashMap();

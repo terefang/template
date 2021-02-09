@@ -31,6 +31,8 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
     @Parameter(defaultValue = "${project.build.directory}/generated-resources")
     protected File resourcesOutput;
 
+    @Parameter(defaultValue = "false")
+    private boolean flattenOutput;
 
     /**
      * process local contexts
@@ -99,6 +101,10 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
             for (String key : scanner.getIncludedFiles())
             {
                 File file = new File(resourcesOutput, key.substring(0, key.lastIndexOf(".")));
+                if(flattenOutput)
+                {
+                    file = new File(resourcesOutput, file.getName());
+                }
                 try
                 {
                     if(processLocalContext)
