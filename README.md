@@ -80,6 +80,7 @@ eg. render many templates with one data context with optional local context data
 --source-directory DIR
 --include [**/*.tl, **/*.j2, **/*.jxt, **/*.gst, **/*.fm]
 --destination-directory DIR
+--flatten
 --process-local-context
 --local-context-extensions ".yaml .yml .json .hson .hjson .toml .tml .ini .pdx .pdata"
 --local-context-root local
@@ -98,6 +99,7 @@ eg. render one template against many data contexts
 --source-directory DIR
 --include [**/*.yaml, **/*.yml, **/*.json, **/*.hson, **/*.hjson, **/*.toml, **/*.tml, **/*.pdx, **/*.pdata]
 --destination-directory DIR
+--flatten
 --template-file FILE
 --destination-extension EXTENSION
 ```
