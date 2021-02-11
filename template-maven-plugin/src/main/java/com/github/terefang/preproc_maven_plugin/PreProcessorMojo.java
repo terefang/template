@@ -14,12 +14,14 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
@@ -84,6 +86,9 @@ public class PreProcessorMojo extends AbstractMojo
 
     public void process(String[] includedFiles)
     {
+        includedFiles = Arrays.stream(includedFiles)
+                .sorted((x,y) -> { return x.compareToIgnoreCase(y); })
+                .toArray((x) -> { return new String[x]; });
         File file = null;
         PrintWriter out = null;
         String _current = null;
