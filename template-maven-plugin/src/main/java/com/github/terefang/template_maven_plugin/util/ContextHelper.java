@@ -36,6 +36,7 @@ public class ContextHelper {
         return ContextUtil.loadContextFrom(new File(this.context.processParent, _file));
     }
 
+
     /*-----  -----*/
 
     public String wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords, String wrapOn) {
@@ -910,6 +911,8 @@ public class ContextHelper {
         return StringUtils.wrap(str, wrapWith);
     }
 
+    /*-----  -----*/
+
     public int toInt(String str) {
         return NumberUtils.toInt(str);
     }
@@ -1269,4 +1272,34 @@ public class ContextHelper {
     public int compare(boolean x, boolean y) {
         return BooleanUtils.compare(x, y);
     }
+
+    /*-----  -----*/
+
+    public boolean checkBoolean(final Object _str)
+    {
+        if(_str==null)
+        {
+            return false;
+        }
+
+        return checkBoolean(_str.toString());
+    }
+
+    public boolean checkBoolean(final String _str)
+    {
+        if (_str == null) {
+            return false;
+        }
+
+        // any defined string is "true" unless it is a false indicator:
+        // false, off, none, no, null, nul, nil, 0
+        if (containsAny(_str.trim().toLowerCase(),
+                "false", "off", "none", "no", "null", "nul", "nil", "0"))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
 }
