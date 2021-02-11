@@ -2,6 +2,7 @@ package com.github.terefang.template_cli;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.github.terefang.preproc_maven_plugin.PreProcessorMojo;
 import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
 import com.github.terefang.template_maven_plugin.AbstractTemplateMojo;
 import com.github.terefang.template_maven_plugin.AbstractTmpMojo;
@@ -24,6 +25,7 @@ import com.github.terefang.template_maven_plugin.velocity.VelocityStandardMojo;
 import com.github.terefang.template_maven_plugin.velocity.VelocityTemplateMojo;
 import lombok.SneakyThrows;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -164,6 +166,12 @@ public class TemplateCliMain
                 _tmojo = new VelocityTemplateMojo();
             }
         }
+        else
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.PREPROCESSOR))
+        {
+            executePreProcessor(_log, _opts);
+            return;
+        }
 
         if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
                 || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
@@ -175,6 +183,33 @@ public class TemplateCliMain
         {
             _tmojo.setLog(_log);
             executeTemplateTemplateMojo(_tmojo, _opts);
+        }
+    }
+
+    public static void executePreProcessor(TemplateCliLogger _log, TemplateCliOptions _opts)
+    {
+        try
+        {
+            PreProcessorMojo _mojo = new PreProcessorMojo();
+            _mojo.setLog(_log);
+
+            _mojo.setIncludes(_opts.getIncludes());
+            _mojo.setExcludes(_opts.getExcludes());
+            _mojo.setResourcesDirectory(_opts.getResourcesDirectory());
+            _mojo.setResourcesOutput(_opts.getResourcesOutput());
+            _mojo.setFlattenOutput(_opts.isFlattenOutput());
+            _mojo.setDestinationExtension(_opts.getDestinationExtension());
+
+            _mojo.setSingleFileOutput(_opts.isSingleFileOutput());
+            _mojo.setMarker(_opts.getProcessMarker());
+            _mojo.setProcessIncludes(_opts.isProcessIncludes());
+            _mojo.setProcessSingleLineMarker(_opts.isProcessSingleLineMarker());
+
+            _mojo.execute();
+        }
+        catch (MojoExecutionException | MojoFailureException _me)
+        {
+            _log.error(_me.getMessage(), _me);
         }
     }
 

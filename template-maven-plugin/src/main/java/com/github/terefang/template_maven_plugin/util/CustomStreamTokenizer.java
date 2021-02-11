@@ -516,6 +516,7 @@ public class CustomStreamTokenizer {
             stringValue = quoteString.toString();
             return ttype;
         }
+
         // Do comments, both "//" and "/*stuff*/"
         if (currentChar == '/' && (slashSlashComments || slashStarComments)) {
             if ((currentChar = read()) == '*' && slashStarComments) {

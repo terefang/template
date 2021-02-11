@@ -1,12 +1,14 @@
 package com.github.terefang.template_cli;
 
+import lombok.Data;
 import picocli.CommandLine;
 
 import java.io.File;
 
+@Data
 public class TemplateCliOptions
 {
-    public static enum TemplateEngineName { THYMELEAF, JINJAVA, JEXL, GROOVY, FREEMARKER, TRIMOU, HANDLEBARS, VELOCITY }
+    public static enum TemplateEngineName { THYMELEAF, JINJAVA, JEXL, GROOVY, FREEMARKER, TRIMOU, HANDLEBARS, VELOCITY, PREPROCESSOR }
 
     @CommandLine.Option(order = 10, names = {"-T", "--template-engine"}, paramLabel = "ENGINE", description = "name of the templating engine, ${COMPLETION-CANDIDATES}", required = true)
     public TemplateEngineName doEngine;
@@ -59,7 +61,7 @@ public class TemplateCliOptions
 
     /* Standard Variables */
 
-    @CommandLine.Option(order = 130, names = {"-L", "--process-local-context"}, description = "option to process local context files for templates for standard mode, default false", required = false, defaultValue = "false")
+    @CommandLine.Option(order = 130, names = {"-L", "--read-local-context"}, description = "option to read local context files for templates for standard mode, default false", required = false, defaultValue = "false")
     protected boolean processLocalContext;
 
     @CommandLine.Option(order = 140, names = {"-l", "--local-context-extensions"}, paramLabel = "EXT-list", description = "local context file extension to check for standard mode, default: .yaml .yml .json .hson .hjson .toml .tml .ini .scsv .csv .tsv .list .pdx .pdata", required = false, defaultValue = ".yaml .yml .json .hson .hjson .toml .tml .ini .scsv .csv .tsv .list .pdx .pdata")
@@ -68,67 +70,17 @@ public class TemplateCliOptions
     @CommandLine.Option(order = 150, names = {"--local-context-root"}, paramLabel = "ROOT", description = "root-tag of local context, default: 'local'", defaultValue = "local", required = false)
     protected String localContextRoot;
 
-    public TemplateEngineName getDoEngine() {
-        return doEngine;
-    }
+    /* Pre-Proc Variables */
 
-    public TemplateEngineMode getDoMode() {
-        return doMode;
-    }
+    @CommandLine.Option(order = 160, names = {"--marker", "--process-marker"}, paramLabel = "MARKER", description = "option to pre-process MARKER begin/end, default MARK", required = false, defaultValue = "MARK")
+    protected String processMarker;
 
-    public OutputType getOutputType() {
-        return outputType;
-    }
+    @CommandLine.Option(order = 140, names = {"--process-includes"}, description = "do pre-process include statements", required = false, defaultValue = "false")
+    protected boolean processIncludes;
 
-    public File getAdditionalContext() {
-        return additionalContext;
-    }
+    @CommandLine.Option(order = 140, names = {"--single-line-marker", "--process-single-line-marker"}, description = "do pre-process single-line markers", required = false, defaultValue = "false")
+    protected boolean processSingleLineMarker;
 
-    public String getAdditionalContextRoot() {
-        return additionalContextRoot;
-    }
-
-    public String getAdditionalVariables() {
-        return additionalVariables;
-    }
-
-    public String[] getIncludes() {
-        return includes;
-    }
-
-    public String[] getExcludes() {
-        return excludes;
-    }
-
-    public File getResourcesDirectory() {
-        return resourcesDirectory;
-    }
-
-    public File getResourcesOutput() {
-        return resourcesOutput;
-    }
-
-    public String getDestinationExtension() {
-        return destinationExtension;
-    }
-
-    public File getTemplateFile() {
-        return templateFile;
-    }
-
-    public boolean isProcessLocalContext() {
-        return processLocalContext;
-    }
-
-    public String getLocalContextExtensions() {
-        return localContextExtensions;
-    }
-
-    public String getLocalContextRoot() {
-        return localContextRoot;
-    }
-
-    public boolean isFlattenOutput() {
-        return flattenOutput;
-    }
+    @CommandLine.Option(order = 140, names = {"--single-file", "--process-single-file-output"}, description = "do pre-process into single file", required = false, defaultValue = "false")
+    protected boolean singleFileOutput;
 }
