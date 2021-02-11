@@ -14,7 +14,7 @@ public class TemplateCliOptions
     public TemplateEngineName doEngine;
 
     public static enum TemplateEngineMode { STD, STANDARD, TEMPLATE }
-    @CommandLine.Option(order = 20, names = {"-M", "--engine-mode"}, paramLabel = "MODE", description = "mode of engine operation, ${COMPLETION-CANDIDATES}", required = true)
+    @CommandLine.Option(order = 20, names = {"-M", "--engine-mode"}, paramLabel = "MODE", description = "mode of engine operation, ${COMPLETION-CANDIDATES}", required = false, defaultValue = "STD")
     public TemplateEngineMode doMode;
 
 
