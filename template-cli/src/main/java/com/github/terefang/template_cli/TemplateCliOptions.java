@@ -8,7 +8,7 @@ import java.io.File;
 @Data
 public class TemplateCliOptions
 {
-    public static enum TemplateEngineName { THYMELEAF, JINJAVA, JEXL, GROOVY, FREEMARKER, TRIMOU, HANDLEBARS, VELOCITY, PREPROCESSOR }
+    public static enum TemplateEngineName { THYMELEAF, JINJAVA, JEXL, GROOVY, FREEMARKER, TRIMOU, HANDLEBARS, VELOCITY, PREPROCESSOR, CONCAT }
 
     @CommandLine.Option(order = 10, names = {"-T", "--template-engine"}, paramLabel = "ENGINE", description = "name of the templating engine, ${COMPLETION-CANDIDATES}", required = true)
     public TemplateEngineName doEngine;
@@ -45,7 +45,7 @@ public class TemplateCliOptions
     @CommandLine.Option(order = 90, names = {"-S", "--src-dir", "--source-directory"}, paramLabel = "DIR", description = "source directory", required = false)
     private File resourcesDirectory;
 
-    @CommandLine.Option(order = 100, names = {"-D", "--dest-dir", "--destination-directory"}, paramLabel = "DIR", description = "destination directory", required = false)
+    @CommandLine.Option(order = 100, names = {"-D", "--dest-dir", "--destination-directory", "--destination"}, paramLabel = "DIR", description = "destination directory/file", required = false)
     private File resourcesOutput;
 
     @CommandLine.Option(order = 101, names = {"--flatten"}, paramLabel = "DIR", description = "flatten destination directories", required = false)

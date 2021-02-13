@@ -104,6 +104,64 @@ eg. render one template against many data contexts
 --destination-extension EXTENSION
 ```
 
+### pre-processor
+
+implements a simple extractor/pre-processor, 
+useful if you want to keep several different structures in one file
+
+eg. pre-process multiple file into one or multiple
+
+**Sample File:**
+```
+%!begin MARK
+
+extracted content
+
+%!end MARK
+
+%% single line extract
+
+%!include path/to/file.ext
+```
+
+#### single file target
+
+if --single-file is given destination is a single file
+
+```
+--template-engine 'PREPROCESSOR'
+--source-directory DIR
+--include [**/*.pp]
+--destination DIRorFile
+--single-file
+--marker MARK
+--process-includes
+--single-line-marker
+```
+
+#### multi file target
+
+```
+--template-engine PREPROCESSOR
+--source-directory DIR
+--include [**/*.pp]
+--destination-directory DIR
+--flatten
+--destination-extension EXTENSION
+--marker MARK
+--process-includes
+--single-line-marker
+```
+
+### concatenation
+
+```
+--template-engine 'CONCAT'
+--source-directory DIR
+--include [**/*.pp]
+--destination FILE
+```
+
 ## Examples
 
 a number of examples will be growing within the examples directory.
@@ -150,7 +208,7 @@ eg. render many templates with one data context
 </plugin>
 ```
 
-### template mode 
+### template mode
 
 eg. render one template against many data contexts
 
@@ -172,6 +230,56 @@ eg. render one template against many data contexts
                 <includes>**/*.hson</includes>
                 <resourcesOutput>${project.build.outputDirectory}/resources</resourcesOutput>
                 <destinationExtension>.md</destinationExtension>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+```
+
+### pre-process
+
+```
+<plugin>
+    <artifactId>template-maven-plugin</artifactId>
+    <groupId>com.github.terefang.template</groupId>
+    <version>${template.maven.plugin.version}</version>
+    <executions>
+        <execution>
+            <id>pre-processor</id>
+            <phase>generate-resources</phase>
+            <goals>
+                <goal>pre-processor</goal>
+            </goals>
+            <configuration>
+                <resourcesDirectory>${project.basedir}/src/main/resources</resourcesDirectory>
+                <includes>**/*.pp</includes>
+                <resourcesOutput>${project.build.outputDirectory}/resources</resourcesOutput>
+                <marker>MARKDOWN</marker>
+                <destinationExtension>.md</destinationExtension>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+```
+
+### concatenate
+
+```
+<plugin>
+    <artifactId>template-maven-plugin</artifactId>
+    <groupId>com.github.terefang.template</groupId>
+    <version>${template.maven.plugin.version}</version>
+    <executions>
+        <execution>
+            <id>concat</id>
+            <phase>generate-resources</phase>
+            <goals>
+                <goal>concat</goal>
+            </goals>
+            <configuration>
+                <resourcesDirectory>${project.basedir}/src/main/resources</resourcesDirectory>
+                <includes>**/*.pp</includes>
+                <resourcesOutput>${project.build.outputDirectory}/concat-file.ext</resourcesOutput>
             </configuration>
         </execution>
     </executions>

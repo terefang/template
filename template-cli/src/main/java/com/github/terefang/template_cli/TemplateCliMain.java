@@ -2,6 +2,7 @@ package com.github.terefang.template_cli;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.github.terefang.concat_maven_plugin.ConcatMojo;
 import com.github.terefang.preproc_maven_plugin.PreProcessorMojo;
 import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
 import com.github.terefang.template_maven_plugin.AbstractTemplateMojo;
@@ -172,6 +173,12 @@ public class TemplateCliMain
             executePreProcessor(_log, _opts);
             return;
         }
+        else
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.CONCAT))
+        {
+            executeConcat(_log, _opts);
+            return;
+        }
 
         if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
                 || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
@@ -204,6 +211,26 @@ public class TemplateCliMain
             _mojo.setMarker(_opts.getProcessMarker());
             _mojo.setProcessIncludes(_opts.isProcessIncludes());
             _mojo.setProcessSingleLineMarker(_opts.isProcessSingleLineMarker());
+
+            _mojo.execute();
+        }
+        catch (MojoExecutionException | MojoFailureException _me)
+        {
+            _log.error(_me.getMessage(), _me);
+        }
+    }
+
+    public static void executeConcat(TemplateCliLogger _log, TemplateCliOptions _opts)
+    {
+        try
+        {
+            ConcatMojo _mojo = new ConcatMojo();
+            _mojo.setLog(_log);
+
+            _mojo.setIncludes(_opts.getIncludes());
+            _mojo.setExcludes(_opts.getExcludes());
+            _mojo.setResourcesDirectory(_opts.getResourcesDirectory());
+            _mojo.setResourcesOutput(_opts.getResourcesOutput());
 
             _mojo.execute();
         }
