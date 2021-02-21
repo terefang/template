@@ -52,10 +52,19 @@ struct2 = {
             float3_key = .12345_67890_12345_67
         }
         {
-            1 = "one"
-            2 = "two"
-            "3" = "three"
+            1 = "one"       2 = "two"       "3" = "three"
         }
     ]
     complex_array = [ 1 .2 "three" 0x4 five ]
 }
+
+task = [
+{
+name = 1
+some = 2
+}
+{
+name = 3
+some = 4
+}
+]

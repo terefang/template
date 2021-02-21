@@ -12,11 +12,15 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
+import org.hjson.JsonArray;
+import org.hjson.JsonObject;
 import org.hjson.JsonValue;
+import org.hjson.Stringify;
 import org.ini4j.Ini;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
@@ -204,7 +208,7 @@ public class ContextUtil {
     public static Map<String, Object> loadContextFromCsv(InputStream _source)
     {
         Map<String, Object> _ret = new HashMap<>();
-        _ret.put("data", readFileCsv("DEFAULT", _source, StandardCharsets.UTF_8));
+        _ret.put("data", readFileCsv("Default", _source, StandardCharsets.UTF_8));
         return _ret;
     }
 
@@ -328,6 +332,130 @@ public class ContextUtil {
         Toml _toml = new Toml();
         _toml.read(new InputStreamReader(_source));
         return _toml.toMap();
+    }
+
+    @SneakyThrows
+    public static void writeAsHson(boolean _json, Writer _out, List<Map<String, Object>> _res)
+    {
+        JsonArray _arr = new JsonArray();
+        for(Map<String, Object> _row : _res)
+        {
+            JsonObject _obj = new JsonObject();
+            for(Map.Entry<String, Object> _entry : _row.entrySet())
+            {
+                Object _v = _entry.getValue();
+                if(_v==null) _v= "";
+                _obj.set(_entry.getKey(), _v.toString());
+            }
+            _arr.add(_obj);
+        }
+        _arr.writeTo(_out, _json ? Stringify.FORMATTED : Stringify.HJSON);
+    }
+
+    @SneakyThrows
+    public static void writeAsHson(boolean _json, Writer _out, Map<String, Object> _res)
+    {
+        JsonObject _obj = new JsonObject();
+        for(Map.Entry<String, Object> _entry : _res.entrySet())
+        {
+            Object _v = _entry.getValue();
+            if(_v==null) _v= "";
+            _obj.set(_entry.getKey(), toJsonObject(_v));
+        }
+        _obj.writeTo(_out, _json ? Stringify.FORMATTED : Stringify.HJSON);
+    }
+
+    private static JsonValue toJsonObject(Object _v) {
+        if(_v instanceof Map)
+        {
+            return toJsonObject((Map)_v);
+        }
+        else
+        if(_v instanceof List)
+        {
+            return toJsonObject((List)_v);
+        }
+        else
+        if(_v instanceof String)
+        {
+            return JsonValue.valueOf((String)_v);
+        }
+        else
+        if(_v instanceof Integer)
+        {
+            return JsonValue.valueOf((Integer)_v);
+        }
+        else
+        if(_v instanceof Long)
+        {
+            return JsonValue.valueOf((Long)_v);
+        }
+        else
+        if(_v instanceof Boolean)
+        {
+            return JsonValue.valueOf((Boolean)_v);
+        }
+        else
+        if(_v instanceof Double)
+        {
+            return JsonValue.valueOf((Double)_v);
+        }
+        else
+        if(_v instanceof Float)
+        {
+            return JsonValue.valueOf((Float)_v);
+        }
+        else
+        if(_v.getClass().isArray())
+        {
+            return toJsonObject((List)Arrays.asList((Object[])_v));
+        }
+        return JsonValue.valueOf(_v.toString());
+    }
+
+    private static JsonValue toJsonObject(String _v) {
+        return JsonValue.valueOf(_v);
+    }
+
+    private static JsonValue toJsonObject(int _v) {
+        return JsonValue.valueOf(_v);
+    }
+
+    private static JsonValue toJsonObject(long _v) {
+        return JsonValue.valueOf(_v);
+    }
+
+    private static JsonValue toJsonObject(boolean _v) {
+        return JsonValue.valueOf(_v);
+    }
+
+    private static JsonValue toJsonObject(double _v) {
+        return JsonValue.valueOf(_v);
+    }
+
+    private static JsonValue toJsonObject(float _v) {
+        return JsonValue.valueOf(_v);
+    }
+
+    private static JsonValue toJsonObject(Map<String,Object> _v) {
+        JsonObject _obj = new JsonObject();
+        for(Map.Entry<String,Object> _entry : _v.entrySet())
+        {
+            Object _v1 = _entry.getValue();
+            if(_v1==null) _v1= "";
+            _obj.set(_entry.getKey(), toJsonObject(_v1));
+        }
+        return _obj;
+    }
+
+    private static JsonValue toJsonObject(List<Object> _v) {
+        JsonArray _obj = new JsonArray();
+        for(Object _entry : _v)
+        {
+            if(_entry==null) _entry= "";
+            _obj.add(toJsonObject(_entry));
+        }
+        return _obj;
     }
 
     @SneakyThrows

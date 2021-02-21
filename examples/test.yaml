@@ -1,0 +1,17 @@
+---
+- name: PLAY 1
+  hosts: apic
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Add a new tenant
+      aci_tenant:
+        host: "{{ inventory_hostname }}"
+        username: "{{ user_id }}"
+        password: "{{ user_passwd }}"
+        tenant: Gitlab
+        description: Tenant created with Gitlab Pipeline
+        state: present
+        validate_certs: no
+      delegate_to: localhost

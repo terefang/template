@@ -1,8 +1,9 @@
 package com.github.terefang.template_cli;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.terefang.concat_maven_plugin.ConcatMojo;
+import com.github.terefang.convert_maven_plugin.ToHsonMojo;
+import com.github.terefang.convert_maven_plugin.ToJsonMojo;
+import com.github.terefang.convert_maven_plugin.ToPdataMojo;
 import com.github.terefang.preproc_maven_plugin.PreProcessorMojo;
 import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
 import com.github.terefang.template_maven_plugin.AbstractTemplateMojo;
@@ -21,16 +22,12 @@ import com.github.terefang.template_maven_plugin.thymeleaf.ThymeleafStandardMojo
 import com.github.terefang.template_maven_plugin.thymeleaf.ThymeleafTemplateMojo;
 import com.github.terefang.template_maven_plugin.trimou.TrimouStandardMojo;
 import com.github.terefang.template_maven_plugin.trimou.TrimouTemplateMojo;
-import com.github.terefang.template_maven_plugin.util.ContextUtil;
 import com.github.terefang.template_maven_plugin.velocity.VelocityStandardMojo;
 import com.github.terefang.template_maven_plugin.velocity.VelocityTemplateMojo;
-import lombok.SneakyThrows;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import picocli.CommandLine;
-
 import java.io.File;
-import java.util.Map;
 
 public class TemplateCliMain
 {
@@ -47,13 +44,37 @@ public class TemplateCliMain
         else
         if(_args.length == 3 && "--to-json".equalsIgnoreCase(_args[0]))
         {
-            executeJsonDump(_args[1], _args[2]);
+            ToJsonMojo.convertToJson(new File(_args[1]), new File(_args[2]));
             System.exit(0);
         }
         else
         if(_args.length == 2 && "--to-json".equalsIgnoreCase(_args[0]))
         {
-            executeJsonDump(_args[1], null);
+            ToJsonMojo.convertToJson(new File(_args[1]), null);
+            System.exit(0);
+        }
+        else
+        if(_args.length == 3 && "--to-hson".equalsIgnoreCase(_args[0]))
+        {
+            ToHsonMojo.convertToHson(new File(_args[1]), new File(_args[2]));
+            System.exit(0);
+        }
+        else
+        if(_args.length == 2 && "--to-hson".equalsIgnoreCase(_args[0]))
+        {
+            ToHsonMojo.convertToHson(new File(_args[1]), null);
+            System.exit(0);
+        }
+        else
+        if(_args.length == 3 && "--to-pdata".equalsIgnoreCase(_args[0]))
+        {
+            ToPdataMojo.convertToPdata(new File(_args[1]), new File(_args[2]));
+            System.exit(0);
+        }
+        else
+        if(_args.length == 2 && "--to-pdata".equalsIgnoreCase(_args[0]))
+        {
+            ToPdataMojo.convertToPdata(new File(_args[1]), null);
             System.exit(0);
         }
 
@@ -179,6 +200,14 @@ public class TemplateCliMain
             executeConcat(_log, _opts);
             return;
         }
+        else
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.TOJSON)
+                || _opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.TOHSON)
+                || _opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.TOPDATA))
+        {
+            executeConvert(_log, _opts);
+            return;
+        }
 
         if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
                 || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
@@ -213,6 +242,61 @@ public class TemplateCliMain
             _mojo.setProcessSingleLineMarker(_opts.isProcessSingleLineMarker());
 
             _mojo.execute();
+        }
+        catch (MojoExecutionException | MojoFailureException _me)
+        {
+            _log.error(_me.getMessage(), _me);
+        }
+    }
+
+    public static void executeConvert(TemplateCliLogger _log, TemplateCliOptions _opts)
+    {
+        try
+        {
+            if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.TOJSON))
+            {
+                ToJsonMojo _mojo = new ToJsonMojo();
+                _mojo.setLog(_log);
+
+                _mojo.setIncludes(_opts.getIncludes());
+                _mojo.setExcludes(_opts.getExcludes());
+                _mojo.setResourcesDirectory(_opts.getResourcesDirectory());
+                _mojo.setResourcesOutput(_opts.getResourcesOutput());
+                _mojo.setFlattenOutput(_opts.isFlattenOutput());
+                _mojo.setDestinationExtension(_opts.getDestinationExtension());
+
+                _mojo.execute();
+            }
+            else
+            if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.TOHSON))
+            {
+                ToHsonMojo _mojo = new ToHsonMojo();
+                _mojo.setLog(_log);
+
+                _mojo.setIncludes(_opts.getIncludes());
+                _mojo.setExcludes(_opts.getExcludes());
+                _mojo.setResourcesDirectory(_opts.getResourcesDirectory());
+                _mojo.setResourcesOutput(_opts.getResourcesOutput());
+                _mojo.setFlattenOutput(_opts.isFlattenOutput());
+                _mojo.setDestinationExtension(_opts.getDestinationExtension());
+
+                _mojo.execute();
+            }
+            else
+            if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.TOPDATA))
+            {
+                ToPdataMojo _mojo = new ToPdataMojo();
+                _mojo.setLog(_log);
+
+                _mojo.setIncludes(_opts.getIncludes());
+                _mojo.setExcludes(_opts.getExcludes());
+                _mojo.setResourcesDirectory(_opts.getResourcesDirectory());
+                _mojo.setResourcesOutput(_opts.getResourcesOutput());
+                _mojo.setFlattenOutput(_opts.isFlattenOutput());
+                _mojo.setDestinationExtension(_opts.getDestinationExtension());
+
+                _mojo.execute();
+            }
         }
         catch (MojoExecutionException | MojoFailureException _me)
         {
@@ -298,22 +382,4 @@ public class TemplateCliMain
             _mojo.getLog().error(_me.getMessage(), _me);
         }
     }
-
-    @SneakyThrows
-    public static void executeJsonDump(String _from, String _to)
-    {
-        Map<String, Object> _data = ContextUtil.loadContextFrom(new File(_from));
-        ObjectMapper _om = new ObjectMapper()
-                .enable(SerializationFeature.INDENT_OUTPUT)
-                .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
-        if(_to == null)
-        {
-            _om.writeValue(System.out, _data);
-        }
-        else
-        {
-            _om.writeValue(new File(_to), _data);
-        }
-    }
-
 }

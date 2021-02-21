@@ -2,14 +2,30 @@ package com.github.terefang.template_maven_plugin.util;
 
 import lombok.SneakyThrows;
 import org.apache.commons.collections4.map.MultiValueMap;
+import org.codehaus.plexus.util.IOUtil;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.Reader;
 import java.util.*;
 
 public class PdxParser {
 
     @SneakyThrows
-    public static Map<String, Object> loadFrom(Reader _file) {
+    public static Map<String, Object> loadFrom(File _file)
+    {
+        FileReader _fh = new FileReader(_file);
+        try {
+            return loadFrom(_fh);
+        }
+        finally {
+            IOUtil.close(_fh);
+        }
+    }
+
+    @SneakyThrows
+    public static Map<String, Object> loadFrom(Reader _file)
+    {
         CustomStreamTokenizer _tokener = new CustomStreamTokenizer(_file);
 
         _tokener.quoteChar('"');
