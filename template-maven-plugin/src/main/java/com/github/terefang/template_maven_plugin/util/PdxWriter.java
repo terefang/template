@@ -39,6 +39,7 @@ public class PdxWriter
         {
             _out.write("\n"+StringUtils.repeat(" ", _level)+"}");
         }
+        _out.flush();
     }
 
     @SneakyThrows
@@ -103,6 +104,7 @@ public class PdxWriter
             writeTo(_level+1, _o, _out);
         }
         _out.write(" ] ");
+        _out.flush();
     }
 
     @SneakyThrows
@@ -120,7 +122,7 @@ public class PdxWriter
     @SneakyThrows
     public static void writeTo(int _level, Boolean _data, Writer _out)
     {
-        _out.write(" "+(_data ? "true" : "false")+" ");
+        _out.write(_data ? " true " : " false ");
     }
 
     @SneakyThrows
@@ -148,6 +150,7 @@ public class PdxWriter
         {
             _out.write(String.format(" \"%s\" ", _data));
         }
+        _out.flush();
     }
 
     @SneakyThrows
@@ -157,10 +160,5 @@ public class PdxWriter
         writeTo(_data, _out);
         _out.flush();
         IOUtil.close(_out);
-    }
-
-    public static void main(String[] args) {
-        Map<String, Object> _data = PdxParser.loadFrom(new File("examples/data.pdx"));
-        writeTo(_data, new File("template-maven-plugin/target/out.pdx"));
     }
 }
