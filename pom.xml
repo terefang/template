@@ -30,10 +30,10 @@
     </properties>
 
     <scm>
-        <connection>scm:svn:http://127.0.0.1/dummy</connection>
-        <developerConnection>scm:svn:https://127.0.0.1/dummy</developerConnection>
+        <connection>scm:git:https://github.com/terefang/template</connection>
+        <developerConnection>scm:git:https://github.com/terefang/template</developerConnection>
         <tag>HEAD</tag>
-        <url>http://127.0.0.1/dummy</url>
+        <url>https://github.com/terefang/template</url>
     </scm>
 
     <build>
@@ -52,13 +52,15 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <format>{0,number}</format>
+                    <!--format>{0,number}</format>
                     <items>
                         <item>buildNumber</item>
-                    </items>
-                    <doCheck>false</doCheck>
+                    </items-->
+                    <doCheck>true</doCheck>
                     <doUpdate>false</doUpdate>
                     <revisionOnScmFailure>unknownbuild</revisionOnScmFailure>
+                    <useLastCommittedRevision>true</useLastCommittedRevision>
+                    <shortRevisionLength>5</shortRevisionLength>
                 </configuration>
             </plugin>
         </plugins>
