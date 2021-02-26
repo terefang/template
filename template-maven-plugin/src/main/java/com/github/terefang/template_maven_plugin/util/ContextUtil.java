@@ -1,5 +1,7 @@
 package com.github.terefang.template_maven_plugin.util;
 
+import com.github.terefang.jdao.JDAO;
+import com.github.terefang.jdao.JdaoUtils;
 import com.moandjiezana.toml.Toml;
 import lombok.SneakyThrows;
 
@@ -20,7 +22,6 @@ import org.ini4j.Ini;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
@@ -234,6 +235,12 @@ public class ContextUtil {
         Map<String, Object> _ret = new HashMap<>();
         _ret.put("data", readFileCsv("sqlite-list", _source, StandardCharsets.UTF_8));
         return _ret;
+    }
+
+    @SneakyThrows
+    public static JDAO daoFromJdbc(String jdbcDriver, String _url, String _user, String _pass)
+    {
+        return JDAO.createDaoFromConnection(JdaoUtils.createConnectionByDriverSpec(StringUtils.isNotEmpty(jdbcDriver) ? jdbcDriver : null, _url, _user, _pass), true);
     }
 
     @SneakyThrows

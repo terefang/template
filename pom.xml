@@ -6,7 +6,7 @@
 
     <groupId>com.github.terefang.template</groupId>
     <artifactId>template</artifactId>
-    <version>2021.3.3</version>
+    <version>2021.4.1</version>
     <modules>
         <module>template-cli</module>
         <module>template-maven-plugin</module>
@@ -27,6 +27,8 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <maven.version>3.6.3</maven.version>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyyMMdd'.'HHmm</maven.build.timestamp.format>
     </properties>
 
     <scm>
@@ -36,6 +38,20 @@
         <url>https://github.com/terefang/template</url>
     </scm>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+    
     <build>
         <plugins>
             <plugin>
@@ -52,15 +68,16 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!--format>{0,number}</format>
+                    <format>{0,number}</format>
                     <items>
                         <item>buildNumber</item>
-                    </items-->
-                    <doCheck>true</doCheck>
+                    </items>
+                    <doCheck>false</doCheck>
                     <doUpdate>false</doUpdate>
                     <revisionOnScmFailure>unknownbuild</revisionOnScmFailure>
                     <useLastCommittedRevision>true</useLastCommittedRevision>
-                    <shortRevisionLength>5</shortRevisionLength>
+                    <shortRevisionLength>6</shortRevisionLength>
+                    <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
                 </configuration>
             </plugin>
         </plugins>

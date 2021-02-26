@@ -62,6 +62,11 @@ public class ToJsonMojo extends AbstractMojo
 
             process(scanner.getIncludedFiles());
         }
+        else
+        if( resourcesDirectory.isFile())
+        {
+            process(new String[]{ resourcesDirectory.getPath() });
+        }
     }
 
     public void process(String[] includedFiles)

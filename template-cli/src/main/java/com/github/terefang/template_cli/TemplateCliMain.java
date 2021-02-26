@@ -26,6 +26,7 @@ import com.github.terefang.template_maven_plugin.velocity.VelocityStandardMojo;
 import com.github.terefang.template_maven_plugin.velocity.VelocityTemplateMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.plexus.util.StringUtils;
 import picocli.CommandLine;
 import java.io.File;
 
@@ -330,6 +331,14 @@ public class TemplateCliMain
         _mojo.setAdditionalContext(_opts.getAdditionalContext());
         _mojo.setAdditionalContextRoot(_opts.getAdditionalContextRoot());
         _mojo.setAdditionalVariables(_opts.getAdditionalVariables());
+
+        if(StringUtils.isNotEmpty(_opts.getJdbcUrl()))
+        {
+            _mojo.setJdbcUrl(_opts.getJdbcUrl());
+            _mojo.setJdbcUsername(_opts.getJdbcUserName());
+            _mojo.setJdbcPassword(_opts.getJdbcPassWord());
+        }
+
         if(_mojo instanceof AbstractTemplateMojo)
         {
             ((AbstractTemplateMojo)_mojo).setIncludes(_opts.getIncludes());

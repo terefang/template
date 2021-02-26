@@ -3,3 +3,4 @@
 /template-maven-plugin/target/
 /template.iml
 /.idea/
+/**/*.versionsBackup

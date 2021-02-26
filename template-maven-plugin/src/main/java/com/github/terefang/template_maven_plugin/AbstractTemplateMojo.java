@@ -71,9 +71,11 @@ public abstract class AbstractTemplateMojo extends AbstractTmpMojo
 
         Map<String, Object> context = Maps.newHashMap();
 
+        prepareStandardContext(context);
+
         prepareAdditionalContext(context);
 
-        FileUtils.mkdir(resourcesOutput.getPath());
+        //FileUtils.mkdir(resourcesOutput.getPath());
 
         DirectoryScanner scanner = new DirectoryScanner();
 
@@ -92,41 +94,62 @@ public abstract class AbstractTemplateMojo extends AbstractTmpMojo
 
             scanner.addDefaultExcludes();
             scanner.scan();
+            process(context,scanner.getIncludedFiles(), false);
+        }
+        else
+        if( resourcesDirectory.isFile())
+        {
+            process(context, new String[]{ resourcesDirectory.getPath() }, true);
+        }
+    }
 
-            for (String key : scanner.getIncludedFiles())
+    @SneakyThrows
+    public void process(Map<String, Object> context, String[] _files, boolean _outputIsFile)
+    {
+        for (String key : _files)
+        {
+            String keybase = key.substring(0, key.lastIndexOf("."));
+
+            File file = new File(resourcesOutput, keybase.concat(destinationExtension));
+
+            if(flattenOutput)
             {
-                String keybase = key.substring(0, key.lastIndexOf("."));
+                file = new File(resourcesOutput, file.getName());
+            }
 
-                File file = new File(resourcesOutput, keybase.concat(destinationExtension));
+            if(_outputIsFile)
+            {
+                file = resourcesOutput;
+            }
 
-                if(flattenOutput)
+            try
+            {
+                Map<String, Object> _tcontext = Maps.newHashMap();
+                _tcontext.putAll(context);
+                File localContext = new File(resourcesDirectory, key);
+                if(_outputIsFile)
                 {
-                    file = new File(resourcesOutput, file.getName());
+                    localContext = new File(key);
                 }
+                getLog().info(MessageFormat.format("loading data from {0}", localContext.getName()));
+                _tcontext.putAll(ContextUtil.loadContextFrom(localContext));
 
-                try
-                {
-                    Map<String, Object> _tcontext = Maps.newHashMap();
-                    _tcontext.putAll(context);
-                    File localContext = new File(resourcesDirectory, key);
-                    getLog().info(MessageFormat.format("loading data from {0}", localContext.getName()));
-                    _tcontext.putAll(ContextUtil.loadContextFrom(localContext));
+                getLog().info(MessageFormat.format("start processing template {0}", templateFile));
+                String targetContent = this.process(templateFile, _tcontext);
 
-                    getLog().info(MessageFormat.format("start processing template {0}", templateFile));
-                    String targetContent = this.process(templateFile, _tcontext);
+                File parentDir = file.getParentFile();
+                getLog().info(MessageFormat.format("creating output directory {0}", parentDir.getAbsolutePath()));
+                parentDir.mkdirs();
 
-                    file.getParentFile().mkdirs();
-
-                    PrintWriter out = new PrintWriter(file);
-                    out.print(targetContent);
-                    out.close();
-                    getLog().info(MessageFormat.format("finished processed to {0}", file.getAbsolutePath()));
-                }
-                catch (IOException e)
-                {
-                    getLog().error(MessageFormat.format("Unable to process data file {0}", key), e);
-                    throw new MojoExecutionException(MessageFormat.format("Unable to process data file {0}", key), e);
-                }
+                PrintWriter out = new PrintWriter(file);
+                out.print(targetContent);
+                out.close();
+                getLog().info(MessageFormat.format("finished processed to {0}", file.getAbsolutePath()));
+            }
+            catch (IOException e)
+            {
+                getLog().error(MessageFormat.format("Unable to process data file {0}", key), e);
+                throw new MojoExecutionException(MessageFormat.format("Unable to process data file {0}", key), e);
             }
         }
     }

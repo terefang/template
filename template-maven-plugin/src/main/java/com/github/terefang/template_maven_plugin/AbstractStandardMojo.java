@@ -3,11 +3,13 @@ package com.github.terefang.template_maven_plugin;
 import com.github.terefang.template_maven_plugin.util.ContextUtil;
 import com.google.common.collect.Maps;
 import lombok.Data;
+import lombok.SneakyThrows;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -78,7 +80,7 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
 
         prepareAdditionalContext(context);
 
-        FileUtils.mkdir(resourcesOutput.getPath());
+        //FileUtils.mkdir(resourcesOutput.getPath());
 
         DirectoryScanner scanner = new DirectoryScanner();
 
@@ -97,51 +99,74 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
 
             scanner.addDefaultExcludes();
             scanner.scan();
+            process(context, scanner.getIncludedFiles(), false);
+        }
+        else
+        if( resourcesDirectory.isFile())
+        {
+            process(context, new String[]{ resourcesDirectory.getPath() }, true);
+        }
+    }
 
-            for (String key : scanner.getIncludedFiles())
+    @SneakyThrows
+    public void process(Map<String, Object> context, String[] _files, boolean _outputIsFile)
+    {
+        for (String key : _files)
+        {
+            File file = new File(resourcesOutput, key.substring(0, key.lastIndexOf(".")));
+            if(flattenOutput)
             {
-                File file = new File(resourcesOutput, key.substring(0, key.lastIndexOf(".")));
-                if(flattenOutput)
-                {
-                    file = new File(resourcesOutput, file.getName());
-                }
-                try
-                {
-                    if(processLocalContext)
-                    {
-                        context.remove(localContextRoot);
-                        File localContext = null;
-                        for(String _ext : StringUtils.split(localContextExtensions, " "))
-                        {
-                            File _localContext = new File(resourcesDirectory, key+_ext);
-                            if(_localContext.exists())
-                            {
-                                localContext = _localContext;
-                                break;
-                            }
-                        }
+                file = new File(resourcesOutput, file.getName());
+            }
 
-                        if(localContext!=null)
+            if(_outputIsFile)
+            {
+                file = resourcesOutput;
+            }
+
+            try
+            {
+                if(processLocalContext)
+                {
+                    context.remove(localContextRoot);
+                    File localContext = null;
+                    for(String _ext : StringUtils.split(localContextExtensions, " "))
+                    {
+                        File _localContext = new File(resourcesDirectory, key+_ext);
+                        if(_localContext.exists())
                         {
-                            getLog().info(MessageFormat.format("loading context {0} from {1}", localContextRoot, localContext.getName()));
-                            context.put(localContextRoot, ContextUtil.loadContextFrom(localContext));
+                            localContext = _localContext;
+                            break;
                         }
                     }
-                    getLog().info(MessageFormat.format("start processing template {0}", key));
 
-                    String targetContent = this.process(new File(resourcesDirectory, key), context);
-
-                    file.getParentFile().mkdirs();
-
-                    PrintWriter out = new PrintWriter(file);
-                    out.print(targetContent);
-                    out.close();
-                    getLog().info(MessageFormat.format("finished processed to {0}", file.getAbsolutePath()));
-
-                } catch (IOException e) {
-                    getLog().error(MessageFormat.format("Unable to process template file {0}", file.getAbsolutePath()), e);
-                    throw new MojoExecutionException(MessageFormat.format("Unable to process template file {0}", file.getAbsolutePath()), e);
+                    if(localContext!=null)
+                    {
+                        getLog().info(MessageFormat.format("loading context {0} from {1}", localContextRoot, localContext.getName()));
+                        context.put(localContextRoot, ContextUtil.loadContextFrom(localContext));
+                    }
                 }
+                getLog().info(MessageFormat.format("start processing template {0}", key));
+
+                File sourceFile = new File(resourcesDirectory, key);
+                if(_outputIsFile)
+                {
+                    sourceFile = resourcesDirectory;
+                }
+                String targetContent = this.process(sourceFile, context);
+
+                File parentDir = file.getParentFile();
+                getLog().info(MessageFormat.format("creating output directory {0}", parentDir.getAbsolutePath()));
+                parentDir.mkdirs();
+
+                PrintWriter out = new PrintWriter(file);
+                out.print(targetContent);
+                out.close();
+                getLog().info(MessageFormat.format("finished processed to {0}", file.getAbsolutePath()));
+
+            } catch (IOException e) {
+                getLog().error(MessageFormat.format("Unable to process template file {0}", file.getAbsolutePath()), e);
+                throw new MojoExecutionException(MessageFormat.format("Unable to process template file {0}", file.getAbsolutePath()), e);
             }
         }
     }

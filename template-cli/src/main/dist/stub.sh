@@ -7,11 +7,12 @@ MYEXE=$(basename $MYSELF)
 if test "x$1" = "x-install"; then
     shift
     IDIR=$(cd $MYDIR && pwd)
-    for e in jexl gsimple jinjava freemarker thymeleaf; do
+    for e in jexl gsimple jinjava freemarker thymeleaf trimou handlebars velocity; do
         for m in std template; do
             cd $IDIR && ln -s ./$MYEXE $e-$m-proc
         done
     done
+    cd $IDIR && ln -s ./$MYEXE preprocessor-proc
     exit 0;
 fi
 
@@ -24,6 +25,12 @@ fi
 if test "x$1" = "x-java-home" -o "x$1" = "x-JH"; then
     shift
     export JAVA_HOME="$1"
+    shift
+fi
+
+if test "x$1" = "x-java-opts" -o "x$1" = "x-JO"; then
+    shift
+    export _JAVA_OPTS="$1"
     shift
 fi
 
@@ -69,7 +76,21 @@ elif test "x$MYEXE" = "xthymeleaf-std-proc"; then
          EXEARGS=" -T THYMELEAF -M STANDARD "
 elif test "x$MYEXE" = "xthymeleaf-template-proc"; then
          EXEARGS=" -T THYMELEAF -M TEMPLATE "
+elif test "x$MYEXE" = "xvelocity-std-proc"; then
+         EXEARGS=" -T VELOCITY -M STANDARD "
+elif test "x$MYEXE" = "xvelocity-template-proc"; then
+         EXEARGS=" -T VELOCITY -M TEMPLATE "
+elif test "x$MYEXE" = "xhandlebars-std-proc"; then
+         EXEARGS=" -T HANDLEBARS -M STANDARD "
+elif test "x$MYEXE" = "xhandlebars-template-proc"; then
+         EXEARGS=" -T HANDLEBARS -M TEMPLATE "
+elif test "x$MYEXE" = "xtrimou-std-proc"; then
+         EXEARGS=" -T TRIMOU -M STANDARD "
+elif test "x$MYEXE" = "xtrimou-template-proc"; then
+         EXEARGS=" -T TRIMOU -M TEMPLATE "
+elif test "x$MYEXE" = "xpreprocessor-proc"; then
+         EXEARGS=" -T PREPROCESSOR -M STANDARD "
 fi
 
-exec "$java" $java_args -jar $MYSELF $EXEARGS "$@"
+exec "$java" $_JAVA_OPTS -jar $MYSELF $EXEARGS "$@"
 exit 1

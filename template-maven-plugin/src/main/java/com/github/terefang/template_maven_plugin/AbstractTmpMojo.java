@@ -45,13 +45,23 @@ public abstract class AbstractTmpMojo extends AbstractMojo
     @Parameter(defaultValue = "")
     protected String additionalVariables;
 
+    @Parameter
+    protected String jdbcUrl;
+    @Parameter
+    protected String jdbcUsername;
+    @Parameter
+    protected String jdbcPassword;
+    @Parameter
+    protected String jdbcDriver;
+
     @SneakyThrows
     public void prepareAdditionalContext(Map<String, Object> context) {
         if(additionalContext!=null && additionalContext.exists())
         {
-            getLog().info(MessageFormat.format("loading context {0} from {1}", additionalContextRoot, additionalContext.getName()));
+            getLog().info(MessageFormat.format("loading context >{0}< from {1}", additionalContextRoot, additionalContext.getName()));
             context.put(additionalContextRoot, ContextUtil.loadContextFrom(additionalContext));
         }
+
         if(StringUtils.isNotEmpty(additionalVariables))
         {
             String[] entries = StringUtils.split(additionalVariables);
@@ -61,6 +71,7 @@ public abstract class AbstractTmpMojo extends AbstractMojo
                 context.put(keyValue[0], keyValue[1]);
             }
         }
+
     }
 
     public void prepareStandardContext(Map<String, Object> context)
@@ -73,15 +84,8 @@ public abstract class AbstractTmpMojo extends AbstractMojo
                 reader = new FileReader(new File("pom.xml"));
                 model = mavenreader.read(reader);
                 model.setPomFile(new File("pom.xml"));
-            } catch (Exception _xe) {
-                getLog().warn("error setting pom.xml in config.", _xe);
-                model=null;
-            }
 
-            Map<String, String> details = new HashMap<String, String>();
-
-            if(model!=null)
-            {
+                Map<String, String> details = new HashMap<String, String>();
                 MavenProject mavenProject = new MavenProject(model);
                 details.put("groupId", mavenProject.getModel().getGroupId());
                 details.put("artifactId", mavenProject.getModel().getArtifactId());
@@ -105,9 +109,19 @@ public abstract class AbstractTmpMojo extends AbstractMojo
                     properties.put(property.getKey().toString(), property.getValue().toString());
                 }
                 context.put("properties", properties);
+
+            } catch (Exception _xe) {
+                getLog().warn("error setting pom.xml in config.");
+                model=null;
             }
+
         } catch (Exception _xe) {
             getLog().error("error preparing context.", _xe);
+        }
+
+        if(StringUtils.isNotEmpty(jdbcUrl))
+        {
+            context.put("_dao", ContextUtil.daoFromJdbc(jdbcDriver, jdbcUrl, jdbcUsername, jdbcPassword));
         }
     }
 
@@ -127,6 +141,4 @@ public abstract class AbstractTmpMojo extends AbstractMojo
     }
 
     public abstract String process(TemplateContext _context);
-
-
 }

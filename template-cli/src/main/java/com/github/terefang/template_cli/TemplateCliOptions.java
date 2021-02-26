@@ -33,6 +33,17 @@ public class TemplateCliOptions
     @CommandLine.Option(order = 60, names = {"--additional-variables"}, paramLabel = "KVs", description = "additional variables", defaultValue = "", required = false)
     public String additionalVariables;
 
+    @CommandLine.Option(order = 65, names = {"--jdbc-url"}, paramLabel = "JDBCURL", defaultValue = "", required = false)
+    public String jdbcUrl;
+
+    @CommandLine.Option(order = 65, names = {"--jdbc-user"}, paramLabel = "USER", defaultValue = "", required = false)
+    public String jdbcUserName;
+
+    @CommandLine.Option(order = 65, names = {"--jdbc-pass"}, paramLabel = "PASS", defaultValue = "", required = false)
+    public String jdbcPassWord;
+
+    @CommandLine.Option(order = 65, names = {"--jdbc-driver"}, paramLabel = "PASS", defaultValue = "", required = false)
+    public String jdbcDriver;
 
     /* shared Variables */
 
