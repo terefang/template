@@ -2,6 +2,7 @@ package com.github.terefang.imageutil;
 
 import lombok.SneakyThrows;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
@@ -56,6 +57,23 @@ public class PixelImage extends BufferedImage
     public void set(int _x, int _y, float _r, float _g, float _b, float _a)
     {
         this.set(_x, _y, (((int)(_a*255))<<24) | (((int)(_r*255))<<16) | (((int)(_g*255))<<8) | ((int)(_b*255)));
+    }
+
+    public void lineXY(int _xf, int _yf,int _xt, int _yt, int _color)
+    {
+        Graphics _g = this.getGraphics();
+        _g.setColor(ImageUtil.createColor(_color));
+        _g.drawLine(_xf,_yf,_xt,_yt);
+        _g.dispose();
+    }
+
+    public void textXY(int _x, int _y, int _color, String _font, int _size, String _text)
+    {
+        Graphics _g = this.getGraphics();
+        _g.setColor(ImageUtil.createColor(_color));
+        _g.setFont(ImageUtil.getFont(_font, _size));
+        _g.drawString(_text,_x,_y);
+        _g.dispose();
     }
 
     @SneakyThrows
