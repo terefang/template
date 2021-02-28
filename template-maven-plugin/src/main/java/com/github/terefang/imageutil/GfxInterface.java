@@ -17,7 +17,7 @@ public interface GfxInterface
     default void gLine(int _x1, int _y1, int _x2, int _y2, float _lineWidth, int _color)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
-        _g.setColor(ImageUtil.createColor(_color));
+        _g.setPaint(ImageUtil.createColor(_color));
         Stroke _s = new BasicStroke(_lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0);
         _g.setStroke(_s);
         _g.drawLine(_x1, _y1, _x2, _y2);
@@ -32,7 +32,7 @@ public interface GfxInterface
     default void gDashedLine(int _x1, int _y1, int _x2, int _y2, float _lineWidth, int _color, float... _shape)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
-        _g.setColor(ImageUtil.createColor(_color));
+        _g.setPaint(ImageUtil.createColor(_color));
         Stroke _dashed = new BasicStroke(_lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, _shape, 0);
         _g.setStroke(_dashed);
         _g.drawLine(_x1, _y1, _x2, _y2);
@@ -52,7 +52,7 @@ public interface GfxInterface
     default void gRectangle(boolean _fill, int _x1, int _y1, int _x2, int _y2, float _lineWidth, int _color, float[] _dash)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
-        _g.setColor(ImageUtil.createColor(_color));
+        _g.setPaint(ImageUtil.createColor(_color));
         if(!_fill)
         {
             Stroke _s = null;
@@ -97,7 +97,7 @@ public interface GfxInterface
     default void gPolygon(boolean _fill, float _lineWidth, int _color, float[] _dash, int... _points)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
-        _g.setColor(ImageUtil.createColor(_color));
+        _g.setPaint(ImageUtil.createColor(_color));
         Polygon _p = new Polygon();
         for(int _i = 0; _i<_points.length; _i+=2)
         {
@@ -147,7 +147,7 @@ public interface GfxInterface
     default void gPolyline(float _lineWidth, int _color, float[] _dash, int... _points)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
-        _g.setColor(ImageUtil.createColor(_color));
+        _g.setPaint(ImageUtil.createColor(_color));
         Stroke _s = null;
         if(_dash == null || _dash.length==0)
         {
@@ -207,7 +207,7 @@ public interface GfxInterface
     default void gOval(boolean _fill, int _x, int _y, int _ra, int _rb, float _lineWidth, int _color, float[] _dash)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
-        _g.setColor(ImageUtil.createColor(_color));
+        _g.setPaint(ImageUtil.createColor(_color));
         if(!_fill)
         {
             Stroke _s = null;
@@ -242,7 +242,7 @@ public interface GfxInterface
     default void gArc(boolean _fill, int _x, int _y, int _ra, int _rb, int _as, int _ae, float _lineWidth, int _color, float[] _dash)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
-        _g.setColor(ImageUtil.createColor(_color));
+        _g.setPaint(ImageUtil.createColor(_color));
         if(!_fill)
         {
             Stroke _s = null;
@@ -271,8 +271,8 @@ public interface GfxInterface
 
     default void gString(String _font, int _size, int _x, int _y, String _s, int _color)
     {
-        Graphics _g = this.getG2d();
-        _g.setColor(ImageUtil.createColor(_color));
+        Graphics2D _g = (Graphics2D) this.getG2d();
+        _g.setPaint(ImageUtil.createColor(_color));
         _g.setFont(ImageUtil.getFont(_font, _size));
         _g.drawString(_s, _x, _y);
         _g.dispose();
@@ -280,8 +280,8 @@ public interface GfxInterface
 
     default void gString(Font _font, int _x, int _y, String _s, int _color)
     {
-        Graphics _g = this.getG2d();
-        _g.setColor(ImageUtil.createColor(_color));
+        Graphics2D _g = (Graphics2D) this.getG2d();
+        _g.setPaint(ImageUtil.createColor(_color));
         _g.setFont(_font);
         _g.drawString(_s, _x, _y);
         _g.dispose();

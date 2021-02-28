@@ -35,7 +35,7 @@ public class ImageUtil
     public static final Map<String, Font> FONT_MAP = new HashMap<>();
     public static Color createColor(int _color)
     {
-        return new Color(_color);
+        return new Color(_color, true);
     }
 
     public static Font getFont(String _name, int _size)

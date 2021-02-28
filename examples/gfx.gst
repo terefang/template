@@ -7,7 +7,7 @@ def _font = ImageUtil.getFont('dialog', 10);
 
 SvgImage _im = SvgImage.create(200, 200);
 
-_im.gDashedLine(0,0,200,200,(float)4, (int)0xff000000, (float)5);
+_im.gDashedLine(0,0,200,200,(float)4, (int)0x55000000, (float)5);
 
 _im.gString(_font, 50,50, 'Hello World !',(int)0xffff0000);
 
