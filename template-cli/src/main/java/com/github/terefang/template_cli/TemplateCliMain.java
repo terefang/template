@@ -363,6 +363,7 @@ public class TemplateCliMain
         {
             setSharedMojoParameters(_mojo, _opts);
 
+            _mojo.setGlobalContextRoot(_opts.getGlobalContextRoot());
             _mojo.setTemplateFile(_opts.getTemplateFile());
             _mojo.setDestinationExtension(_opts.getDestinationExtension());
 

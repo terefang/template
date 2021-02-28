@@ -10,12 +10,15 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Map;
+import java.util.UUID;
 
 @Data
 public abstract class AbstractTemplateMojo extends AbstractTmpMojo
@@ -34,6 +37,9 @@ public abstract class AbstractTemplateMojo extends AbstractTmpMojo
 
     @Parameter(defaultValue = "false")
     private boolean flattenOutput;
+
+    @Parameter(defaultValue = "")
+    protected String globalContextRoot;
 
     /**
      * the extension used by the destination files
@@ -108,6 +114,7 @@ public abstract class AbstractTemplateMojo extends AbstractTmpMojo
     {
         for (String key : _files)
         {
+            String _id = UUID.nameUUIDFromBytes(key.getBytes(StandardCharsets.UTF_8)).toString();
             String keybase = key.substring(0, key.lastIndexOf("."));
 
             File file = new File(resourcesOutput, keybase.concat(destinationExtension));
@@ -131,9 +138,18 @@ public abstract class AbstractTemplateMojo extends AbstractTmpMojo
                 {
                     localContext = new File(key);
                 }
-                getLog().info(MessageFormat.format("loading data from {0}", localContext.getName()));
-                _tcontext.putAll(ContextUtil.loadContextFrom(localContext));
 
+                if(StringUtils.isNotEmpty(this.globalContextRoot))
+                {
+                    getLog().info(MessageFormat.format("loading data from {0} into <{1}>", localContext.getName(), this.globalContextRoot));
+                    _tcontext.put(this.globalContextRoot, ContextUtil.loadContextFrom(localContext));
+                }
+                else
+                {
+                    getLog().info(MessageFormat.format("loading data from {0}", localContext.getName()));
+                    _tcontext.putAll(ContextUtil.loadContextFrom(localContext));
+                }
+                _tcontext.put("_id", _id);
                 getLog().info(MessageFormat.format("start processing template {0}", templateFile));
                 String targetContent = this.process(templateFile, _tcontext);
 

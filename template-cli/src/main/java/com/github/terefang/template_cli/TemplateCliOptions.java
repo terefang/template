@@ -69,6 +69,8 @@ public class TemplateCliOptions
     @CommandLine.Option(order = 120, names = {"-F", "--tmpl", "--template-file"}, paramLabel = "FILE", description = "global template file for template mode", required = false)
     private File templateFile;
 
+    @CommandLine.Option(order = 125, names = {"--context-root", "--global-context-root"}, paramLabel = "ROOT", description = "root-tag of global context, if any, default: ''", defaultValue = "", required = false)
+    String globalContextRoot;
 
     /* Standard Variables */
 

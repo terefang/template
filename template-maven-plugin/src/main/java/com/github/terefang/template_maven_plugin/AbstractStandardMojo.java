@@ -15,8 +15,10 @@ import org.codehaus.plexus.util.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Map;
+import java.util.UUID;
 
 @Data
 public abstract class AbstractStandardMojo extends AbstractTmpMojo {
@@ -113,6 +115,8 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
     {
         for (String key : _files)
         {
+            String _id = UUID.nameUUIDFromBytes(key.getBytes(StandardCharsets.UTF_8)).toString();
+
             File file = new File(resourcesOutput, key.substring(0, key.lastIndexOf(".")));
             if(flattenOutput)
             {
@@ -142,8 +146,16 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
 
                     if(localContext!=null)
                     {
-                        getLog().info(MessageFormat.format("loading context {0} from {1}", localContextRoot, localContext.getName()));
-                        context.put(localContextRoot, ContextUtil.loadContextFrom(localContext));
+                        if(StringUtils.isNotEmpty(localContextRoot))
+                        {
+                            getLog().info(MessageFormat.format("loading local context from {1} into <{0}>", localContextRoot, localContext.getName()));
+                            context.put(localContextRoot, ContextUtil.loadContextFrom(localContext));
+                        }
+                        else
+                        {
+                            getLog().info(MessageFormat.format("loading local context from {0}", localContext.getName()));
+                            context.putAll(ContextUtil.loadContextFrom(localContext));
+                        }
                     }
                 }
                 getLog().info(MessageFormat.format("start processing template {0}", key));
@@ -153,6 +165,7 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
                 {
                     sourceFile = resourcesDirectory;
                 }
+                context.put("_id", _id);
                 String targetContent = this.process(sourceFile, context);
 
                 File parentDir = file.getParentFile();

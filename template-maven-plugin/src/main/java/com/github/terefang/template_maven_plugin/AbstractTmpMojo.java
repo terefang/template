@@ -58,7 +58,7 @@ public abstract class AbstractTmpMojo extends AbstractMojo
     public void prepareAdditionalContext(Map<String, Object> context) {
         if(additionalContext!=null && additionalContext.exists())
         {
-            getLog().info(MessageFormat.format("loading context >{0}< from {1}", additionalContextRoot, additionalContext.getName()));
+            getLog().info(MessageFormat.format("loading additional context from {1} into <{0}>", additionalContextRoot, additionalContext.getName()));
             context.put(additionalContextRoot, ContextUtil.loadContextFrom(additionalContext));
         }
 
