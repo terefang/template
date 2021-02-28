@@ -220,11 +220,11 @@ public interface GfxInterface
                 _s = new BasicStroke(_lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, _dash, 0f);
             }
             _g.setStroke(_s);
-            _g.drawOval(_x, _y, _ra*2,_rb*2);
+            _g.drawOval(_x-_ra, _y-_rb, _ra*2,_rb*2);
         }
         else
         {
-            _g.fillOval(_x, _y,_ra*2,_rb*2);
+            _g.fillOval(_x-_ra, _y-_rb,_ra*2,_rb*2);
         }
         _g.dispose();
     }
@@ -255,11 +255,11 @@ public interface GfxInterface
                 _s = new BasicStroke(_lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, _dash, 0f);
             }
             _g.setStroke(_s);
-            _g.drawArc(_x, _y, _ra*2,_rb*2, _as, _ae-_as);
+            _g.drawArc(_x-_ra, _y-_rb, _ra*2,_rb*2, _as, _ae-_as);
         }
         else
         {
-            _g.fillArc(_x, _y, _ra*2,_rb*2, _as, _ae-_as);
+            _g.fillArc(_x-_ra, _y-_rb, _ra*2,_rb*2, _as, _ae-_as);
         }
         _g.dispose();
     }
