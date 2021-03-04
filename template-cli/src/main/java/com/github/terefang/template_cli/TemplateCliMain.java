@@ -10,14 +10,18 @@ import com.github.terefang.template_maven_plugin.AbstractTemplateMojo;
 import com.github.terefang.template_maven_plugin.AbstractTmpMojo;
 import com.github.terefang.template_maven_plugin.freemarker.FreeMarkerStandardMojo;
 import com.github.terefang.template_maven_plugin.freemarker.FreeMarkerTemplateMojo;
-import com.github.terefang.template_maven_plugin.groovy.GroovySimpleStandardMojo;
-import com.github.terefang.template_maven_plugin.groovy.GroovySimpleTemplateMojo;
+import com.github.terefang.template_maven_plugin.groovy.GSimpleStandardMojo;
+import com.github.terefang.template_maven_plugin.groovy.GSimpleTemplateMojo;
+import com.github.terefang.template_maven_plugin.groovy.GroovyStandardMojo;
+import com.github.terefang.template_maven_plugin.groovy.GroovyTemplateMojo;
 import com.github.terefang.template_maven_plugin.handlebars.HandlebarsStandardMojo;
 import com.github.terefang.template_maven_plugin.handlebars.HandlebarsTemplateMojo;
 import com.github.terefang.template_maven_plugin.jexl.JexlJxtStandardMojo;
 import com.github.terefang.template_maven_plugin.jexl.JexlJxtTemplateMojo;
 import com.github.terefang.template_maven_plugin.jinjava.JinjavaStandardMojo;
 import com.github.terefang.template_maven_plugin.jinjava.JinjavaTemplateMojo;
+import com.github.terefang.template_maven_plugin.luaj.LuajStandardMojo;
+import com.github.terefang.template_maven_plugin.luaj.LuajTemplateMojo;
 import com.github.terefang.template_maven_plugin.thymeleaf.ThymeleafStandardMojo;
 import com.github.terefang.template_maven_plugin.thymeleaf.ThymeleafTemplateMojo;
 import com.github.terefang.template_maven_plugin.trimou.TrimouStandardMojo;
@@ -112,16 +116,46 @@ public class TemplateCliMain
             }
         }
         else
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.GSIMPLE))
+        {
+            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
+                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
+            {
+                _smojo = new GSimpleStandardMojo();
+            }
+            else
+            {
+                _tmojo = new GSimpleTemplateMojo();
+            }
+        }
+        else
         if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.GROOVY))
         {
             if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
                     || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
             {
-                _smojo = new GroovySimpleStandardMojo();
+                _smojo = new GroovyStandardMojo();
+                ((GroovyStandardMojo)_smojo).setIncludePath(_opts.getIncludePath());
             }
             else
             {
-                _tmojo = new GroovySimpleTemplateMojo();
+                _tmojo = new GroovyTemplateMojo();
+                ((GroovyTemplateMojo)_tmojo).setIncludePath(_opts.getIncludePath());
+            }
+        }
+        else
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.LUAJ))
+        {
+            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
+                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
+            {
+                _smojo = new LuajStandardMojo();
+                ((LuajStandardMojo)_smojo).setIncludePath(_opts.getIncludePath());
+            }
+            else
+            {
+                _tmojo = new LuajTemplateMojo();
+                ((LuajTemplateMojo)_tmojo).setIncludePath(_opts.getIncludePath());
             }
         }
         else
@@ -202,9 +236,9 @@ public class TemplateCliMain
             return;
         }
         else
-        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.TOJSON)
-                || _opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.TOHSON)
-                || _opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.TOPDATA))
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.ToJSON)
+                || _opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.ToHSON)
+                || _opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.ToPDATA))
         {
             executeConvert(_log, _opts);
             return;
@@ -254,7 +288,7 @@ public class TemplateCliMain
     {
         try
         {
-            if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.TOJSON))
+            if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.ToJSON))
             {
                 ToJsonMojo _mojo = new ToJsonMojo();
                 _mojo.setLog(_log);
@@ -269,7 +303,7 @@ public class TemplateCliMain
                 _mojo.execute();
             }
             else
-            if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.TOHSON))
+            if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.ToHSON))
             {
                 ToHsonMojo _mojo = new ToHsonMojo();
                 _mojo.setLog(_log);
@@ -284,7 +318,7 @@ public class TemplateCliMain
                 _mojo.execute();
             }
             else
-            if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.TOPDATA))
+            if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.ToPDATA))
             {
                 ToPdataMojo _mojo = new ToPdataMojo();
                 _mojo.setLog(_log);

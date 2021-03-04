@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.Map;
 
 @Mojo(name = "gsimple-template", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
-public class GroovySimpleTemplateMojo extends AbstractTemplateMojo {
+public class GSimpleTemplateMojo extends AbstractTemplateMojo {
 
     @Override
     @SneakyThrows

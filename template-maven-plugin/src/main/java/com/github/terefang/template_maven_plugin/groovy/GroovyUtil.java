@@ -1,13 +1,28 @@
 package com.github.terefang.template_maven_plugin.groovy;
 
 import com.github.terefang.template_maven_plugin.TemplateContext;
+import groovy.lang.Binding;
+import groovy.lang.Closure;
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
+import groovy.util.GroovyScriptEngine;
+import groovy.util.ResourceConnector;
+import groovy.util.ResourceException;
+import groovy.util.ScriptException;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.output.StringBuilderWriter;
 
+import java.io.File;
 import java.io.FileReader;
+import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
+import java.util.Vector;
 
+@Slf4j
 public class GroovyUtil {
 
     static SimpleTemplateEngine templateEngine = new SimpleTemplateEngine();
@@ -21,5 +36,109 @@ public class GroovyUtil {
         template.make(_context.processContext).writeTo(_out);
 
         return _out.getBuffer().toString();
+    }
+
+    @SneakyThrows
+    public static synchronized String processScript(TemplateContext _context, List<String> _includePath)
+    {
+        GroovyScriptEngine _gse = createGroovyScriptEngine(_context, _includePath);
+        final String scriptUri = _context.getProcessFile().getAbsolutePath();
+        final Binding binding = new Binding();
+        for(String _key : _context.getProcessContext().keySet())
+        {
+            binding.setVariable(_key, _context.getProcessContext().get(_key));
+        }
+
+        StringBuilderWriter _sbw = new StringBuilderWriter();
+        PrintWriter _pw = new PrintWriter(_sbw);
+        binding.setVariable("out", _pw);
+
+        Closure _closure = new Closure(_gse)
+        {
+            public Object call() {
+                try {
+                    return ((GroovyScriptEngine) this.getDelegate()).run(scriptUri, binding);
+                } catch (ResourceException _re)
+                {
+                    log.error(_re.getMessage());
+                    return null;
+                } catch (ScriptException _se) {
+                    log.error(_se.getMessage());
+                    return null;
+                }
+            }
+        };
+
+        Object _ret = _closure.call();
+        // check return value if true false
+        // if false output is in printwriter
+        if(!_context.getProcessContextHelper().checkBoolean(_ret))
+        {
+            _pw.flush();
+            return _sbw.getBuilder().toString();
+        }
+        return _ret.toString();
+    }
+
+    static GroovyScriptEngine createGroovyScriptEngine(TemplateContext context, List<String> includePath) {
+        return new GroovyScriptEngine(
+                GroovyUtilResourceConnector.create(context, includePath),
+                GroovyUtil.class.getClassLoader());
+    }
+
+    static class GroovyUtilResourceConnector implements ResourceConnector {
+
+        File scriptFile;
+        List<String> includePath;
+        public static ResourceConnector create(TemplateContext _context, List<String> _includePath) {
+            GroovyUtilResourceConnector _grc = new GroovyUtilResourceConnector();
+            _grc.includePath = _includePath;
+            _grc.scriptFile = _context.processFile;
+            return _grc;
+        }
+
+        @Override
+        @SneakyThrows
+        public URLConnection getResourceConnection(String _resourcePath) throws ResourceException {
+            URL _url = null;
+            if((_url = GroovyUtil.findResourceUrl(_resourcePath, this.scriptFile, this.includePath)) != null)
+            {
+                return _url.openConnection();
+            }
+            throw new ResourceException(_resourcePath);
+        }
+    }
+
+    @SneakyThrows
+    public static final URL findResourceUrl(String _resourcePath, File _scriptFile, List<String> _includePath)
+    {
+        //log.warn(_resourcePath);
+        if(_resourcePath.equalsIgnoreCase(_scriptFile.getAbsolutePath()))
+        {
+            return _scriptFile.toURL();
+        }
+
+        if(_resourcePath.startsWith("file:"))
+        {
+            URL _url = new URL(_resourcePath);
+            if(new File(_url.getPath()).exists())
+            {
+                return _url;
+            }
+            return null;
+        }
+
+        List<String> _dirs = new Vector<>();
+        _dirs.add(_scriptFile.getParent());
+        _dirs.addAll(_includePath);
+        for(String _path : _dirs)
+        {
+            File _test = new File(_path, _resourcePath);
+            if(_test.exists())
+            {
+                return _test.toURL();
+            }
+        }
+        return null;
     }
 }

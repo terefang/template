@@ -4,11 +4,12 @@ import lombok.Data;
 import picocli.CommandLine;
 
 import java.io.File;
+import java.util.List;
 
 @Data
 public class TemplateCliOptions
 {
-    public static enum TemplateEngineName { THYMELEAF, JINJAVA, JEXL, GROOVY, FREEMARKER, TRIMOU, HANDLEBARS, VELOCITY, PREPROCESSOR, CONCAT, TOJSON, TOHSON, TOPDATA }
+    public static enum TemplateEngineName { THYMELEAF, JINJAVA, JEXL, GSIMPLE, GROOVY, LUAJ, FREEMARKER, TRIMOU, HANDLEBARS, VELOCITY, PREPROCESSOR, CONCAT, ToJSON, ToHSON, ToPDATA}
 
     @CommandLine.Option(order = 10, names = {"-T", "--template-engine"}, paramLabel = "ENGINE", description = "name of the templating engine, ${COMPLETION-CANDIDATES}", required = true)
     public TemplateEngineName doEngine;
@@ -96,4 +97,9 @@ public class TemplateCliOptions
 
     @CommandLine.Option(order = 140, names = {"--single-file", "--process-single-file-output"}, description = "do pre-process into single file", required = false, defaultValue = "false")
     protected boolean singleFileOutput;
+
+    /* groovy variable */
+
+    @CommandLine.Option(order = 150, names = {"--inc-path", "--include-path"}, description = "include paths for groovy/luaj script", required = false, defaultValue = "")
+    protected List<String> includePath;
 }
