@@ -3,6 +3,8 @@ package com.github.terefang.template_maven_plugin.util;
 import com.github.terefang.template_maven_plugin.TemplateContext;
 import lombok.SneakyThrows;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -10,17 +12,23 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.text.WordUtils;
 import org.apache.commons.text.CaseUtils;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.file.OpenOption;
+import java.nio.file.Path;
+import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
 public class ContextHelper {
     TemplateContext context;
+
+    HmacUtils _hmac;
+
 
     public static ContextHelper from(TemplateContext _tc)
     {
@@ -36,6 +44,72 @@ public class ContextHelper {
         return ContextUtil.loadContextFrom(new File(this.context.processParent, _file));
     }
 
+    /*----- hmacs -----*/
+
+    public  String hmacMd5Hex(String key, String valueToDigest) {
+        return HmacUtils.hmacMd5Hex(key, valueToDigest);
+    }
+
+    public  String hmacSha1Hex(String key, String valueToDigest) {
+        return HmacUtils.hmacSha1Hex(key, valueToDigest);
+    }
+
+    public  String hmacSha256Hex(String key, String valueToDigest) {
+        return HmacUtils.hmacSha256Hex(key, valueToDigest);
+    }
+
+    public  String hmacSha384Hex(String key, String valueToDigest) {
+        return HmacUtils.hmacSha384Hex(key, valueToDigest);
+    }
+
+    public  String hmacSha512Hex(String key, String valueToDigest) {
+        return HmacUtils.hmacSha512Hex(key, valueToDigest);
+    }
+
+    /*----- digest -----*/
+
+    public  String md2Hex(String data) {
+        return DigestUtils.md2Hex(data);
+    }
+
+    public  String md5Hex(String data) {
+        return DigestUtils.md5Hex(data);
+    }
+
+    public  String sha1Hex(String data) {
+        return DigestUtils.sha1Hex(data);
+    }
+
+    public  String sha256Hex(String data) {
+        return DigestUtils.sha256Hex(data);
+    }
+
+    public  String sha3_256Hex(String data) {
+        return DigestUtils.sha3_256Hex(data);
+    }
+
+    public  String sha3_384Hex(String data) {
+        return DigestUtils.sha3_384Hex(data);
+    }
+
+    public  String sha3_512Hex(String data) {
+        return DigestUtils.sha3_512Hex(data);
+    }
+
+    public  String sha384Hex(String data) {
+        return DigestUtils.sha384Hex(data);
+    }
+
+    public  String sha512_224Hex(String data) {
+        return DigestUtils.sha512_224Hex(data);
+    }
+    public  String sha512_256Hex(String data) {
+        return DigestUtils.sha512_256Hex(data);
+    }
+
+    public  String sha512Hex(String data) {
+        return DigestUtils.sha512Hex(data);
+    }
 
     /*-----  -----*/
 
