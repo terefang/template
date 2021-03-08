@@ -12,4 +12,5 @@ public class TemplateContext {
     public File processParent;
     public Map<String, Object> processContext;
     public ContextHelper processContextHelper;
+    public File processDest;
 }

@@ -91,7 +91,7 @@ public abstract class AbstractTemplateMojo extends AbstractTmpMojo
             if (includes != null && includes.length != 0) {
                 scanner.setIncludes(includes);
             } else {
-                scanner.setIncludes(new String[]{ "**/*.yaml" });
+                scanner.setIncludes(DEFAULT_SINGLE_DATA_FILTER);
             }
 
             if (excludes != null && excludes.length != 0) {
@@ -151,22 +151,26 @@ public abstract class AbstractTemplateMojo extends AbstractTmpMojo
                 }
                 _tcontext.put("_id", _id);
                 getLog().info(MessageFormat.format("start processing template {0}", templateFile));
-                String targetContent = this.process(templateFile, _tcontext);
 
                 File parentDir = file.getParentFile();
                 getLog().info(MessageFormat.format("creating output directory {0}", parentDir.getAbsolutePath()));
                 parentDir.mkdirs();
 
-                PrintWriter out = new PrintWriter(file);
-                out.print(targetContent);
-                out.close();
-                getLog().info(MessageFormat.format("finished processed to {0}", file.getAbsolutePath()));
+                if(this.process(templateFile, _tcontext, file))
+                {
+                    getLog().info(MessageFormat.format("finished processed to {0}", file.getAbsolutePath()));
+                }
+                else
+                {
+                    getLog().error(MessageFormat.format("Unable to process data file {0}", key));
+                }
             }
-            catch (IOException e)
+            catch (Exception e)
             {
-                getLog().error(MessageFormat.format("Unable to process data file {0}", key), e);
                 throw new MojoExecutionException(MessageFormat.format("Unable to process data file {0}", key), e);
             }
         }
     }
+
+
 }

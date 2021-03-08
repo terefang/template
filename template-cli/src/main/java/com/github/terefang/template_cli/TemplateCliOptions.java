@@ -9,26 +9,25 @@ import java.util.List;
 @Data
 public class TemplateCliOptions
 {
-    public static enum TemplateEngineName { THYMELEAF, JINJAVA, JEXL, GSIMPLE, GROOVY, LUAJ, FREEMARKER, TRIMOU, HANDLEBARS, VELOCITY, PREPROCESSOR, CONCAT, ToJSON, ToHSON, ToPDATA}
+    public static enum TemplateEngineName { THYMELEAF, JINJAVA, JXLT, JEXL, GSIMPLE, GROOVY, LUAJ, ECMA, FREEMARKER, TRIMOU, HANDLEBARS, VELOCITY, PREPROCESSOR, CONCAT, ToJSON, ToHSON, ToPDATA}
 
     @CommandLine.Option(order = 10, names = {"-T", "--template-engine"}, paramLabel = "ENGINE", description = "name of the templating engine, ${COMPLETION-CANDIDATES}", required = true)
     public TemplateEngineName doEngine;
 
     public static enum TemplateEngineMode { STD, STANDARD, TEMPLATE }
-    @CommandLine.Option(order = 20, names = {"-M", "--engine-mode"}, paramLabel = "MODE", description = "mode of engine operation, ${COMPLETION-CANDIDATES}", required = false, defaultValue = "STD")
+    @CommandLine.Option(order = 20, names = {"-M", "--engine-mode"}, paramLabel = "MODE", description = "mode of engine operation, ${COMPLETION-CANDIDATES} (default: ${DEFAULT-VALUE})", required = false, defaultValue = "STD")
     public TemplateEngineMode doMode;
-
 
     /* TMP variables */
 
-    public static enum OutputType { TEXT, XML, HTML, JAVASCRIPT }
-    @CommandLine.Option(order = 30, names = {"-O", "--output-type"}, paramLabel = "TYPE", description = "type of output, ${COMPLETION-CANDIDATES}", required = false, defaultValue = "TEXT")
+    public static enum OutputType { TEXT, XML, HTML, JAVASCRIPT, SVG, PNG, PDF, XLS, XLSX, CSV, BIN }
+    @CommandLine.Option(order = 30, names = {"-O", "--output-type"}, paramLabel = "TYPE", description = "type of output, ${COMPLETION-CANDIDATES} (default: ${DEFAULT-VALUE})", required = false, defaultValue = "TEXT")
     public OutputType outputType;
 
     @CommandLine.Option(order = 40, names = {"--additional-context-file"}, paramLabel = "FILE", description = "file containing additional context definitions", required = false)
     public File additionalContext;
 
-    @CommandLine.Option(order = 50, names = {"--additional-context-root"}, paramLabel = "ROOT", description = "root-tag of additional context, default: 'context'", defaultValue = "context", required = false)
+    @CommandLine.Option(order = 50, names = {"--additional-context-root"}, paramLabel = "ROOT", description = "root-tag of additional context (default: ${DEFAULT-VALUE})", defaultValue = "context", required = false)
     public String additionalContextRoot;
 
     @CommandLine.Option(order = 60, names = {"--additional-variables"}, paramLabel = "KVs", description = "additional variables", defaultValue = "", required = false)
@@ -62,6 +61,7 @@ public class TemplateCliOptions
 
     @CommandLine.Option(order = 101, names = {"--flatten"}, paramLabel = "DIR", description = "flatten destination directories", required = false)
     private boolean flattenOutput;
+
     /* Template Variables */
 
     @CommandLine.Option(order = 110, names = {"-E", "--dest-ext", "--destination-extension"}, paramLabel = "EXTENSION", description = "destination extension for template mode, default .txt", required = false, defaultValue = ".txt")
@@ -75,31 +75,31 @@ public class TemplateCliOptions
 
     /* Standard Variables */
 
-    @CommandLine.Option(order = 130, names = {"-L", "--read-local-context"}, description = "option to read local context files for templates for standard mode, default false", required = false, defaultValue = "false")
+    @CommandLine.Option(order = 130, names = {"-L", "--read-local-context"}, description = "option to read local context files for templates for standard mode (default: ${DEFAULT-VALUE})", required = false, defaultValue = "false")
     protected boolean processLocalContext;
 
-    @CommandLine.Option(order = 140, names = {"-l", "--local-context-extensions"}, paramLabel = "EXT-list", description = "local context file extension to check for standard mode, default: .yaml .yml .json .hson .hjson .toml .tml .ini .scsv .csv .tsv .list .pdx .pdata", required = false, defaultValue = ".yaml .yml .json .hson .hjson .toml .tml .ini .scsv .csv .tsv .list .pdx .pdata")
+    @CommandLine.Option(order = 140, names = {"-l", "--local-context-extensions"}, paramLabel = "EXT-list", description = "local context file extension to check for standard mode (default: ${DEFAULT-VALUE})", required = false, defaultValue = ".props .properties .yaml .yml .json .hson .hjson .tml .toml .ini .pdx .pdata .sqlite.csv .list .scsv .csv .tsv .txt")
     protected String localContextExtensions;
 
-    @CommandLine.Option(order = 150, names = {"--local-context-root"}, paramLabel = "ROOT", description = "root-tag of local context, default: 'local'", defaultValue = "local", required = false)
+    @CommandLine.Option(order = 150, names = {"--local-context-root"}, paramLabel = "ROOT", description = "root-tag of local context (default: ${DEFAULT-VALUE})", defaultValue = "local", required = false)
     protected String localContextRoot;
 
     /* Pre-Proc Variables */
 
-    @CommandLine.Option(order = 160, names = {"--marker", "--process-marker"}, paramLabel = "MARKER", description = "option to pre-process MARKER begin/end, default MARK", required = false, defaultValue = "MARK")
+    @CommandLine.Option(order = 160, names = {"--marker", "--process-marker"}, paramLabel = "MARKER", description = "option to pre-process MARKER begin/end (default: ${DEFAULT-VALUE})", required = false, defaultValue = "MARK")
     protected String processMarker;
 
-    @CommandLine.Option(order = 140, names = {"--process-includes"}, description = "do pre-process include statements", required = false, defaultValue = "false")
+    @CommandLine.Option(order = 140, names = {"--process-includes"}, description = "do pre-process include statements (default: ${DEFAULT-VALUE})", required = false, defaultValue = "false")
     protected boolean processIncludes;
 
-    @CommandLine.Option(order = 140, names = {"--single-line-marker", "--process-single-line-marker"}, description = "do pre-process single-line markers", required = false, defaultValue = "false")
+    @CommandLine.Option(order = 140, names = {"--single-line-marker", "--process-single-line-marker"}, description = "do pre-process single-line markers (default: ${DEFAULT-VALUE})", required = false, defaultValue = "false")
     protected boolean processSingleLineMarker;
 
-    @CommandLine.Option(order = 140, names = {"--single-file", "--process-single-file-output"}, description = "do pre-process into single file", required = false, defaultValue = "false")
+    @CommandLine.Option(order = 140, names = {"--single-file", "--process-single-file-output"}, description = "do pre-process into single file (default: ${DEFAULT-VALUE})", required = false, defaultValue = "false")
     protected boolean singleFileOutput;
 
     /* groovy variable */
 
-    @CommandLine.Option(order = 150, names = {"--inc-path", "--include-path"}, description = "include paths for groovy/luaj script", required = false, defaultValue = "")
+    @CommandLine.Option(order = 150, names = {"--inc-path", "--include-path"}, description = "include paths for groovy/luaj script (default: ${DEFAULT-VALUE})", required = false, defaultValue = ".")
     protected List<String> includePath;
 }

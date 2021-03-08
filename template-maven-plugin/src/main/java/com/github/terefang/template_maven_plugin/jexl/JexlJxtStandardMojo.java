@@ -1,5 +1,6 @@
 package com.github.terefang.template_maven_plugin.jexl;
 
+import com.github.terefang.imageutil.GfxInterface;
 import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
 import com.github.terefang.template_maven_plugin.TemplateContext;
 import lombok.SneakyThrows;
@@ -17,9 +18,21 @@ public class JexlJxtStandardMojo extends AbstractStandardMojo {
     }
 
     @Override
-    @SneakyThrows
-    public String process(TemplateContext _context)
+    public GfxInterface processToImage(TemplateContext _context)
     {
-        return JexlJxtUtil.process(_context, "");
+        throw new IllegalArgumentException();
+    }
+
+    @Override
+    public boolean processToFile(TemplateContext _context)
+    {
+        throw new IllegalArgumentException();
+    }
+
+    @Override
+    @SneakyThrows
+    public String processToString(TemplateContext _context)
+    {
+        return JexlUtil.processJxlTemplateScript(_context);
     }
 }

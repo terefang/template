@@ -13,6 +13,7 @@ import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -47,7 +48,7 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
     /**
      * local context extensions
      */
-    @Parameter(defaultValue = ".yaml .yml .json .hson .hjson .toml .tml .ini")
+    @Parameter(defaultValue = /* ContextUtil.EXTENSIONS */ ".props .properties .yaml .yml .json .hson .hjson .tml .toml .ini .pdx .pdata .sqlite.csv .list .scsv .csv .tsv .txt" )
     protected String localContextExtensions;
 
     /**
@@ -166,19 +167,22 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
                     sourceFile = resourcesDirectory;
                 }
                 context.put("_id", _id);
-                String targetContent = this.process(sourceFile, context);
 
                 File parentDir = file.getParentFile();
                 getLog().info(MessageFormat.format("creating output directory {0}", parentDir.getAbsolutePath()));
                 parentDir.mkdirs();
 
-                PrintWriter out = new PrintWriter(file);
-                out.print(targetContent);
-                out.close();
-                getLog().info(MessageFormat.format("finished processed to {0}", file.getAbsolutePath()));
+                if(this.process(sourceFile, context, file))
+                {
+                    getLog().info(MessageFormat.format("finished processed to {0}", file.getAbsolutePath()));
+                }
+                else
+                {
+                    getLog().error(MessageFormat.format("Unable to process template file {0}", file.getAbsolutePath()));
+                }
 
-            } catch (IOException e) {
-                getLog().error(MessageFormat.format("Unable to process template file {0}", file.getAbsolutePath()), e);
+            } catch (Exception e)
+            {
                 throw new MojoExecutionException(MessageFormat.format("Unable to process template file {0}", file.getAbsolutePath()), e);
             }
         }

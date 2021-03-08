@@ -1,5 +1,6 @@
 package com.github.terefang.template_maven_plugin.groovy;
 
+import com.github.terefang.imageutil.GfxInterface;
 import com.github.terefang.template_maven_plugin.TemplateContext;
 import groovy.lang.Binding;
 import groovy.lang.Closure;
@@ -13,10 +14,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.output.StringBuilderWriter;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -38,8 +36,7 @@ public class GroovyUtil {
         return _out.getBuffer().toString();
     }
 
-    @SneakyThrows
-    public static synchronized String processScript(TemplateContext _context, List<String> _includePath)
+    public static Object processGenericScript(TemplateContext _context, List<String> _includePath, Writer _out)
     {
         GroovyScriptEngine _gse = createGroovyScriptEngine(_context, _includePath);
         final String scriptUri = _context.getProcessFile().getAbsolutePath();
@@ -49,9 +46,10 @@ public class GroovyUtil {
             binding.setVariable(_key, _context.getProcessContext().get(_key));
         }
 
-        StringBuilderWriter _sbw = new StringBuilderWriter();
-        PrintWriter _pw = new PrintWriter(_sbw);
-        binding.setVariable("out", _pw);
+        binding.setVariable("out", _out);
+        binding.setVariable("_log", log);
+        binding.setVariable("_file", _context.getProcessDest());
+        binding.setVariable("_filepath", _context.getProcessDest().getAbsolutePath());
 
         Closure _closure = new Closure(_gse)
         {
@@ -69,7 +67,47 @@ public class GroovyUtil {
             }
         };
 
-        Object _ret = _closure.call();
+        return _closure.call();
+    }
+
+    public static boolean processFileScript(TemplateContext _context, List<String> _includePath)
+    {
+        Object _ret = processGenericScript(_context, _includePath, new Writer() {
+            @Override public void write(char[] cbuf, int off, int len) throws IOException { log.info("out off="+off+" len="+len);}
+            @Override public void flush() throws IOException { }
+            @Override public void close() throws IOException { }
+        });
+
+        if(!_context.getProcessContextHelper().checkBoolean(_ret))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public static GfxInterface processImageScript(TemplateContext _context, List<String> _includePath)
+    {
+        Object _ret = processGenericScript(_context, _includePath, new Writer() {
+            @Override public void write(char[] cbuf, int off, int len) throws IOException { }
+            @Override public void flush() throws IOException { }
+            @Override public void close() throws IOException { }
+        });
+
+        if(_ret instanceof GfxInterface)
+        {
+            return (GfxInterface) _ret;
+        }
+        throw new IllegalArgumentException("return type is no image");
+    }
+
+    @SneakyThrows
+    public static synchronized String processScript(TemplateContext _context, List<String> _includePath)
+    {
+        StringBuilderWriter _sbw = new StringBuilderWriter();
+        PrintWriter _pw = new PrintWriter(_sbw);
+
+        Object _ret = processGenericScript(_context,_includePath, _pw);
+
         // check return value if true false
         // if false output is in printwriter
         if(!_context.getProcessContextHelper().checkBoolean(_ret))
@@ -85,6 +123,7 @@ public class GroovyUtil {
                 GroovyUtilResourceConnector.create(context, includePath),
                 GroovyUtil.class.getClassLoader());
     }
+
 
     static class GroovyUtilResourceConnector implements ResourceConnector {
 
@@ -130,7 +169,7 @@ public class GroovyUtil {
 
         List<String> _dirs = new Vector<>();
         _dirs.add(_scriptFile.getParent());
-        _dirs.addAll(_includePath);
+        if(_includePath!=null) _dirs.addAll(_includePath);
         for(String _path : _dirs)
         {
             File _test = new File(_path, _resourcePath);

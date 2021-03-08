@@ -1,0 +1,12 @@
+
+
+var _dao = _.daoFromJdbc("com.sqlsheet.XlsDriver", "jdbc:xls:file:"+_filepath, "sa", "sa");
+
+_dao.execute("CREATE TABLE TEST_INSERT(COL1 INT, COL2 VARCHAR(255), COL3 DATE)");
+
+_dao.update("INSERT INTO TEST_INSERT (COL1, COL2, COL3) VALUES (?,?,?)", 1, "test1", 3);
+_dao.update("INSERT INTO TEST_INSERT (COL1, COL2, COL3) VALUES (?,?,?)", 2, "test2", 4);
+_dao.update("INSERT INTO TEST_INSERT (COL1, COL2, COL3) VALUES (?,?,?)", 3, "test3", 5);
+_dao.close();
+
+return true;

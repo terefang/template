@@ -30,6 +30,27 @@ import java.util.*;
 @Slf4j
 public class ContextUtil {
 
+    public static final String[] EXTENSION_LIST = {
+            ".props",
+            ".properties",
+            ".yaml",
+            ".yml",
+            ".json",
+            ".hson",
+            ".hjson",
+            ".tml",
+            ".toml",
+            ".ini",
+            ".pdx",
+            ".pdata",
+            ".sqlite.csv",
+            ".list",
+            ".scsv",
+            ".csv",
+            ".tsv",
+            ".txt" };
+    public static final String EXTENSIONS = StringUtils.join(ContextUtil.EXTENSION_LIST," ");
+
     @SneakyThrows
     public static Map<String, Object> loadContextFrom(File _file) throws MojoExecutionException
     {
@@ -37,8 +58,14 @@ public class ContextUtil {
         InputStream _fh = getStreamBySuffix(_file);
         String _fn = unCompressedFilename(_file);
 
+        if(_fn.endsWith(".props")
+                || _fn.endsWith(".properties"))
+        {
+            _ret.putAll(loadContextFromProperties(_fh));
+        }
+        else
         if(_fn.endsWith(".yaml")
-            || _fn.endsWith(".yml"))
+                || _fn.endsWith(".yml"))
         {
             _ret.putAll(loadContextFromYaml(_fh));
         }
@@ -90,6 +117,11 @@ public class ContextUtil {
         if(_fn.endsWith(".tsv"))
         {
             _ret.putAll(loadContextFromTsv(_fh));
+        }
+        else
+        if(_fn.endsWith(".txt"))
+        {
+            _ret.putAll(loadContextFromTxt(_fh));
         }
         else
         {
@@ -196,6 +228,44 @@ public class ContextUtil {
             .withEscape('\\')
             .withRecordSeparator('\n')
             .withTrim();
+
+    @SneakyThrows
+    public static Map<String,?> loadContextFromTxt(InputStream _source)
+    {
+        Map<String, Object> _ret = new HashMap<>();
+        _ret.put("data", loadFileLines(_source));
+        return _ret;
+    }
+
+    @SneakyThrows
+    public static List<String> loadFileLines(InputStream _source)
+    {
+        final List<String> _lines = new ArrayList<String>();
+        BufferedReader _reader = null;
+        try
+        {
+            _reader = new BufferedReader(new InputStreamReader(_source));
+
+            for (String _line = _reader.readLine(); _line != null; _line = _reader.readLine())
+            {
+                _line = _line.trim();
+
+                if (!_line.startsWith("#") && (_line.length() != 0))
+                {
+                    _lines.add(_line);
+                }
+            }
+
+            _reader.close();
+            _reader = null;
+        }
+        finally
+        {
+            IOUtil.close(_reader);
+        }
+
+        return _lines;
+    }
 
     @SneakyThrows
     public static Map<String, Object> loadContextFromTsv(InputStream _source)
@@ -323,6 +393,18 @@ public class ContextUtil {
     public static Map<String, Object> loadContextFromPdx(InputStream _source)
     {
         return PdxParser.loadFrom(new InputStreamReader(_source));
+    }
+
+    @SneakyThrows
+    public static Map<String,?> loadContextFromProperties(InputStream _source) {
+        InputStreamReader _rd = new InputStreamReader(_source);
+        Properties _props = new Properties();
+        _props.load(_rd);
+        IOUtil.close(_rd);
+        HashMap<String, String> _ret = new HashMap<String, String>();
+        for (final String name : _props.stringPropertyNames())
+            _ret.put(name, _props.getProperty(name));
+        return _ret;
     }
 
     @SneakyThrows

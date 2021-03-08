@@ -1,0 +1,9 @@
+
+
+var _dao = _.daoFromJdbc("com.sqlsheet.XlsDriver", "jdbc:xls:file:examples/jexl.xlsx", "sa", "sa");
+
+var _res = _dao.queryForMapList("SELECT * FROM TEST_INSERT");
+_dao.close();
+
+out.println(_res.toString());
+

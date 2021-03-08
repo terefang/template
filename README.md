@@ -8,19 +8,33 @@ various template files using various data files.
 * jinjava (.j2)
 * thymeleaf (.tl)
 * freemarker (.fm)
-* jexl -- ie. apache commons jexl jxt (.jxt)
+* jexl -- ie. apache commons jexl jxt (.jxt) or plain jexl (.jx)
+* ecma -- ie. mozilla rhino javascript (.js/.ecma) or asp-style (.esp)
 * gsimple -- ie. groovy simple-template-engine (.gst)
+* groovy -- ie. groovy script with redirected stdout (.groovy)
+* luaj -- ie. lua script with out printwriter (.lua)
 * handlebars -- (.hbs)
 * trimou -- ie. advanced handlebars (.tri)
+* apache velocity -- (.vm, .vt)
+
+**Gfx Formats**
+
+*Only groovy and luaj are currently able to produce gfx.*
+
+* PNG
+* SVG
 
 **Data Formats**
 
+* java properties
 * yaml/yml -- ie. YAML 1.1 -- https://yaml.org/spec/1.1/current.html
 * toml/tml -- ie. TOML 0.4 -- https://github.com/toml-lang/toml/blob/master/versions/en/toml-v0.4.0.md
 * json -- ie. JSON -- https://www.json.org/json-en.html
 * hson/hjson -- ie. human JSON -- https://hjson.github.io/
 * ini -- simple windows ini file format
-* pdx/pdata -- Paradox Config Format (Clausewitz Engine) with some quality of life extensions
+* csv/list/scsv/tsv format files, under 'data' context 
+* txt format files (line by line), under 'data' context
+* pdx/pdata -- Paradox Config Format (Clausewitz Engine) with some quality of life extensions ( arrays, cardinals, hexadecimal )
 
 ```
 #One struct
@@ -29,10 +43,7 @@ struct1 = {
     desc = "test description"
 }
 #Another struct
-struct2 = {
-    id = test_2
-    desc = "test 2 description"
-}
+struct2 = { id = test_2 desc = "test 2 description" }
 #complex struct
 struct2 = {
     string_array = [ one two "three" ]
@@ -42,27 +53,9 @@ struct2 = {
                     very long text
     """
     struct_array = [
-        {
-            hex1_key = 0xdeadbeef
-            hex2_key = 0xcafeaffe
-            hex3_key = 0xf
-            hex4_key = 0xff
-            hex5_key = 0xfff
-        }
-        {
-            dec1_key = 0
-            dec2_key = 01
-        } 
-        {
-            float1_key = 0.1
-            float2_key = .1
-        }
-        {
-            1 = "one"
-            2 = "two"
-            "3" = "three"
-        }
-    ]
+        { hex1_key = 0xdeadbeef hex2_key = 0xcafeaffe hex3_key = 0xf hex4_key = 0xff hex5_key = 0xfff }
+        { dec1_key = 0 dec2_key = 01 } { float1_key = 0.1 float2_key = .1 }
+        { 1 = "one" 2 = "two" "3" = "three" } ]
     complex_array = [ 1 .2 "three" 0x4 five ]
 }
 ```
@@ -72,9 +65,9 @@ struct2 = {
 eg. render many templates with one data context with optional local context data
 
 ```
---template-engine [THYMELEAF, JINJAVA, JEXL, GROOVY, FREEMARKER]
+--template-engine [THYMELEAF, JINJAVA, JXLT, JEXL, GSIMPLE, GROOVY, LUAJ, FREEMARKER, TRIMOU, HANDLEBARS, VELOCITY]
 --engine-mode STANDARD
---output-type [TEXT, XML, HTML, JAVASCRIPT]
+--output-type [TEXT, XML, HTML, JAVASCRIPT, SVG, PNG]
 --additional-context-file FILE
 --additional-context-root context
 --source-directory DIR
@@ -91,9 +84,9 @@ eg. render many templates with one data context with optional local context data
 eg. render one template against many data contexts
 
 ```
---template-engine [THYMELEAF, JINJAVA, JEXL, GROOVY, FREEMARKER]
+--template-engine [THYMELEAF, JINJAVA, JXLT, JEXL, GSIMPLE, GROOVY, LUAJ, FREEMARKER, TRIMOU, HANDLEBARS, VELOCITY]
 --engine-mode TEMPLATE
---output-type [TEXT, XML, HTML, JAVASCRIPT]
+--output-type [TEXT, XML, HTML, JAVASCRIPT, SVG, PNG]
 --additional-context-file FILE
 --additional-context-root context
 --source-directory DIR

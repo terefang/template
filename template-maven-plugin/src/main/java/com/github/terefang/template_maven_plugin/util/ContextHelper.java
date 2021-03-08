@@ -1,6 +1,11 @@
 package com.github.terefang.template_maven_plugin.util;
 
+import com.github.terefang.imageutil.PdfImage;
+import com.github.terefang.imageutil.PixelImage;
+import com.github.terefang.imageutil.SvgImage;
+import com.github.terefang.jdao.JDAO;
 import com.github.terefang.template_maven_plugin.TemplateContext;
+import com.github.terefang.template_maven_plugin.luaj.LuaScriptContext;
 import lombok.SneakyThrows;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -11,24 +16,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.text.WordUtils;
 import org.apache.commons.text.CaseUtils;
+import org.luaj.vm2.LuaValue;
 
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.nio.file.OpenOption;
-import java.nio.file.Path;
-import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
 public class ContextHelper {
     TemplateContext context;
-
-    HmacUtils _hmac;
-
 
     public static ContextHelper from(TemplateContext _tc)
     {
@@ -39,10 +38,32 @@ public class ContextHelper {
     }
 
     @SneakyThrows
-    public Map<String, Object> load(String _file)
+    public Map<String, Object> loadContextFile(String _file)
     {
         return ContextUtil.loadContextFrom(new File(this.context.processParent, _file));
     }
+
+    /*----- dao helper -----*/
+
+    public JDAO daoFromJdbc(String _driver, String _url, String _user, String _pass)
+    {
+        return ContextUtil.daoFromJdbc(_driver, _url, _user,_pass);
+    }
+
+    /*----- lua helper -----*/
+
+    public LuaValue lvalue(Object _o)
+    {
+        return LuaScriptContext.wrapJava(_o);
+    }
+
+    /*----- image helper -----*/
+
+    public PixelImage pixImage(int _w, int _h) { return PixelImage.create(_w,_h); }
+
+    public SvgImage svgImage(int _w, int _h) { return SvgImage.create(_w,_h); }
+
+    public PdfImage pdfImage(int _w, int _h) { return PdfImage.create(_w,_h); }
 
     /*----- hmacs -----*/
 

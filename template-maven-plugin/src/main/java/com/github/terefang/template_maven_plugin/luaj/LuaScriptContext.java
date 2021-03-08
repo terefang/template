@@ -56,8 +56,33 @@ public class LuaScriptContext
         return runLua(new FileReader(_source));
     }
 
-    @SneakyThrows
     public String runLua(Reader _source)
+    {
+        StringBuilderWriter _sbw = new StringBuilderWriter();
+        runLuaGeneric(_source,  _sbw);
+        return _sbw.getBuilder().toString();
+    }
+
+    @SneakyThrows
+    public LuaValue runLuaGeneric(Writer _out)
+    {
+        return runLuaGeneric(this.getContext().getProcessFile(), _out);
+    }
+
+    @SneakyThrows
+    public LuaValue runLuaGeneric(String _source, Writer _out)
+    {
+        return runLuaGeneric(new StringReader(_source), _out);
+    }
+
+    @SneakyThrows
+    public LuaValue runLuaGeneric(File _source, Writer _out)
+    {
+        return runLuaGeneric(new FileReader(_source), _out);
+    }
+
+    @SneakyThrows
+    public LuaValue runLuaGeneric(Reader _source, Writer _out)
     {
         Globals globals = new Globals();
         globals.load(new JseBaseLib());
@@ -67,7 +92,10 @@ public class LuaScriptContext
         List<String> pkgSearchPath = new Vector<>();
 
         pkgSearchPath.add(this.getContext().getProcessParent().getAbsolutePath());
-        pkgSearchPath.addAll(this.includePath);
+        if(this.includePath!=null)
+        {
+            pkgSearchPath.addAll(this.includePath);
+        }
         String _path = StringUtils.join(pkgSearchPath.iterator(), "/?.lua;")+"/?.lua;?.lua";
         log.info("setting search-path "+_path);
         _pkglib.setLuaPath(_path);
@@ -90,14 +118,24 @@ public class LuaScriptContext
             globals.set(_entry.getKey(), CoerceJavaToLua.coerce(_entry.getValue()));
         }
 
-        StringBuilderWriter _sbw = new StringBuilderWriter();
-        PrintWriter _pw = new PrintWriter(_sbw);
-        globals.set("out", CoerceJavaToLua.coerce(_pw));
-        LuaValue _chunk = globals.load(_source, this.getContext().getProcessFile().getName());
-        _chunk.call();
-        _pw.flush();
-        return _sbw.getBuilder().toString();
+        PrintWriter _pw = new PrintWriter(_out);
+        LuaValue _lval = null;
+        try {
+            globals.set("out", CoerceJavaToLua.coerce(_pw));
+            globals.set("_log", CoerceJavaToLua.coerce(log));
+            globals.set("_file", CoerceJavaToLua.coerce(this.context.processDest));
+            globals.set("_filepath", CoerceJavaToLua.coerce(this.context.processDest.getAbsolutePath()));
+            LuaValue _chunk = globals.load(_source, this.getContext().getProcessFile().getName());
+            _lval = _chunk.call();
+        }
+        finally {
+            _pw.flush();
+        }
+        return _lval;
     }
 
-
+    public static LuaValue wrapJava(Object _o)
+    {
+        return CoerceJavaToLua.coerce(_o);
+    }
 }

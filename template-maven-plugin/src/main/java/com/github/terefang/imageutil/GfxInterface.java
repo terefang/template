@@ -1,20 +1,87 @@
 package com.github.terefang.imageutil;
 
 import java.awt.*;
+import java.io.File;
+import java.io.OutputStream;
 
 public interface GfxInterface
 {
     public Graphics2D getG2d();
+    default GfxInterface getSub()
+    {
+        return G2dProxy.create(this);
+    }
 
-    public void gSet(int _x, int _y, int _color);
+    public String beginGroup();
+
+    public String beginGroup(String _id);
+
+    public void endGroup();
+
+    default GfxInterface getSub(String _id)
+    {
+        return G2dProxy.create(this, _id);
+    }
+
+    default Font getFont(String _name, int _size)
+    {
+        return ImageUtil.getFont(_name, _size);
+    }
+
+    default Font getPSFont(String _name, int _size)
+    {
+        Font _font = ImageUtil.getPSFont(new File(_name), _size);
+        if(this instanceof PdfImage)
+        {
+            ((PdfImage)this).registerFont(_font, new File(_name));
+        }
+        return _font;
+    }
+
+    default Font getTTFont(String _name, int _size)
+    {
+        Font _font = ImageUtil.getTTFont(new File(_name), _size);
+        if(this instanceof PdfImage)
+        {
+            ((PdfImage)this).registerFont(_font, new File(_name));
+        }
+        return _font;
+    }
+
+    default Font getFont(String _name, float _size)
+    {
+        return ImageUtil.getFont(_name, _size);
+    }
+
+    default Font getPSFont(String _name, float _size)
+    {
+        Font _font = ImageUtil.getPSFont(new File(_name), _size);
+        if(this instanceof PdfImage)
+        {
+            ((PdfImage)this).registerFont(_font, new File(_name));
+        }
+        return _font;
+    }
+
+    default Font getTTFont(String _name, float _size)
+    {
+        Font _font = ImageUtil.getTTFont(new File(_name), _size);
+        if(this instanceof PdfImage)
+        {
+            ((PdfImage)this).registerFont(_font, new File(_name));
+        }
+        return _font;
+    }
+
+    public void gSet(int _x, int _y, long _color);
     public int gGet(int _x, int _y);
 
-    default void gLine(int _x1, int _y1, int _x2, int _y2, int _color)
+    default void gLine(int _x1, int _y1, int _x2, int _y2, long _color)
     {
         gLine(_x1, _y1, _x2, _y2, 1, _color);
     }
 
-    default void gLine(int _x1, int _y1, int _x2, int _y2, float _lineWidth, int _color)
+    default void gLine(int _x1, int _y1, int _x2, int _y2, float _lineWidth, long _color)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
         _g.setPaint(ImageUtil.createColor(_color));
@@ -24,12 +91,22 @@ public interface GfxInterface
         _g.dispose();
     }
 
-    default void gDashedLine(int _x1, int _y1, int _x2, int _y2, int _color, float... _shape)
+    default void gDashedLine(int _x1, int _y1, int _x2, int _y2, long _color, float _shape)
+    {
+        gDashedLine(_x1, _y1, _x2, _y2, 1, _color, new float[] {_shape});
+    }
+
+    default void gDashedLine(int _x1, int _y1, int _x2, int _y2, long _color, float... _shape)
     {
         gDashedLine(_x1, _y1, _x2, _y2, 1, _color, _shape);
     }
 
-    default void gDashedLine(int _x1, int _y1, int _x2, int _y2, float _lineWidth, int _color, float... _shape)
+    default void gDashedLine(int _x1, int _y1, int _x2, int _y2, float _lineWidth, long _color, float _shape)
+    {
+        gDashedLine(_x1, _y1, _x2, _y2, _lineWidth, _color, new float[] {_shape});
+    }
+
+    default void gDashedLine(int _x1, int _y1, int _x2, int _y2, float _lineWidth, long _color, float... _shape)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
         _g.setPaint(ImageUtil.createColor(_color));
@@ -39,17 +116,22 @@ public interface GfxInterface
         _g.dispose();
     }
 
-    default void gRectangle(int _x1, int _y1, int _x2, int _y2, int _color)
+    default void gRectangle(int _x1, int _y1, int _x2, int _y2, long _color)
     {
         gRectangle(false, _x1, _y1, _x2, _y2, 1, _color, null);
     }
 
-    default void gRectangle(int _x1, int _y1, int _x2, int _y2, float _lineWidth, int _color, float[] _dash)
+    default void gRectangle(int _x1, int _y1, int _x2, int _y2, float _lineWidth, long _color, float _dash)
+    {
+        gRectangle(false, _x1, _y1, _x2, _y2, _lineWidth, _color, new float[] {_dash});
+    }
+
+    default void gRectangle(int _x1, int _y1, int _x2, int _y2, float _lineWidth, long _color, float[] _dash)
     {
         gRectangle(false, _x1, _y1, _x2, _y2, _lineWidth, _color, null);
     }
 
-    default void gRectangle(boolean _fill, int _x1, int _y1, int _x2, int _y2, float _lineWidth, int _color, float[] _dash)
+    default void gRectangle(boolean _fill, int _x1, int _y1, int _x2, int _y2, float _lineWidth, long _color, float[] _dash)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
         _g.setPaint(ImageUtil.createColor(_color));
@@ -74,27 +156,27 @@ public interface GfxInterface
         _g.dispose();
     }
 
-    default void gFilledRectangle(int _x1, int _y1, int _x2, int _y2, int _color)
+    default void gFilledRectangle(int _x1, int _y1, int _x2, int _y2, long _color)
     {
         gRectangle(true, _x1, _y1, _x2, _y2, 1, _color, null);
     }
 
-    default void gFilledRectangle(int _x1, int _y1, int _x2, int _y2, float _lineWidth, int _color)
+    default void gFilledRectangle(int _x1, int _y1, int _x2, int _y2, float _lineWidth, long _color)
     {
         gRectangle(true, _x1, _y1, _x2, _y2, _lineWidth, _color, null);
     }
 
-    default void gPolygon(int _color, int... _points)
+    default void gPolygon(long _color, int... _points)
     {
         gPolygon(1, _color, null, _points);
     }
 
-    default void gPolygon(float _lineWidth, int _color, float[] _dash, int... _points)
+    default void gPolygon(float _lineWidth, long _color, float[] _dash, int... _points)
     {
         this.gPolygon(false,_lineWidth, _color, _dash, _points);
     }
 
-    default void gPolygon(boolean _fill, float _lineWidth, int _color, float[] _dash, int... _points)
+    default void gPolygon(boolean _fill, float _lineWidth, long _color, float[] _dash, int... _points)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
         _g.setPaint(ImageUtil.createColor(_color));
@@ -124,27 +206,27 @@ public interface GfxInterface
         _g.dispose();
     }
 
-    default void gFilledPolygon(int _color, int... _points)
+    default void gFilledPolygon(long _color, int... _points)
     {
         gFilledPolygon(1, _color, _points);
     }
 
-    default void gFilledPolygon(float _lineWidth, int _color, int... _points)
+    default void gFilledPolygon(float _lineWidth, long _color, int... _points)
     {
         this.gPolygon(true,_lineWidth, _color, null, _points);
     }
 
-    default void gPolyline(int _color, int... _points)
+    default void gPolyline(long _color, int... _points)
     {
         gPolyline(1, _color, null, _points);
     }
 
-    default void gPolyline(float _lineWidth, int _color, int... _points)
+    default void gPolyline(float _lineWidth, long _color, int... _points)
     {
         gPolyline(_lineWidth, _color, null, _points);
     }
 
-    default void gPolyline(float _lineWidth, int _color, float[] _dash, int... _points)
+    default void gPolyline(float _lineWidth, long _color, float[] _dash, int... _points)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
         _g.setPaint(ImageUtil.createColor(_color));
@@ -169,77 +251,62 @@ public interface GfxInterface
         _g.dispose();
     }
 
-    default void gCircle(int _x, int _y, int _r, int _color)
+    default void gCircle(int _cx, int _cy, int _r, long _color)
     {
-        this.gOval(_x, _y, _r, _r, 1, _color, null);
+        this.gOval(_cx, _cy, _r, _r, 1, _color, null);
     }
 
-    default void gCircle(int _x, int _y, int _r, float _lineWidth, int _color)
+    default void gCircle(int _cx, int _cy, int _r, float _lineWidth, long _color)
     {
-        this.gOval(_x, _y, _r, _r, _lineWidth, _color, null);
+        this.gOval(_cx, _cy, _r, _r, _lineWidth, _color, null);
     }
 
-    default void gCircle(int _x, int _y, int _r, float _lineWidth, int _color, float[] _dash)
+    default void gCircle(int _cx, int _cy, int _r, float _lineWidth, long _color, float _dash)
     {
-        this.gOval(false, _x, _y, _r, _r, _lineWidth, _color, _dash);
+        this.gOval(_cx, _cy, _r, _r, _lineWidth, _color, new float[]{ _dash });
     }
 
-    default void gCircle(boolean _fill, int _x, int _y, int _r, float _lineWidth, int _color, float[] _dash)
+    default void gCircle(int _cx, int _cy, int _r, float _lineWidth, long _color, float[] _dash)
     {
-        this.gOval(_fill, _x, _y, _r, _r, _lineWidth, _color, _dash);
+        this.gOval(false, _cx, _cy, _r, _r, _lineWidth, _color, _dash);
     }
 
-    default void gFilledCircle(int _x, int _y, int _r, int _color)
+    default void gCircle(boolean _fill, int _cx, int _cy, int _r, float _lineWidth, long _color, float _dash)
     {
-        this.gCircle(true, _x, _y, _r, 1, _color, null);
+        this.gOval(_fill, _cx, _cy, _r, _r, _lineWidth, _color, new float[]{ _dash });
     }
 
-    default void gOval(int _x, int _y, int _ra, int _rb, int _color)
+    default void gCircle(boolean _fill, int _cx, int _cy, int _r, float _lineWidth, long _color, float[] _dash)
     {
-        this.gOval(_x, _y, _ra, _rb, 1, _color, null);
+        this.gOval(_fill, _cx, _cy, _r, _r, _lineWidth, _color, _dash);
     }
 
-    default void gOval(int _x, int _y, int _ra, int _rb, float _lineWidth, int _color, float[] _dash)
+    default void gFilledCircle(int _cx, int _cy, int _r, long _color)
     {
-        this.gOval(false, _x, _y, _ra, _rb, 1, _color, null);
+        this.gCircle(true, _cx, _cy, _r, 1, _color, null);
     }
 
-    default void gOval(boolean _fill, int _x, int _y, int _ra, int _rb, float _lineWidth, int _color, float[] _dash)
+    default void gOval(int _cx, int _cy, int _ra, int _rb, long _color)
     {
-        Graphics2D _g = (Graphics2D) this.getG2d();
-        _g.setPaint(ImageUtil.createColor(_color));
-        if(!_fill)
-        {
-            Stroke _s = null;
-            if(_dash == null || _dash.length==0)
-            {
-                _s = new BasicStroke(_lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0);
-            }
-            else
-            {
-                _s = new BasicStroke(_lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, _dash, 0f);
-            }
-            _g.setStroke(_s);
-            _g.drawOval(_x-_ra, _y-_rb, _ra*2,_rb*2);
-        }
-        else
-        {
-            _g.fillOval(_x-_ra, _y-_rb,_ra*2,_rb*2);
-        }
-        _g.dispose();
+        this.gOval(_cx, _cy, _ra, _rb, 1, _color, null);
     }
 
-    default void gFilledOval(int _x, int _y, int _ra, int _rb, int _color)
+    default void gOval(int _cx, int _cy, int _ra, int _rb, float _lineWidth, long _color, float _dash)
     {
-        this.gOval(true, _x, _y, _ra, _rb, 1, _color, null);
+        this.gOval(false, _cx, _cy, _ra, _rb, _lineWidth, _color, new float[]{ _dash });
     }
 
-    default void gArc(int _x, int _y, int _ra, int _rb, int _as, int _ae, int _color)
+    default void gOval(int _cx, int _cy, int _ra, int _rb, float _lineWidth, long _color, float[] _dash)
     {
-        gArc(false, _x, _y, _ra, _rb, _as, _ae,1, _color, null);
+        this.gOval(false, _cx, _cy, _ra, _rb, 1, _color, null);
     }
 
-    default void gArc(boolean _fill, int _x, int _y, int _ra, int _rb, int _as, int _ae, float _lineWidth, int _color, float[] _dash)
+    default void gOval(boolean _fill, int _cx, int _cy, int _ra, int _rb, float _lineWidth, long _color, float _dash)
+    {
+        this.gOval(_fill, _cx, _cy, _ra, _rb, _lineWidth, _color, new float[]{ _dash });
+    }
+
+    default void gOval(boolean _fill, int _cx, int _cy, int _ra, int _rb, float _lineWidth, long _color, float[] _dash)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
         _g.setPaint(ImageUtil.createColor(_color));
@@ -255,21 +322,61 @@ public interface GfxInterface
                 _s = new BasicStroke(_lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, _dash, 0f);
             }
             _g.setStroke(_s);
-            _g.drawArc(_x-_ra, _y-_rb, _ra*2,_rb*2, _as, _ae-_as);
+            _g.drawOval(_cx-_ra, _cy-_rb, _ra*2,_rb*2);
         }
         else
         {
-            _g.fillArc(_x-_ra, _y-_rb, _ra*2,_rb*2, _as, _ae-_as);
+            _g.fillOval(_cx-_ra, _cy-_rb,_ra*2,_rb*2);
         }
         _g.dispose();
     }
 
-    default void gFilledArc(int _x, int _y, int _ra, int _rb, int _as, int _ae, int _color)
+    default void gFilledOval(int _cx, int _cy, int _ra, int _rb, long _color)
     {
-        gArc(true, _x, _y, _ra, _rb, _as, _ae,1, _color, null);
+        this.gOval(true, _cx, _cy, _ra, _rb, 1, _color, null);
     }
 
-    default void gString(String _font, int _size, int _x, int _y, String _s, int _color)
+    default void gArc(int _cx, int _cy, int _ra, int _rb, int _as, int _ae, long _color)
+    {
+        gArc(false, _cx, _cy, _ra, _rb, _as, _ae,1, _color, null);
+    }
+
+    default void gArc(boolean _fill, int _cx, int _cy, int _ra, int _rb, int _as, int _ae, float _lineWidth, long _color, float _dash)
+    {
+        gArc(_fill, _cx, _cy, _ra, _rb, _as, _ae,1, _color, new float[] { _dash });
+    }
+
+    default void gArc(boolean _fill, int _cx, int _cy, int _ra, int _rb, int _as, int _ae, float _lineWidth, long _color, float[] _dash)
+    {
+        Graphics2D _g = (Graphics2D) this.getG2d();
+        _g.setPaint(ImageUtil.createColor(_color));
+        if(!_fill)
+        {
+            Stroke _s = null;
+            if(_dash == null || _dash.length==0)
+            {
+                _s = new BasicStroke(_lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0);
+            }
+            else
+            {
+                _s = new BasicStroke(_lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, _dash, 0f);
+            }
+            _g.setStroke(_s);
+            _g.drawArc(_cx-_ra, _cy-_rb, _ra*2,_rb*2, _as, _ae-_as);
+        }
+        else
+        {
+            _g.fillArc(_cx-_ra, _cy-_rb, _ra*2,_rb*2, _as, _ae-_as);
+        }
+        _g.dispose();
+    }
+
+    default void gFilledArc(int _cx, int _cy, int _ra, int _rb, int _as, int _ae, long _color)
+    {
+        gArc(true, _cx, _cy, _ra, _rb, _as, _ae,1, _color, null);
+    }
+
+    default void gString(String _font, int _size, int _x, int _y, String _s, long _color)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
         _g.setPaint(ImageUtil.createColor(_color));
@@ -278,7 +385,7 @@ public interface GfxInterface
         _g.dispose();
     }
 
-    default void gString(Font _font, int _x, int _y, String _s, int _color)
+    default void gString(Font _font, int _x, int _y, String _s, long _color)
     {
         Graphics2D _g = (Graphics2D) this.getG2d();
         _g.setPaint(ImageUtil.createColor(_color));
@@ -287,4 +394,8 @@ public interface GfxInterface
         _g.dispose();
     }
 
+    public void save(File _out);
+    public void save(OutputStream _out);
+
+    public StackedGfxInterface getStackedGfxInterface();
 }

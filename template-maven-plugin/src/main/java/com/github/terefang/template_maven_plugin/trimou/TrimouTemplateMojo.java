@@ -1,5 +1,6 @@
 package com.github.terefang.template_maven_plugin.trimou;
 
+import com.github.terefang.imageutil.GfxInterface;
 import com.github.terefang.template_maven_plugin.AbstractTemplateMojo;
 import com.github.terefang.template_maven_plugin.TemplateContext;
 import com.hubspot.jinjava.Jinjava;
@@ -19,8 +20,13 @@ public class TrimouTemplateMojo extends AbstractTemplateMojo
             .build();
 
     @Override
+    public GfxInterface processToImage(TemplateContext _context) {
+        return null;
+    }
+
+    @Override
     @SneakyThrows
-    public String process(TemplateContext _context)
+    public String processToString(TemplateContext _context)
     {
         String sourceContent = FileUtils.fileRead(_context.processFile);
         return engine.compileMustache(sourceContent).render(_context.processContext);

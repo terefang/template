@@ -1,10 +1,14 @@
 package com.github.terefang.template_maven_plugin;
 
+import com.github.terefang.imageutil.GfxInterface;
+import com.github.terefang.imageutil.PixelImage;
+import com.github.terefang.imageutil.SvgImage;
 import com.github.terefang.template_maven_plugin.util.ContextHelper;
 import com.github.terefang.template_maven_plugin.util.ContextUtil;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -13,8 +17,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +28,28 @@ import java.util.Map;
 @Data
 public abstract class AbstractTmpMojo extends AbstractMojo
 {
+    public static final String[] DEFAULT_DATA_FILTER = {
+            /* ContextUtil.EXTENSIONS */
+            "**/*.props",
+            "**/*.properties",
+            "**/*.yaml",
+            "**/*.yml",
+            "**/*.json",
+            "**/*.hson",
+            "**/*.hjson",
+            "**/*.tml",
+            "**/*.toml",
+            "**/*.ini",
+            "**/*.pdx",
+            "**/*.pdata",
+            "**/*.sqlite.csv",
+            "**/*.list",
+            "**/*.scsv",
+            "**/*.csv",
+            "**/*.tsv",
+            "**/*.txt" };
+    public static final String[] DEFAULT_SINGLE_DATA_FILTER = { "**/*.props", "**/*.hson", "**/*.pdata" };
+
     @Parameter(defaultValue = "text")
     protected String outputType;
 
@@ -125,20 +151,63 @@ public abstract class AbstractTmpMojo extends AbstractMojo
         }
     }
 
-    public final String process(File _template, Map<String, Object> _context)
+    public TemplateContext prepareTemplateContext(File _template, Map<String, Object> _context, File _dest)
+    {
+        TemplateContext _tc = new TemplateContext();
+        _tc.processFile = _template;
+        _tc.processDest = _dest;
+        _tc.processParent = _template.getParentFile();
+        _tc.processContext = _context;
+        _tc.processContextHelper = ContextHelper.from(_tc);
+        return _tc;
+    }
+
+    public final boolean process(File _template, Map<String, Object> _context, File _dest)
     {
         try {
-            TemplateContext _tc = new TemplateContext();
-            _tc.processFile = _template;
-            _tc.processParent = _template.getParentFile();
-            _tc.processContext = _context;
-            _tc.processContextHelper = ContextHelper.from(_tc);
-            return process(_tc);
+            return process(prepareTemplateContext(_template, _context, _dest));
         } catch (Exception _xe) {
             getLog().error(MessageFormat.format("error processing template {0}.", _template.getAbsolutePath()), _xe);
-            throw _xe;
+            return false;
         }
     }
 
-    public abstract String process(TemplateContext _context);
+    public boolean process(TemplateContext _context)
+    {
+        try
+        {
+            if("bin".equalsIgnoreCase(this.outputType)
+                    || "csv".equalsIgnoreCase(this.outputType)
+                    || "xls".equalsIgnoreCase(this.outputType)
+                    || "xlsx".equalsIgnoreCase(this.outputType))
+            {
+                _context.processContext.put("_output_type", this.outputType.toLowerCase());
+                return this.processToFile(_context);
+            }
+            else
+            if("pdf".equalsIgnoreCase(this.outputType)
+                    || "svg".equalsIgnoreCase(this.outputType)
+                    || "png".equalsIgnoreCase(this.outputType))
+            {
+                _context.processContext.put("_output_type", this.outputType.toLowerCase());
+                GfxInterface _img = this.processToImage(_context);
+                _img.save(_context.processDest);
+            }
+            else
+            {
+                FileUtils.write(_context.processDest, processToString(_context), StandardCharsets.UTF_8);
+            }
+            return true;
+        }
+        catch (IOException e)
+        {
+            return false;
+        }
+    }
+
+    public boolean processToFile(TemplateContext _context) { return false; }
+
+    public abstract GfxInterface processToImage(TemplateContext _context);
+
+    public abstract String processToString(TemplateContext _context);
 }

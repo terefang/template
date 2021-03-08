@@ -4,12 +4,14 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
+import org.jfree.graphics2d.svg.SVGHints;
+import org.jfree.graphics2d.svg.SVGUnits;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
+import java.util.UUID;
 
-public class SvgImage implements GfxInterface
+public class SvgImage extends AbstractGfxInterface implements GfxInterface
 {
     SVGGraphics2D g2d;
     public static final SvgImage create(int _width, int _height) {
@@ -19,7 +21,8 @@ public class SvgImage implements GfxInterface
     public SvgImage(int width, int height)
     {
         super();
-        g2d = new SVGGraphics2D(width, height);
+        this.g2d = new SVGGraphics2D(width, height);
+        this.g2d.setFontSizeUnits(SVGUnits.PT);
     }
 
     @Override
@@ -28,11 +31,27 @@ public class SvgImage implements GfxInterface
     }
 
     @Override
-    public void gSet(int _x, int _y, int _color) {
+    public void gSet(int _x, int _y, long _color) {
         Graphics2D _g = this.getG2d();
         _g.setColor(ImageUtil.createColor(_color));
         _g.fillRect(_x, _y, 1, 1);
         _g.dispose();
+    }
+
+    public String beginGroup()
+    {
+        return beginGroup(UUID.randomUUID().toString());
+    }
+
+    public String beginGroup(String _id)
+    {
+        this.g2d.setRenderingHint(SVGHints.KEY_BEGIN_GROUP, _id);
+        return _id;
+    }
+
+    public void endGroup()
+    {
+        this.g2d.setRenderingHint(SVGHints.KEY_END_GROUP, "true");
     }
 
     @Override
@@ -48,8 +67,14 @@ public class SvgImage implements GfxInterface
     @SneakyThrows
     public void save(File _out)
     {
-        FileWriter _fh = new FileWriter(_out);
-        IOUtil.copy(this.g2d.getSVGDocument(), _fh);
-        IOUtil.close(_fh);
+        this.save(new FileOutputStream(_out));
+    }
+
+    @SneakyThrows
+    public void save(OutputStream _out)
+    {
+        BufferedWriter _bw = new BufferedWriter(new OutputStreamWriter(_out), 8192);
+        IOUtil.copy(this.g2d.getSVGDocument(), _bw);
+        IOUtil.close(_bw);
     }
 }

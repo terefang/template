@@ -11,10 +11,13 @@
         <module name="template-maven-plugin" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="8">
       <module name="template" target="8" />
       <module name="template-cli" target="1.8" />
       <module name="template-maven-plugin" target="8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="GENERATE_NO_WARNINGS" value="true" />
   </component>
 </project>

@@ -1,6 +1,7 @@
 package com.github.terefang.template_maven_plugin.handlebars;
 
 import com.github.jknack.handlebars.Handlebars;
+import com.github.terefang.imageutil.GfxInterface;
 import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
 import com.github.terefang.template_maven_plugin.TemplateContext;
 import lombok.SneakyThrows;
@@ -22,8 +23,13 @@ public class HandlebarsStandardMojo extends AbstractStandardMojo {
     Handlebars engine = new Handlebars();
 
     @Override
+    public GfxInterface processToImage(TemplateContext _context) {
+        return null;
+    }
+
+    @Override
     @SneakyThrows
-    public String process(TemplateContext _context)
+    public String processToString(TemplateContext _context)
     {
         String sourceContent = FileUtils.fileRead(_context.processFile);
         return engine.compileInline(sourceContent).apply(_context.processContext);

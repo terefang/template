@@ -1,5 +1,6 @@
 package com.github.terefang.template_maven_plugin.groovy;
 
+import com.github.terefang.imageutil.GfxInterface;
 import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
 import com.github.terefang.template_maven_plugin.TemplateContext;
 import lombok.Data;
@@ -25,9 +26,19 @@ public class GroovyStandardMojo extends AbstractStandardMojo {
     List<String> includePath;
 
     @Override
+    public GfxInterface processToImage(TemplateContext _context) {
+        return GroovyUtil.processImageScript(_context, includePath);
+    }
+
+    @Override
     @SneakyThrows
-    public String process(TemplateContext _context)
+    public String processToString(TemplateContext _context)
     {
         return GroovyUtil.processScript(_context, includePath);
+    }
+
+    @Override
+    public boolean processToFile(TemplateContext _context) {
+        return GroovyUtil.processFileScript(_context, includePath);
     }
 }

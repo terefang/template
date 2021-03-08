@@ -1,33 +1,20 @@
 package com.github.terefang.template_cli;
 
 import com.github.terefang.concat_maven_plugin.ConcatMojo;
-import com.github.terefang.convert_maven_plugin.ToHsonMojo;
-import com.github.terefang.convert_maven_plugin.ToJsonMojo;
-import com.github.terefang.convert_maven_plugin.ToPdataMojo;
+import com.github.terefang.convert_maven_plugin.*;
 import com.github.terefang.preproc_maven_plugin.PreProcessorMojo;
-import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
-import com.github.terefang.template_maven_plugin.AbstractTemplateMojo;
-import com.github.terefang.template_maven_plugin.AbstractTmpMojo;
-import com.github.terefang.template_maven_plugin.freemarker.FreeMarkerStandardMojo;
-import com.github.terefang.template_maven_plugin.freemarker.FreeMarkerTemplateMojo;
-import com.github.terefang.template_maven_plugin.groovy.GSimpleStandardMojo;
-import com.github.terefang.template_maven_plugin.groovy.GSimpleTemplateMojo;
-import com.github.terefang.template_maven_plugin.groovy.GroovyStandardMojo;
-import com.github.terefang.template_maven_plugin.groovy.GroovyTemplateMojo;
-import com.github.terefang.template_maven_plugin.handlebars.HandlebarsStandardMojo;
-import com.github.terefang.template_maven_plugin.handlebars.HandlebarsTemplateMojo;
-import com.github.terefang.template_maven_plugin.jexl.JexlJxtStandardMojo;
-import com.github.terefang.template_maven_plugin.jexl.JexlJxtTemplateMojo;
-import com.github.terefang.template_maven_plugin.jinjava.JinjavaStandardMojo;
-import com.github.terefang.template_maven_plugin.jinjava.JinjavaTemplateMojo;
-import com.github.terefang.template_maven_plugin.luaj.LuajStandardMojo;
-import com.github.terefang.template_maven_plugin.luaj.LuajTemplateMojo;
-import com.github.terefang.template_maven_plugin.thymeleaf.ThymeleafStandardMojo;
-import com.github.terefang.template_maven_plugin.thymeleaf.ThymeleafTemplateMojo;
-import com.github.terefang.template_maven_plugin.trimou.TrimouStandardMojo;
-import com.github.terefang.template_maven_plugin.trimou.TrimouTemplateMojo;
-import com.github.terefang.template_maven_plugin.velocity.VelocityStandardMojo;
-import com.github.terefang.template_maven_plugin.velocity.VelocityTemplateMojo;
+import com.github.terefang.template_maven_plugin.*;
+import com.github.terefang.template_maven_plugin.freemarker.*;
+import com.github.terefang.template_maven_plugin.groovy.*;
+import com.github.terefang.template_maven_plugin.handlebars.*;
+import com.github.terefang.template_maven_plugin.jexl.*;
+import com.github.terefang.template_maven_plugin.jinjava.*;
+import com.github.terefang.template_maven_plugin.luaj.*;
+import com.github.terefang.template_maven_plugin.rhino.RhinoStandardMojo;
+import com.github.terefang.template_maven_plugin.rhino.RhinoTemplateMojo;
+import com.github.terefang.template_maven_plugin.thymeleaf.*;
+import com.github.terefang.template_maven_plugin.trimou.*;
+import com.github.terefang.template_maven_plugin.velocity.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.StringUtils;
@@ -103,7 +90,7 @@ public class TemplateCliMain
             }
         }
         else
-        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.JEXL))
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.JXLT))
         {
             if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
                     || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
@@ -113,6 +100,19 @@ public class TemplateCliMain
             else
             {
                 _tmojo = new JexlJxtTemplateMojo();
+            }
+        }
+        else
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.JEXL))
+        {
+            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
+                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
+            {
+                _smojo = new JexlStandardMojo();
+            }
+            else
+            {
+                _tmojo = new JexlTemplateMojo();
             }
         }
         else
@@ -156,6 +156,21 @@ public class TemplateCliMain
             {
                 _tmojo = new LuajTemplateMojo();
                 ((LuajTemplateMojo)_tmojo).setIncludePath(_opts.getIncludePath());
+            }
+        }
+        else
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.ECMA))
+        {
+            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
+                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
+            {
+                _smojo = new RhinoStandardMojo();
+                ((RhinoStandardMojo)_smojo).setIncludePath(_opts.getIncludePath());
+            }
+            else
+            {
+                _tmojo = new RhinoTemplateMojo();
+                ((RhinoTemplateMojo)_tmojo).setIncludePath(_opts.getIncludePath());
             }
         }
         else

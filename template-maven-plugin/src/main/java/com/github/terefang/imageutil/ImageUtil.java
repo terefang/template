@@ -33,9 +33,9 @@ public class ImageUtil
     public static final int HALF_CYAN = 0x8800ffff;
 
     public static final Map<String, Font> FONT_MAP = new HashMap<>();
-    public static Color createColor(int _color)
+    public static Color createColor(long _color)
     {
-        return new Color(_color, true);
+        return new Color((int)_color, true);
     }
 
     public static Font getFont(String _name, int _size)
@@ -75,6 +75,47 @@ public class ImageUtil
         if(!FONT_MAP.containsKey(_l))
         {
             FONT_MAP.put(_l,Font.createFont(Font.TYPE1_FONT, _name).deriveFont((float)_size));
+        }
+        return FONT_MAP.get(_l);
+    }
+
+    public static Font getFont(String _name, float _size)
+    {
+        String _l = String.format("%s/%f", _name, _size);
+        if(!FONT_MAP.containsKey(_l))
+        {
+            Font _awt = Font.getFont(_name);
+            if(_awt==null)
+            {
+                _awt = new Font(_name, Font.PLAIN, (int)_size);
+            }
+            else
+            {
+                _awt = _awt.deriveFont(_size);
+            }
+            FONT_MAP.put(_l, _awt);
+        }
+        return FONT_MAP.get(_l);
+    }
+
+    @SneakyThrows
+    public static Font getTTFont(File _name, float _size)
+    {
+        String _l = String.format("%s/%f", _name.getName(), _size);
+        if(!FONT_MAP.containsKey(_l))
+        {
+            FONT_MAP.put(_l,Font.createFont(Font.TRUETYPE_FONT, _name).deriveFont(_size));
+        }
+        return FONT_MAP.get(_l);
+    }
+
+    @SneakyThrows
+    public static Font getPSFont(File _name, float _size)
+    {
+        String _l = String.format("%s/%f", _name.getName(), _size);
+        if(!FONT_MAP.containsKey(_l))
+        {
+            FONT_MAP.put(_l,Font.createFont(Font.TYPE1_FONT, _name).deriveFont(_size));
         }
         return FONT_MAP.get(_l);
     }
