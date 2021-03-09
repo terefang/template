@@ -38,11 +38,7 @@ while test ! -z "$1" ; do
       (cd $bDIR && mvn -N versions:update-child-modules) || exit 1
       ;;
     -install*)
-        cd $bDIR && scp target/*.rpm root@reposp.ucs.lan.at:/data/repos/shared/rpms/
-
-        for x in /data/repos/shared/; do
-          ssh root@reposp.ucs.lan.at "createrepo -s sha -v -v -v ${x}"
-        done
+      (cd $bDIR && mvn install $OPTS) || exit 1
       ;;
     *) echo "unknow option ..."
       ;;
