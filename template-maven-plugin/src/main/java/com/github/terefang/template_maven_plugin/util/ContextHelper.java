@@ -5,26 +5,17 @@ import com.github.terefang.imageutil.PixelImage;
 import com.github.terefang.imageutil.SvgImage;
 import com.github.terefang.jdao.JDAO;
 import com.github.terefang.template_maven_plugin.TemplateContext;
-import com.github.terefang.template_maven_plugin.luaj.LuaScriptContext;
 import lombok.SneakyThrows;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.codec.digest.HmacUtils;
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.text.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.commons.text.WordUtils;
-import org.apache.commons.text.CaseUtils;
+import org.apache.commons.codec.DecoderException;
 import org.luaj.vm2.LuaValue;
 
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.*;
 
 public class ContextHelper {
     TemplateContext context;
@@ -38,1363 +29,1742 @@ public class ContextHelper {
     }
 
     @SneakyThrows
-    public Map<String, Object> loadContextFile(String _file)
+    public final Map<String, Object> loadContextFile(String _file)
     {
         return ContextUtil.loadContextFrom(new File(this.context.processParent, _file));
     }
 
     /*----- dao helper -----*/
 
-    public JDAO daoFromJdbc(String _driver, String _url, String _user, String _pass)
+    public final JDAO daoFromJdbc(String _driver, String _url, String _user, String _pass)
     {
         return ContextUtil.daoFromJdbc(_driver, _url, _user,_pass);
     }
 
-    /*----- lua helper -----*/
 
-    public LuaValue lvalue(Object _o)
-    {
-        return LuaScriptContext.wrapJava(_o);
+    public final LuaValue lvalue(Object _o) {
+        return ContextUtil.lvalue(_o);
     }
 
-    /*----- image helper -----*/
-
-    public PixelImage pixImage(int _w, int _h) { return PixelImage.create(_w,_h); }
-
-    public SvgImage svgImage(int _w, int _h) { return SvgImage.create(_w,_h); }
-
-    public PdfImage pdfImage(int _w, int _h) { return PdfImage.create(_w,_h); }
-
-    /*----- hmacs -----*/
-
-    public  String hmacMd5Hex(String key, String valueToDigest) {
-        return HmacUtils.hmacMd5Hex(key, valueToDigest);
+    public final PixelImage pixImage(int _w, int _h) {
+        return ContextUtil.pixImage(_w, _h);
     }
 
-    public  String hmacSha1Hex(String key, String valueToDigest) {
-        return HmacUtils.hmacSha1Hex(key, valueToDigest);
+    public final SvgImage svgImage(int _w, int _h) {
+        return ContextUtil.svgImage(_w, _h);
     }
 
-    public  String hmacSha256Hex(String key, String valueToDigest) {
-        return HmacUtils.hmacSha256Hex(key, valueToDigest);
+    public final PdfImage pdfImage(int _w, int _h) {
+        return ContextUtil.pdfImage(_w, _h);
     }
 
-    public  String hmacSha384Hex(String key, String valueToDigest) {
-        return HmacUtils.hmacSha384Hex(key, valueToDigest);
+    public final String hmacMd5Hex(String key, String valueToDigest) {
+        return ContextUtil.hmacMd5Hex(key, valueToDigest);
     }
 
-    public  String hmacSha512Hex(String key, String valueToDigest) {
-        return HmacUtils.hmacSha512Hex(key, valueToDigest);
+    public final String hmacSha1Hex(String key, String valueToDigest) {
+        return ContextUtil.hmacSha1Hex(key, valueToDigest);
     }
 
-    /*----- digest -----*/
-
-    public  String md2Hex(String data) {
-        return DigestUtils.md2Hex(data);
+    public final String hmacSha256Hex(String key, String valueToDigest) {
+        return ContextUtil.hmacSha256Hex(key, valueToDigest);
     }
 
-    public  String md5Hex(String data) {
-        return DigestUtils.md5Hex(data);
+    public final String hmacSha384Hex(String key, String valueToDigest) {
+        return ContextUtil.hmacSha384Hex(key, valueToDigest);
     }
 
-    public  String sha1Hex(String data) {
-        return DigestUtils.sha1Hex(data);
+    public final String hmacSha512Hex(String key, String valueToDigest) {
+        return ContextUtil.hmacSha512Hex(key, valueToDigest);
     }
 
-    public  String sha256Hex(String data) {
-        return DigestUtils.sha256Hex(data);
+    public final String md2Hex(String data) {
+        return ContextUtil.md2Hex(data);
     }
 
-    public  String sha3_256Hex(String data) {
-        return DigestUtils.sha3_256Hex(data);
+    public final String md5Hex(String data) {
+        return ContextUtil.md5Hex(data);
     }
 
-    public  String sha3_384Hex(String data) {
-        return DigestUtils.sha3_384Hex(data);
+    public final String sha1Hex(String data) {
+        return ContextUtil.sha1Hex(data);
     }
 
-    public  String sha3_512Hex(String data) {
-        return DigestUtils.sha3_512Hex(data);
+    public final String sha256Hex(String data) {
+        return ContextUtil.sha256Hex(data);
     }
 
-    public  String sha384Hex(String data) {
-        return DigestUtils.sha384Hex(data);
+    public final String sha3_256Hex(String data) {
+        return ContextUtil.sha3_256Hex(data);
     }
 
-    public  String sha512_224Hex(String data) {
-        return DigestUtils.sha512_224Hex(data);
-    }
-    public  String sha512_256Hex(String data) {
-        return DigestUtils.sha512_256Hex(data);
+    public final String sha3_384Hex(String data) {
+        return ContextUtil.sha3_384Hex(data);
     }
 
-    public  String sha512Hex(String data) {
-        return DigestUtils.sha512Hex(data);
+    public final String sha3_512Hex(String data) {
+        return ContextUtil.sha3_512Hex(data);
     }
 
-    /*-----  -----*/
-
-    public String wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords, String wrapOn) {
-        return WordUtils.wrap(str, wrapLength, newLineStr, wrapLongWords, wrapOn);
+    public final String sha384Hex(String data) {
+        return ContextUtil.sha384Hex(data);
     }
 
-    public boolean containsAllWords(CharSequence word, CharSequence... words) {
-        return WordUtils.containsAllWords(word, words);
+    public final String sha512_224Hex(String data) {
+        return ContextUtil.sha512_224Hex(data);
+    }
+
+    public final String sha512_256Hex(String data) {
+        return ContextUtil.sha512_256Hex(data);
+    }
+
+    public final String sha512Hex(String data) {
+        return ContextUtil.sha512Hex(data);
+    }
+
+    public final String wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords, String wrapOn) {
+        return ContextUtil.wrap(str, wrapLength, newLineStr, wrapLongWords, wrapOn);
+    }
+
+    public final boolean containsAllWords(CharSequence word, CharSequence... words) {
+        return ContextUtil.containsAllWords(word, words);
     }
 
     @Deprecated
-    public boolean isDelimiter(char ch, char[] delimiters) {
-        return WordUtils.isDelimiter(ch, delimiters);
+    public final boolean isDelimiter(char ch, char[] delimiters) {
+        return ContextUtil.isDelimiter(ch, delimiters);
     }
 
     @Deprecated
-    public boolean isDelimiter(int codePoint, char[] delimiters) {
-        return WordUtils.isDelimiter(codePoint, delimiters);
+    public final boolean isDelimiter(int codePoint, char[] delimiters) {
+        return ContextUtil.isDelimiter(codePoint, delimiters);
     }
 
-    public String abbreviate(String str, int lower, int upper, String appendToEnd) {
-        return WordUtils.abbreviate(str, lower, upper, appendToEnd);
+    public final String abbreviate(String str, int lower, int upper, String appendToEnd) {
+        return ContextUtil.abbreviate(str, lower, upper, appendToEnd);
     }
 
-    public String toCamelCase(String str, boolean capitalizeFirstLetter, char... delimiters) {
-        return CaseUtils.toCamelCase(str, capitalizeFirstLetter, delimiters);
+    public final String toCamelCase(String str, boolean capitalizeFirstLetter, char... delimiters) {
+        return ContextUtil.toCamelCase(str, capitalizeFirstLetter, delimiters);
     }
 
-    public String toCamelCase(String str) {
-        return CaseUtils.toCamelCase(str, false);
+    public final String toCamelCase(String str) {
+        return ContextUtil.toCamelCase(str);
     }
 
-    public String wrap(String str, int wrapLength) {
-        return WordUtils.wrap(str, wrapLength);
+    public final String wrap(String str, int wrapLength) {
+        return ContextUtil.wrap(str, wrapLength);
     }
 
-    public String wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords) {
-        return WordUtils.wrap(str, wrapLength, newLineStr, wrapLongWords);
+    public final String wrap(String str, int wrapLength, String newLineStr, boolean wrapLongWords) {
+        return ContextUtil.wrap(str, wrapLength, newLineStr, wrapLongWords);
     }
 
-    public String escapeJava(String input) {
-        return StringEscapeUtils.escapeJava(input);
+    public final String escapeJava(String input) {
+        return ContextUtil.escapeJava(input);
     }
 
-    public String escapeEcmaScript(String input) {
-        return StringEscapeUtils.escapeEcmaScript(input);
+    public final String escapeEcmaScript(String input) {
+        return ContextUtil.escapeEcmaScript(input);
     }
 
-    public String escapeJson(String input) {
-        return StringEscapeUtils.escapeJson(input);
+    public final String escapeJson(String input) {
+        return ContextUtil.escapeJson(input);
     }
 
-    public String unescapeJava(String input) {
-        return StringEscapeUtils.unescapeJava(input);
+    public final String unescapeJava(String input) {
+        return ContextUtil.unescapeJava(input);
     }
 
-    public String unescapeEcmaScript(String input) {
-        return StringEscapeUtils.unescapeEcmaScript(input);
+    public final String unescapeEcmaScript(String input) {
+        return ContextUtil.unescapeEcmaScript(input);
     }
 
-    public String unescapeJson(String input) {
-        return StringEscapeUtils.unescapeJson(input);
+    public final String unescapeJson(String input) {
+        return ContextUtil.unescapeJson(input);
     }
 
-    public String escapeHtml4(String input) {
-        return StringEscapeUtils.escapeHtml4(input);
+    public final String escapeHtml4(String input) {
+        return ContextUtil.escapeHtml4(input);
     }
 
-    public String escapeHtml3(String input) {
-        return StringEscapeUtils.escapeHtml3(input);
+    public final String escapeHtml3(String input) {
+        return ContextUtil.escapeHtml3(input);
     }
 
-    public String unescapeHtml4(String input) {
-        return StringEscapeUtils.unescapeHtml4(input);
+    public final String unescapeHtml4(String input) {
+        return ContextUtil.unescapeHtml4(input);
     }
 
-    public String unescapeHtml3(String input) {
-        return StringEscapeUtils.unescapeHtml3(input);
+    public final String unescapeHtml3(String input) {
+        return ContextUtil.unescapeHtml3(input);
     }
 
-    public String escapeXml(String input) {
-        return StringEscapeUtils.escapeXml10(input);
+    public final String escapeXml(String input) {
+        return ContextUtil.escapeXml(input);
     }
 
-    public String escapeXml10(String input) {
-        return StringEscapeUtils.escapeXml10(input);
+    public final String escapeXml10(String input) {
+        return ContextUtil.escapeXml10(input);
     }
 
-    public String escapeXml11(String input) {
-        return StringEscapeUtils.escapeXml11(input);
+    public final String escapeXml11(String input) {
+        return ContextUtil.escapeXml11(input);
     }
 
-    public String unescapeXml(String input) {
-        return StringEscapeUtils.unescapeXml(input);
+    public final String unescapeXml(String input) {
+        return ContextUtil.unescapeXml(input);
     }
 
-    public String escapeCsv(String input) {
-        return StringEscapeUtils.escapeCsv(input);
+    public final String escapeCsv(String input) {
+        return ContextUtil.escapeCsv(input);
     }
 
-    public String unescapeCsv(String input) {
-        return StringEscapeUtils.unescapeCsv(input);
+    public final String unescapeCsv(String input) {
+        return ContextUtil.unescapeCsv(input);
     }
 
-    public boolean isEmpty(CharSequence cs) {
-        return StringUtils.isEmpty(cs);
+    public final boolean isEmpty(CharSequence cs) {
+        return ContextUtil.isEmpty(cs);
     }
 
-    public boolean isNotEmpty(CharSequence cs) {
-        return StringUtils.isNotEmpty(cs);
+    public final boolean isNotEmpty(CharSequence cs) {
+        return ContextUtil.isNotEmpty(cs);
     }
 
-    public boolean isAnyEmpty(CharSequence... css) {
-        return StringUtils.isAnyEmpty(css);
+    public final boolean isAnyEmpty(CharSequence... css) {
+        return ContextUtil.isAnyEmpty(css);
     }
 
-    public boolean isNoneEmpty(CharSequence... css) {
-        return StringUtils.isNoneEmpty(css);
+    public final boolean isNoneEmpty(CharSequence... css) {
+        return ContextUtil.isNoneEmpty(css);
     }
 
-    public boolean isBlank(CharSequence cs) {
-        return StringUtils.isBlank(cs);
+    public final boolean isBlank(CharSequence cs) {
+        return ContextUtil.isBlank(cs);
     }
 
-    public boolean isNotBlank(CharSequence cs) {
-        return StringUtils.isNotBlank(cs);
+    public final boolean isNotBlank(CharSequence cs) {
+        return ContextUtil.isNotBlank(cs);
     }
 
-    public boolean isAnyBlank(CharSequence... css) {
-        return StringUtils.isAnyBlank(css);
+    public final boolean isAnyBlank(CharSequence... css) {
+        return ContextUtil.isAnyBlank(css);
     }
 
-    public boolean isNoneBlank(CharSequence... css) {
-        return StringUtils.isNoneBlank(css);
+    public final boolean isNoneBlank(CharSequence... css) {
+        return ContextUtil.isNoneBlank(css);
     }
 
-    public String trim(String str) {
-        return StringUtils.trim(str);
+    public final String trim(String str) {
+        return ContextUtil.trim(str);
     }
 
-    public String trimToNull(String str) {
-        return StringUtils.trimToNull(str);
+    public final String trimToNull(String str) {
+        return ContextUtil.trimToNull(str);
     }
 
-    public String trimToEmpty(String str) {
-        return StringUtils.trimToEmpty(str);
+    public final String trimToEmpty(String str) {
+        return ContextUtil.trimToEmpty(str);
     }
 
-    public String strip(String str) {
-        return StringUtils.strip(str);
+    public final String strip(String str) {
+        return ContextUtil.strip(str);
     }
 
-    public String stripToNull(String str) {
-        return StringUtils.stripToNull(str);
+    public final String stripToNull(String str) {
+        return ContextUtil.stripToNull(str);
     }
 
-    public String stripToEmpty(String str) {
-        return StringUtils.stripToEmpty(str);
+    public final String stripToEmpty(String str) {
+        return ContextUtil.stripToEmpty(str);
     }
 
-    public String strip(String str, String stripChars) {
-        return StringUtils.strip(str, stripChars);
+    public final String strip(String str, String stripChars) {
+        return ContextUtil.strip(str, stripChars);
     }
 
-    public String stripStart(String str, String stripChars) {
-        return StringUtils.stripStart(str, stripChars);
+    public final String stripStart(String str, String stripChars) {
+        return ContextUtil.stripStart(str, stripChars);
     }
 
-    public String stripEnd(String str, String stripChars) {
-        return StringUtils.stripEnd(str, stripChars);
+    public final String stripEnd(String str, String stripChars) {
+        return ContextUtil.stripEnd(str, stripChars);
     }
 
-    public String[] stripAll(String... strs) {
-        return StringUtils.stripAll(strs);
+    public final String[] stripAll(String... strs) {
+        return ContextUtil.stripAll(strs);
     }
 
-    public String[] stripAll(String[] strs, String stripChars) {
-        return StringUtils.stripAll(strs, stripChars);
+    public final String[] stripAll(String[] strs, String stripChars) {
+        return ContextUtil.stripAll(strs, stripChars);
     }
 
-    public String stripAccents(String input) {
-        return StringUtils.stripAccents(input);
+    public final String stripAccents(String input) {
+        return ContextUtil.stripAccents(input);
     }
 
-    public boolean equals(CharSequence cs1, CharSequence cs2) {
-        return StringUtils.equals(cs1, cs2);
+    public final boolean equals(CharSequence cs1, CharSequence cs2) {
+        return ContextUtil.equals(cs1, cs2);
     }
 
-    public boolean equalsIgnoreCase(CharSequence str1, CharSequence str2) {
-        return StringUtils.equalsIgnoreCase(str1, str2);
+    public final boolean equalsIgnoreCase(CharSequence str1, CharSequence str2) {
+        return ContextUtil.equalsIgnoreCase(str1, str2);
     }
 
-    public int indexOf(CharSequence seq, int searchChar) {
-        return StringUtils.indexOf(seq, searchChar);
+    public final int indexOf(CharSequence seq, int searchChar) {
+        return ContextUtil.indexOf(seq, searchChar);
     }
 
-    public int indexOf(CharSequence seq, int searchChar, int startPos) {
-        return StringUtils.indexOf(seq, searchChar, startPos);
+    public final int indexOf(CharSequence seq, int searchChar, int startPos) {
+        return ContextUtil.indexOf(seq, searchChar, startPos);
     }
 
-    public int indexOf(CharSequence seq, CharSequence searchSeq) {
-        return StringUtils.indexOf(seq, searchSeq);
+    public final int indexOf(CharSequence seq, CharSequence searchSeq) {
+        return ContextUtil.indexOf(seq, searchSeq);
     }
 
-    public int indexOf(CharSequence seq, CharSequence searchSeq, int startPos) {
-        return StringUtils.indexOf(seq, searchSeq, startPos);
+    public final int indexOf(CharSequence seq, CharSequence searchSeq, int startPos) {
+        return ContextUtil.indexOf(seq, searchSeq, startPos);
     }
 
-    public int ordinalIndexOf(CharSequence str, CharSequence searchStr, int ordinal) {
-        return StringUtils.ordinalIndexOf(str, searchStr, ordinal);
+    public final int ordinalIndexOf(CharSequence str, CharSequence searchStr, int ordinal) {
+        return ContextUtil.ordinalIndexOf(str, searchStr, ordinal);
     }
 
-    public int indexOfIgnoreCase(CharSequence str, CharSequence searchStr) {
-        return StringUtils.indexOfIgnoreCase(str, searchStr);
+    public final int indexOfIgnoreCase(CharSequence str, CharSequence searchStr) {
+        return ContextUtil.indexOfIgnoreCase(str, searchStr);
     }
 
-    public int indexOfIgnoreCase(CharSequence str, CharSequence searchStr, int startPos) {
-        return StringUtils.indexOfIgnoreCase(str, searchStr, startPos);
+    public final int indexOfIgnoreCase(CharSequence str, CharSequence searchStr, int startPos) {
+        return ContextUtil.indexOfIgnoreCase(str, searchStr, startPos);
     }
 
-    public int lastIndexOf(CharSequence seq, int searchChar) {
-        return StringUtils.lastIndexOf(seq, searchChar);
+    public final int lastIndexOf(CharSequence seq, int searchChar) {
+        return ContextUtil.lastIndexOf(seq, searchChar);
     }
 
-    public int lastIndexOf(CharSequence seq, int searchChar, int startPos) {
-        return StringUtils.lastIndexOf(seq, searchChar, startPos);
+    public final int lastIndexOf(CharSequence seq, int searchChar, int startPos) {
+        return ContextUtil.lastIndexOf(seq, searchChar, startPos);
     }
 
-    public int lastIndexOf(CharSequence seq, CharSequence searchSeq) {
-        return StringUtils.lastIndexOf(seq, searchSeq);
+    public final int lastIndexOf(CharSequence seq, CharSequence searchSeq) {
+        return ContextUtil.lastIndexOf(seq, searchSeq);
     }
 
-    public int lastOrdinalIndexOf(CharSequence str, CharSequence searchStr, int ordinal) {
-        return StringUtils.lastOrdinalIndexOf(str, searchStr, ordinal);
+    public final int lastOrdinalIndexOf(CharSequence str, CharSequence searchStr, int ordinal) {
+        return ContextUtil.lastOrdinalIndexOf(str, searchStr, ordinal);
     }
 
-    public int lastIndexOf(CharSequence seq, CharSequence searchSeq, int startPos) {
-        return StringUtils.lastIndexOf(seq, searchSeq, startPos);
+    public final int lastIndexOf(CharSequence seq, CharSequence searchSeq, int startPos) {
+        return ContextUtil.lastIndexOf(seq, searchSeq, startPos);
     }
 
-    public int lastIndexOfIgnoreCase(CharSequence str, CharSequence searchStr) {
-        return StringUtils.lastIndexOfIgnoreCase(str, searchStr);
+    public final int lastIndexOfIgnoreCase(CharSequence str, CharSequence searchStr) {
+        return ContextUtil.lastIndexOfIgnoreCase(str, searchStr);
     }
 
-    public int lastIndexOfIgnoreCase(CharSequence str, CharSequence searchStr, int startPos) {
-        return StringUtils.lastIndexOfIgnoreCase(str, searchStr, startPos);
+    public final int lastIndexOfIgnoreCase(CharSequence str, CharSequence searchStr, int startPos) {
+        return ContextUtil.lastIndexOfIgnoreCase(str, searchStr, startPos);
     }
 
-    public boolean contains(CharSequence seq, int searchChar) {
-        return StringUtils.contains(seq, searchChar);
+    public final boolean contains(CharSequence seq, int searchChar) {
+        return ContextUtil.contains(seq, searchChar);
     }
 
-    public boolean contains(CharSequence seq, CharSequence searchSeq) {
-        return StringUtils.contains(seq, searchSeq);
+    public final boolean contains(CharSequence seq, CharSequence searchSeq) {
+        return ContextUtil.contains(seq, searchSeq);
     }
 
-    public boolean containsIgnoreCase(CharSequence str, CharSequence searchStr) {
-        return StringUtils.containsIgnoreCase(str, searchStr);
+    public final boolean containsIgnoreCase(CharSequence str, CharSequence searchStr) {
+        return ContextUtil.containsIgnoreCase(str, searchStr);
     }
 
-    public boolean containsWhitespace(CharSequence seq) {
-        return StringUtils.containsWhitespace(seq);
+    public final boolean containsWhitespace(CharSequence seq) {
+        return ContextUtil.containsWhitespace(seq);
     }
 
-    public int indexOfAny(CharSequence cs, char... searchChars) {
-        return StringUtils.indexOfAny(cs, searchChars);
+    public final int indexOfAny(CharSequence cs, char... searchChars) {
+        return ContextUtil.indexOfAny(cs, searchChars);
     }
 
-    public int indexOfAny(CharSequence cs, String searchChars) {
-        return StringUtils.indexOfAny(cs, searchChars);
+    public final int indexOfAny(CharSequence cs, String searchChars) {
+        return ContextUtil.indexOfAny(cs, searchChars);
     }
 
-    public boolean containsAny(CharSequence cs, char... searchChars) {
-        return StringUtils.containsAny(cs, searchChars);
+    public final boolean containsAny(CharSequence cs, char... searchChars) {
+        return ContextUtil.containsAny(cs, searchChars);
     }
 
-    public boolean containsAny(CharSequence cs, CharSequence searchChars) {
-        return StringUtils.containsAny(cs, searchChars);
+    public final boolean containsAny(CharSequence cs, CharSequence searchChars) {
+        return ContextUtil.containsAny(cs, searchChars);
     }
 
-    public boolean containsAny(CharSequence cs, CharSequence... searchCharSequences) {
-        return StringUtils.containsAny(cs, searchCharSequences);
+    public final boolean containsAny(CharSequence cs, CharSequence... searchCharSequences) {
+        return ContextUtil.containsAny(cs, searchCharSequences);
     }
 
-    public int indexOfAnyBut(CharSequence cs, char... searchChars) {
-        return StringUtils.indexOfAnyBut(cs, searchChars);
+    public final int indexOfAnyBut(CharSequence cs, char... searchChars) {
+        return ContextUtil.indexOfAnyBut(cs, searchChars);
     }
 
-    public int indexOfAnyBut(CharSequence seq, CharSequence searchChars) {
-        return StringUtils.indexOfAnyBut(seq, searchChars);
+    public final int indexOfAnyBut(CharSequence seq, CharSequence searchChars) {
+        return ContextUtil.indexOfAnyBut(seq, searchChars);
     }
 
-    public boolean containsOnly(CharSequence cs, char... valid) {
-        return StringUtils.containsOnly(cs, valid);
+    public final boolean containsOnly(CharSequence cs, char... valid) {
+        return ContextUtil.containsOnly(cs, valid);
     }
 
-    public boolean containsOnly(CharSequence cs, String validChars) {
-        return StringUtils.containsOnly(cs, validChars);
+    public final boolean containsOnly(CharSequence cs, String validChars) {
+        return ContextUtil.containsOnly(cs, validChars);
     }
 
-    public boolean containsNone(CharSequence cs, char... searchChars) {
-        return StringUtils.containsNone(cs, searchChars);
+    public final boolean containsNone(CharSequence cs, char... searchChars) {
+        return ContextUtil.containsNone(cs, searchChars);
     }
 
-    public boolean containsNone(CharSequence cs, String invalidChars) {
-        return StringUtils.containsNone(cs, invalidChars);
+    public final boolean containsNone(CharSequence cs, String invalidChars) {
+        return ContextUtil.containsNone(cs, invalidChars);
     }
 
-    public int indexOfAny(CharSequence str, CharSequence... searchStrs) {
-        return StringUtils.indexOfAny(str, searchStrs);
+    public final int indexOfAny(CharSequence str, CharSequence... searchStrs) {
+        return ContextUtil.indexOfAny(str, searchStrs);
     }
 
-    public int lastIndexOfAny(CharSequence str, CharSequence... searchStrs) {
-        return StringUtils.lastIndexOfAny(str, searchStrs);
+    public final int lastIndexOfAny(CharSequence str, CharSequence... searchStrs) {
+        return ContextUtil.lastIndexOfAny(str, searchStrs);
     }
 
-    public String substring(String str, int start) {
-        return StringUtils.substring(str, start);
+    public final String substring(String str, int start) {
+        return ContextUtil.substring(str, start);
     }
 
-    public String substring(String str, int start, int end) {
-        return StringUtils.substring(str, start, end);
+    public final String substring(String str, int start, int end) {
+        return ContextUtil.substring(str, start, end);
     }
 
-    public String left(String str, int len) {
-        return StringUtils.left(str, len);
+    public final String left(String str, int len) {
+        return ContextUtil.left(str, len);
     }
 
-    public String right(String str, int len) {
-        return StringUtils.right(str, len);
+    public final String right(String str, int len) {
+        return ContextUtil.right(str, len);
     }
 
-    public String mid(String str, int pos, int len) {
-        return StringUtils.mid(str, pos, len);
+    public final String mid(String str, int pos, int len) {
+        return ContextUtil.mid(str, pos, len);
     }
 
-    public String substringBefore(String str, String separator) {
-        return StringUtils.substringBefore(str, separator);
+    public final String substringBefore(String str, String separator) {
+        return ContextUtil.substringBefore(str, separator);
     }
 
-    public String substringAfter(String str, String separator) {
-        return StringUtils.substringAfter(str, separator);
+    public final String substringAfter(String str, String separator) {
+        return ContextUtil.substringAfter(str, separator);
     }
 
-    public String substringBeforeLast(String str, String separator) {
-        return StringUtils.substringBeforeLast(str, separator);
+    public final String substringBeforeLast(String str, String separator) {
+        return ContextUtil.substringBeforeLast(str, separator);
     }
 
-    public String substringAfterLast(String str, String separator) {
-        return StringUtils.substringAfterLast(str, separator);
+    public final String substringAfterLast(String str, String separator) {
+        return ContextUtil.substringAfterLast(str, separator);
     }
 
-    public String substringBetween(String str, String tag) {
-        return StringUtils.substringBetween(str, tag);
+    public final String substringBetween(String str, String tag) {
+        return ContextUtil.substringBetween(str, tag);
     }
 
-    public String substringBetween(String str, String open, String close) {
-        return StringUtils.substringBetween(str, open, close);
+    public final String substringBetween(String str, String open, String close) {
+        return ContextUtil.substringBetween(str, open, close);
     }
 
-    public String[] substringsBetween(String str, String open, String close) {
-        return StringUtils.substringsBetween(str, open, close);
+    public final String[] substringsBetween(String str, String open, String close) {
+        return ContextUtil.substringsBetween(str, open, close);
     }
 
-    public String[] split(String str) {
-        return StringUtils.split(str);
+    public final String[] split(String str) {
+        return ContextUtil.split(str);
     }
 
-    public String[] split(String str, char separatorChar) {
-        return StringUtils.split(str, separatorChar);
+    public final String[] split(String str, char separatorChar) {
+        return ContextUtil.split(str, separatorChar);
     }
 
-    public String[] split(String str, String separatorChars) {
-        return StringUtils.split(str, separatorChars);
+    public final String[] split(String str, String separatorChars) {
+        return ContextUtil.split(str, separatorChars);
     }
 
-    public String[] split(String str, String separatorChars, int max) {
-        return StringUtils.split(str, separatorChars, max);
+    public final String[] split(String str, String separatorChars, int max) {
+        return ContextUtil.split(str, separatorChars, max);
     }
 
-    public String[] splitByWholeSeparator(String str, String separator) {
-        return StringUtils.splitByWholeSeparator(str, separator);
+    public final String[] splitByWholeSeparator(String str, String separator) {
+        return ContextUtil.splitByWholeSeparator(str, separator);
     }
 
-    public String[] splitByWholeSeparator(String str, String separator, int max) {
-        return StringUtils.splitByWholeSeparator(str, separator, max);
+    public final String[] splitByWholeSeparator(String str, String separator, int max) {
+        return ContextUtil.splitByWholeSeparator(str, separator, max);
     }
 
-    public String[] splitByWholeSeparatorPreserveAllTokens(String str, String separator) {
-        return StringUtils.splitByWholeSeparatorPreserveAllTokens(str, separator);
+    public final String[] splitByWholeSeparatorPreserveAllTokens(String str, String separator) {
+        return ContextUtil.splitByWholeSeparatorPreserveAllTokens(str, separator);
     }
 
-    public String[] splitByWholeSeparatorPreserveAllTokens(String str, String separator, int max) {
-        return StringUtils.splitByWholeSeparatorPreserveAllTokens(str, separator, max);
+    public final String[] splitByWholeSeparatorPreserveAllTokens(String str, String separator, int max) {
+        return ContextUtil.splitByWholeSeparatorPreserveAllTokens(str, separator, max);
     }
 
-    public String[] splitPreserveAllTokens(String str) {
-        return StringUtils.splitPreserveAllTokens(str);
+    public final String[] splitPreserveAllTokens(String str) {
+        return ContextUtil.splitPreserveAllTokens(str);
     }
 
-    public String[] splitPreserveAllTokens(String str, char separatorChar) {
-        return StringUtils.splitPreserveAllTokens(str, separatorChar);
+    public final String[] splitPreserveAllTokens(String str, char separatorChar) {
+        return ContextUtil.splitPreserveAllTokens(str, separatorChar);
     }
 
-    public String[] splitPreserveAllTokens(String str, String separatorChars) {
-        return StringUtils.splitPreserveAllTokens(str, separatorChars);
+    public final String[] splitPreserveAllTokens(String str, String separatorChars) {
+        return ContextUtil.splitPreserveAllTokens(str, separatorChars);
     }
 
-    public String[] splitPreserveAllTokens(String str, String separatorChars, int max) {
-        return StringUtils.splitPreserveAllTokens(str, separatorChars, max);
+    public final String[] splitPreserveAllTokens(String str, String separatorChars, int max) {
+        return ContextUtil.splitPreserveAllTokens(str, separatorChars, max);
     }
 
-    public String[] splitByCharacterType(String str) {
-        return StringUtils.splitByCharacterType(str);
+    public final String[] splitByCharacterType(String str) {
+        return ContextUtil.splitByCharacterType(str);
     }
 
-    public String[] splitByCharacterTypeCamelCase(String str) {
-        return StringUtils.splitByCharacterTypeCamelCase(str);
+    public final String[] splitByCharacterTypeCamelCase(String str) {
+        return ContextUtil.splitByCharacterTypeCamelCase(str);
     }
 
-    public <T> String join(T... elements) {
-        return StringUtils.join(elements);
+    public final <T> String join(T... elements) {
+        return ContextUtil.join(elements);
     }
 
-    public String join(Object[] array, char separator) {
-        return StringUtils.join(array, separator);
+    public final String join(Object[] array, char separator) {
+        return ContextUtil.join(array, separator);
     }
 
-    public String join(long[] array, char separator) {
-        return StringUtils.join(array, separator);
+    public final String join(long[] array, char separator) {
+        return ContextUtil.join(array, separator);
     }
 
-    public String join(int[] array, char separator) {
-        return StringUtils.join(array, separator);
+    public final String join(int[] array, char separator) {
+        return ContextUtil.join(array, separator);
     }
 
-    public String join(short[] array, char separator) {
-        return StringUtils.join(array, separator);
+    public final String join(short[] array, char separator) {
+        return ContextUtil.join(array, separator);
     }
 
-    public String join(byte[] array, char separator) {
-        return StringUtils.join(array, separator);
+    public final String join(byte[] array, char separator) {
+        return ContextUtil.join(array, separator);
     }
 
-    public String join(char[] array, char separator) {
-        return StringUtils.join(array, separator);
+    public final String join(char[] array, char separator) {
+        return ContextUtil.join(array, separator);
     }
 
-    public String join(float[] array, char separator) {
-        return StringUtils.join(array, separator);
+    public final String join(float[] array, char separator) {
+        return ContextUtil.join(array, separator);
     }
 
-    public String join(double[] array, char separator) {
-        return StringUtils.join(array, separator);
+    public final String join(double[] array, char separator) {
+        return ContextUtil.join(array, separator);
     }
 
-    public String join(Object[] array, char separator, int startIndex, int endIndex) {
-        return StringUtils.join(array, separator, startIndex, endIndex);
+    public final String join(Object[] array, char separator, int startIndex, int endIndex) {
+        return ContextUtil.join(array, separator, startIndex, endIndex);
     }
 
-    public String join(long[] array, char separator, int startIndex, int endIndex) {
-        return StringUtils.join(array, separator, startIndex, endIndex);
+    public final String join(long[] array, char separator, int startIndex, int endIndex) {
+        return ContextUtil.join(array, separator, startIndex, endIndex);
     }
 
-    public String join(int[] array, char separator, int startIndex, int endIndex) {
-        return StringUtils.join(array, separator, startIndex, endIndex);
+    public final String join(int[] array, char separator, int startIndex, int endIndex) {
+        return ContextUtil.join(array, separator, startIndex, endIndex);
     }
 
-    public String join(byte[] array, char separator, int startIndex, int endIndex) {
-        return StringUtils.join(array, separator, startIndex, endIndex);
+    public final String join(byte[] array, char separator, int startIndex, int endIndex) {
+        return ContextUtil.join(array, separator, startIndex, endIndex);
     }
 
-    public String join(short[] array, char separator, int startIndex, int endIndex) {
-        return StringUtils.join(array, separator, startIndex, endIndex);
+    public final String join(short[] array, char separator, int startIndex, int endIndex) {
+        return ContextUtil.join(array, separator, startIndex, endIndex);
     }
 
-    public String join(char[] array, char separator, int startIndex, int endIndex) {
-        return StringUtils.join(array, separator, startIndex, endIndex);
+    public final String join(char[] array, char separator, int startIndex, int endIndex) {
+        return ContextUtil.join(array, separator, startIndex, endIndex);
     }
 
-    public String join(double[] array, char separator, int startIndex, int endIndex) {
-        return StringUtils.join(array, separator, startIndex, endIndex);
+    public final String join(double[] array, char separator, int startIndex, int endIndex) {
+        return ContextUtil.join(array, separator, startIndex, endIndex);
     }
 
-    public String join(float[] array, char separator, int startIndex, int endIndex) {
-        return StringUtils.join(array, separator, startIndex, endIndex);
+    public final String join(float[] array, char separator, int startIndex, int endIndex) {
+        return ContextUtil.join(array, separator, startIndex, endIndex);
     }
 
-    public String join(Object[] array, String separator) {
-        return StringUtils.join(array, separator);
+    public final String join(Object[] array, String separator) {
+        return ContextUtil.join(array, separator);
     }
 
-    public String join(Object[] array, String separator, int startIndex, int endIndex) {
-        return StringUtils.join(array, separator, startIndex, endIndex);
+    public final String join(Object[] array, String separator, int startIndex, int endIndex) {
+        return ContextUtil.join(array, separator, startIndex, endIndex);
     }
 
-    public String join(Iterator<?> iterator, char separator) {
-        return StringUtils.join(iterator, separator);
+    public final String join(Iterator<?> iterator, char separator) {
+        return ContextUtil.join(iterator, separator);
     }
 
-    public String join(Iterator<?> iterator, String separator) {
-        return StringUtils.join(iterator, separator);
+    public final String join(Iterator<?> iterator, String separator) {
+        return ContextUtil.join(iterator, separator);
     }
 
-    public String join(Iterable<?> iterable, char separator) {
-        return StringUtils.join(iterable, separator);
+    public final String join(Iterable<?> iterable, char separator) {
+        return ContextUtil.join(iterable, separator);
     }
 
-    public String join(Iterable<?> iterable, String separator) {
-        return StringUtils.join(iterable, separator);
+    public final String join(Iterable<?> iterable, String separator) {
+        return ContextUtil.join(iterable, separator);
     }
 
-    public String deleteWhitespace(String str) {
-        return StringUtils.deleteWhitespace(str);
+    public final String deleteWhitespace(String str) {
+        return ContextUtil.deleteWhitespace(str);
     }
 
-    public String removeStart(String str, String remove) {
-        return StringUtils.removeStart(str, remove);
+    public final String removeStart(String str, String remove) {
+        return ContextUtil.removeStart(str, remove);
     }
 
-    public String removeStartIgnoreCase(String str, String remove) {
-        return StringUtils.removeStartIgnoreCase(str, remove);
+    public final String removeStartIgnoreCase(String str, String remove) {
+        return ContextUtil.removeStartIgnoreCase(str, remove);
     }
 
-    public String removeEnd(String str, String remove) {
-        return StringUtils.removeEnd(str, remove);
+    public final String removeEnd(String str, String remove) {
+        return ContextUtil.removeEnd(str, remove);
     }
 
-    public String removeEndIgnoreCase(String str, String remove) {
-        return StringUtils.removeEndIgnoreCase(str, remove);
+    public final String removeEndIgnoreCase(String str, String remove) {
+        return ContextUtil.removeEndIgnoreCase(str, remove);
     }
 
-    public String remove(String str, String remove) {
-        return StringUtils.remove(str, remove);
+    public final String remove(String str, String remove) {
+        return ContextUtil.remove(str, remove);
     }
 
-    public String remove(String str, char remove) {
-        return StringUtils.remove(str, remove);
+    public final String remove(String str, char remove) {
+        return ContextUtil.remove(str, remove);
     }
 
-    public String replaceOnce(String text, String searchString, String replacement) {
-        return StringUtils.replaceOnce(text, searchString, replacement);
+    public final String replaceOnce(String text, String searchString, String replacement) {
+        return ContextUtil.replaceOnce(text, searchString, replacement);
     }
 
-    public String replacePattern(String source, String regex, String replacement) {
-        return StringUtils.replacePattern(source, regex, replacement);
+    public final String replacePattern(String source, String regex, String replacement) {
+        return ContextUtil.replacePattern(source, regex, replacement);
     }
 
-    public String removePattern(String source, String regex) {
-        return StringUtils.removePattern(source, regex);
+    public final String removePattern(String source, String regex) {
+        return ContextUtil.removePattern(source, regex);
     }
 
-    public String replace(String text, String searchString, String replacement) {
-        return StringUtils.replace(text, searchString, replacement);
+    public final String replace(String text, String searchString, String replacement) {
+        return ContextUtil.replace(text, searchString, replacement);
     }
 
-    public String replace(String text, String searchString, String replacement, int max) {
-        return StringUtils.replace(text, searchString, replacement, max);
+    public final String replace(String text, String searchString, String replacement, int max) {
+        return ContextUtil.replace(text, searchString, replacement, max);
     }
 
-    public String replaceEach(String text, String[] searchList, String[] replacementList) {
-        return StringUtils.replaceEach(text, searchList, replacementList);
+    public final String replaceEach(String text, String[] searchList, String[] replacementList) {
+        return ContextUtil.replaceEach(text, searchList, replacementList);
     }
 
-    public String replaceEachRepeatedly(String text, String[] searchList, String[] replacementList) {
-        return StringUtils.replaceEachRepeatedly(text, searchList, replacementList);
+    public final String replaceEachRepeatedly(String text, String[] searchList, String[] replacementList) {
+        return ContextUtil.replaceEachRepeatedly(text, searchList, replacementList);
     }
 
-    public String replaceChars(String str, char searchChar, char replaceChar) {
-        return StringUtils.replaceChars(str, searchChar, replaceChar);
+    public final String replaceChars(String str, char searchChar, char replaceChar) {
+        return ContextUtil.replaceChars(str, searchChar, replaceChar);
     }
 
-    public String replaceChars(String str, String searchChars, String replaceChars) {
-        return StringUtils.replaceChars(str, searchChars, replaceChars);
+    public final String replaceChars(String str, String searchChars, String replaceChars) {
+        return ContextUtil.replaceChars(str, searchChars, replaceChars);
     }
 
-    public String overlay(String str, String overlay, int start, int end) {
-        return StringUtils.overlay(str, overlay, start, end);
+    public final String overlay(String str, String overlay, int start, int end) {
+        return ContextUtil.overlay(str, overlay, start, end);
     }
 
-    public String chomp(String str) {
-        return StringUtils.chomp(str);
+    public final String chomp(String str) {
+        return ContextUtil.chomp(str);
     }
 
     @Deprecated
-    public String chomp(String str, String separator) {
-        return StringUtils.chomp(str, separator);
+    public final String chomp(String str, String separator) {
+        return ContextUtil.chomp(str, separator);
     }
 
-    public String chop(String str) {
-        return StringUtils.chop(str);
+    public final String chop(String str) {
+        return ContextUtil.chop(str);
     }
 
-    public String repeat(String str, int repeat) {
-        return StringUtils.repeat(str, repeat);
+    public final String repeat(String str, int repeat) {
+        return ContextUtil.repeat(str, repeat);
     }
 
-    public String repeat(String str, String separator, int repeat) {
-        return StringUtils.repeat(str, separator, repeat);
+    public final String repeat(String str, String separator, int repeat) {
+        return ContextUtil.repeat(str, separator, repeat);
     }
 
-    public String repeat(char ch, int repeat) {
-        return StringUtils.repeat(ch, repeat);
+    public final String repeat(char ch, int repeat) {
+        return ContextUtil.repeat(ch, repeat);
     }
 
-    public String rightPad(String str, int size) {
-        return StringUtils.rightPad(str, size);
+    public final String rightPad(String str, int size) {
+        return ContextUtil.rightPad(str, size);
     }
 
-    public String rightPad(String str, int size, char padChar) {
-        return StringUtils.rightPad(str, size, padChar);
+    public final String rightPad(String str, int size, char padChar) {
+        return ContextUtil.rightPad(str, size, padChar);
     }
 
-    public String rightPad(String str, int size, String padStr) {
-        return StringUtils.rightPad(str, size, padStr);
+    public final String rightPad(String str, int size, String padStr) {
+        return ContextUtil.rightPad(str, size, padStr);
     }
 
-    public String leftPad(String str, int size) {
-        return StringUtils.leftPad(str, size);
+    public final String leftPad(String str, int size) {
+        return ContextUtil.leftPad(str, size);
     }
 
-    public String leftPad(String str, int size, char padChar) {
-        return StringUtils.leftPad(str, size, padChar);
+    public final String leftPad(String str, int size, char padChar) {
+        return ContextUtil.leftPad(str, size, padChar);
     }
 
-    public String leftPad(String str, int size, String padStr) {
-        return StringUtils.leftPad(str, size, padStr);
+    public final String leftPad(String str, int size, String padStr) {
+        return ContextUtil.leftPad(str, size, padStr);
     }
 
-    public int length(CharSequence cs) {
-        return StringUtils.length(cs);
+    public final int length(CharSequence cs) {
+        return ContextUtil.length(cs);
     }
 
-    public String center(String str, int size) {
-        return StringUtils.center(str, size);
+    public final String center(String str, int size) {
+        return ContextUtil.center(str, size);
     }
 
-    public String center(String str, int size, char padChar) {
-        return StringUtils.center(str, size, padChar);
+    public final String center(String str, int size, char padChar) {
+        return ContextUtil.center(str, size, padChar);
     }
 
-    public String center(String str, int size, String padStr) {
-        return StringUtils.center(str, size, padStr);
+    public final String center(String str, int size, String padStr) {
+        return ContextUtil.center(str, size, padStr);
     }
 
-    public String upperCase(String str) {
-        return StringUtils.upperCase(str);
+    public final String upperCase(String str) {
+        return ContextUtil.upperCase(str);
     }
 
-    public String upperCase(String str, Locale locale) {
-        return StringUtils.upperCase(str, locale);
+    public final String upperCase(String str, Locale locale) {
+        return ContextUtil.upperCase(str, locale);
     }
 
-    public String lowerCase(String str) {
-        return StringUtils.lowerCase(str);
+    public final String lowerCase(String str) {
+        return ContextUtil.lowerCase(str);
     }
 
-    public String lowerCase(String str, Locale locale) {
-        return StringUtils.lowerCase(str, locale);
+    public final String lowerCase(String str, Locale locale) {
+        return ContextUtil.lowerCase(str, locale);
     }
 
-    public String capitalize(String str) {
-        return StringUtils.capitalize(str);
+    public final String capitalize(String str) {
+        return ContextUtil.capitalize(str);
     }
 
-    public String capitalize(String str, char... delimiters) {
-        return WordUtils.capitalize(str, delimiters);
+    public final String capitalize(String str, char... delimiters) {
+        return ContextUtil.capitalize(str, delimiters);
     }
 
-    public String capitalizeFully(String str) {
-        return WordUtils.capitalizeFully(str);
+    public final String capitalizeFully(String str) {
+        return ContextUtil.capitalizeFully(str);
     }
 
-    public String capitalizeFully(String str, char... delimiters) {
-        return WordUtils.capitalizeFully(str, delimiters);
+    public final String capitalizeFully(String str, char... delimiters) {
+        return ContextUtil.capitalizeFully(str, delimiters);
     }
 
-    public String uncapitalize(String str) {
-        return StringUtils.uncapitalize(str);
+    public final String uncapitalize(String str) {
+        return ContextUtil.uncapitalize(str);
     }
 
-    public String uncapitalize(String str, char... delimiters) {
-        return WordUtils.uncapitalize(str, delimiters);
+    public final String uncapitalize(String str, char... delimiters) {
+        return ContextUtil.uncapitalize(str, delimiters);
     }
 
-    public String swapCase(String str) {
-        return StringUtils.swapCase(str);
+    public final String swapCase(String str) {
+        return ContextUtil.swapCase(str);
     }
 
-    public String initials(String str) {
-        return WordUtils.initials(str);
+    public final String initials(String str) {
+        return ContextUtil.initials(str);
     }
 
-    public String initials(String str, char... delimiters) {
-        return WordUtils.initials(str, delimiters);
+    public final String initials(String str, char... delimiters) {
+        return ContextUtil.initials(str, delimiters);
     }
 
-    public int countMatches(CharSequence str, CharSequence sub) {
-        return StringUtils.countMatches(str, sub);
+    public final int countMatches(CharSequence str, CharSequence sub) {
+        return ContextUtil.countMatches(str, sub);
     }
 
-    public int countMatches(CharSequence str, char ch) {
-        return StringUtils.countMatches(str, ch);
+    public final int countMatches(CharSequence str, char ch) {
+        return ContextUtil.countMatches(str, ch);
     }
 
-    public boolean isAlpha(CharSequence cs) {
-        return StringUtils.isAlpha(cs);
+    public final boolean isAlpha(CharSequence cs) {
+        return ContextUtil.isAlpha(cs);
     }
 
-    public boolean isAlphaSpace(CharSequence cs) {
-        return StringUtils.isAlphaSpace(cs);
+    public final boolean isAlphaSpace(CharSequence cs) {
+        return ContextUtil.isAlphaSpace(cs);
     }
 
-    public boolean isAlphanumeric(CharSequence cs) {
-        return StringUtils.isAlphanumeric(cs);
+    public final boolean isAlphanumeric(CharSequence cs) {
+        return ContextUtil.isAlphanumeric(cs);
     }
 
-    public boolean isAlphanumericSpace(CharSequence cs) {
-        return StringUtils.isAlphanumericSpace(cs);
+    public final boolean isAlphanumericSpace(CharSequence cs) {
+        return ContextUtil.isAlphanumericSpace(cs);
     }
 
-    public boolean isAsciiPrintable(CharSequence cs) {
-        return StringUtils.isAsciiPrintable(cs);
+    public final boolean isAsciiPrintable(CharSequence cs) {
+        return ContextUtil.isAsciiPrintable(cs);
     }
 
-    public boolean isNumeric(CharSequence cs) {
-        return StringUtils.isNumeric(cs);
+    public final boolean isNumeric(CharSequence cs) {
+        return ContextUtil.isNumeric(cs);
     }
 
-    public boolean isNumericSpace(CharSequence cs) {
-        return StringUtils.isNumericSpace(cs);
+    public final boolean isNumericSpace(CharSequence cs) {
+        return ContextUtil.isNumericSpace(cs);
     }
 
-    public boolean isWhitespace(CharSequence cs) {
-        return StringUtils.isWhitespace(cs);
+    public final boolean isWhitespace(CharSequence cs) {
+        return ContextUtil.isWhitespace(cs);
     }
 
-    public boolean isAllLowerCase(CharSequence cs) {
-        return StringUtils.isAllLowerCase(cs);
+    public final boolean isAllLowerCase(CharSequence cs) {
+        return ContextUtil.isAllLowerCase(cs);
     }
 
-    public boolean isAllUpperCase(CharSequence cs) {
-        return StringUtils.isAllUpperCase(cs);
+    public final boolean isAllUpperCase(CharSequence cs) {
+        return ContextUtil.isAllUpperCase(cs);
     }
 
-    public String defaultString(String str) {
-        return StringUtils.defaultString(str);
+    public final String defaultString(String str) {
+        return ContextUtil.defaultString(str);
     }
 
-    public String defaultString(String str, String defaultStr) {
-        return StringUtils.defaultString(str, defaultStr);
+    public final String defaultString(String str, String defaultStr) {
+        return ContextUtil.defaultString(str, defaultStr);
     }
 
-    public <T extends CharSequence> T defaultIfBlank(T str, T defaultStr) {
-        return StringUtils.defaultIfBlank(str, defaultStr);
+    public final <T extends CharSequence> T defaultIfBlank(T str, T defaultStr) {
+        return ContextUtil.defaultIfBlank(str, defaultStr);
     }
 
-    public <T extends CharSequence> T defaultIfEmpty(T str, T defaultStr) {
-        return StringUtils.defaultIfEmpty(str, defaultStr);
+    public final <T extends CharSequence> T defaultIfEmpty(T str, T defaultStr) {
+        return ContextUtil.defaultIfEmpty(str, defaultStr);
     }
 
-    public String reverse(String str) {
-        return StringUtils.reverse(str);
+    public final String reverse(String str) {
+        return ContextUtil.reverse(str);
     }
 
-    public String reverseDelimited(String str, char separatorChar) {
-        return StringUtils.reverseDelimited(str, separatorChar);
+    public final String reverseDelimited(String str, char separatorChar) {
+        return ContextUtil.reverseDelimited(str, separatorChar);
     }
 
-    public String abbreviate(String str, int maxWidth) {
-        return StringUtils.abbreviate(str, maxWidth);
+    public final String abbreviate(String str, int maxWidth) {
+        return ContextUtil.abbreviate(str, maxWidth);
     }
 
-    public String abbreviate(String str, int offset, int maxWidth) {
-        return StringUtils.abbreviate(str, offset, maxWidth);
+    public final String abbreviate(String str, int offset, int maxWidth) {
+        return ContextUtil.abbreviate(str, offset, maxWidth);
     }
 
-    public String abbreviateMiddle(String str, String middle, int length) {
-        return StringUtils.abbreviateMiddle(str, middle, length);
+    public final String abbreviateMiddle(String str, String middle, int length) {
+        return ContextUtil.abbreviateMiddle(str, middle, length);
     }
 
-    public String difference(String str1, String str2) {
-        return StringUtils.difference(str1, str2);
+    public final String difference(String str1, String str2) {
+        return ContextUtil.difference(str1, str2);
     }
 
-    public int indexOfDifference(CharSequence cs1, CharSequence cs2) {
-        return StringUtils.indexOfDifference(cs1, cs2);
+    public final int indexOfDifference(CharSequence cs1, CharSequence cs2) {
+        return ContextUtil.indexOfDifference(cs1, cs2);
     }
 
-    public int indexOfDifference(CharSequence... css) {
-        return StringUtils.indexOfDifference(css);
+    public final int indexOfDifference(CharSequence... css) {
+        return ContextUtil.indexOfDifference(css);
     }
 
-    public String getCommonPrefix(String... strs) {
-        return StringUtils.getCommonPrefix(strs);
+    public final String getCommonPrefix(String... strs) {
+        return ContextUtil.getCommonPrefix(strs);
     }
 
-    public int getLevenshteinDistance(CharSequence s, CharSequence t) {
-        return StringUtils.getLevenshteinDistance(s, t);
+    public final int getLevenshteinDistance(CharSequence s, CharSequence t) {
+        return ContextUtil.getLevenshteinDistance(s, t);
     }
 
-    public int getLevenshteinDistance(CharSequence s, CharSequence t, int threshold) {
-        return StringUtils.getLevenshteinDistance(s, t, threshold);
+    public final int getLevenshteinDistance(CharSequence s, CharSequence t, int threshold) {
+        return ContextUtil.getLevenshteinDistance(s, t, threshold);
     }
 
-    public double getJaroWinklerDistance(CharSequence first, CharSequence second) {
-        return StringUtils.getJaroWinklerDistance(first, second);
+    public final double getJaroWinklerDistance(CharSequence first, CharSequence second) {
+        return ContextUtil.getJaroWinklerDistance(first, second);
     }
 
-    public int getFuzzyDistance(CharSequence term, CharSequence query, Locale locale) {
-        return StringUtils.getFuzzyDistance(term, query, locale);
+    public final int getFuzzyDistance(CharSequence term, CharSequence query, Locale locale) {
+        return ContextUtil.getFuzzyDistance(term, query, locale);
     }
 
-    public boolean startsWith(CharSequence str, CharSequence prefix) {
-        return StringUtils.startsWith(str, prefix);
+    public final boolean startsWith(CharSequence str, CharSequence prefix) {
+        return ContextUtil.startsWith(str, prefix);
     }
 
-    public boolean startsWithIgnoreCase(CharSequence str, CharSequence prefix) {
-        return StringUtils.startsWithIgnoreCase(str, prefix);
+    public final boolean startsWithIgnoreCase(CharSequence str, CharSequence prefix) {
+        return ContextUtil.startsWithIgnoreCase(str, prefix);
     }
 
-    public boolean startsWithAny(CharSequence string, CharSequence... searchStrings) {
-        return StringUtils.startsWithAny(string, searchStrings);
+    public final boolean startsWithAny(CharSequence string, CharSequence... searchStrings) {
+        return ContextUtil.startsWithAny(string, searchStrings);
     }
 
-    public boolean endsWith(CharSequence str, CharSequence suffix) {
-        return StringUtils.endsWith(str, suffix);
+    public final boolean endsWith(CharSequence str, CharSequence suffix) {
+        return ContextUtil.endsWith(str, suffix);
     }
 
-    public boolean endsWithIgnoreCase(CharSequence str, CharSequence suffix) {
-        return StringUtils.endsWithIgnoreCase(str, suffix);
+    public final boolean endsWithIgnoreCase(CharSequence str, CharSequence suffix) {
+        return ContextUtil.endsWithIgnoreCase(str, suffix);
     }
 
-    public String normalizeSpace(String str) {
-        return StringUtils.normalizeSpace(str);
+    public final String normalizeSpace(String str) {
+        return ContextUtil.normalizeSpace(str);
     }
 
-    public boolean endsWithAny(CharSequence string, CharSequence... searchStrings) {
-        return StringUtils.endsWithAny(string, searchStrings);
+    public final boolean endsWithAny(CharSequence string, CharSequence... searchStrings) {
+        return ContextUtil.endsWithAny(string, searchStrings);
     }
 
-    public String appendIfMissing(String str, CharSequence suffix, CharSequence... suffixes) {
-        return StringUtils.appendIfMissing(str, suffix, suffixes);
+    public final String appendIfMissing(String str, CharSequence suffix, CharSequence... suffixes) {
+        return ContextUtil.appendIfMissing(str, suffix, suffixes);
     }
 
-    public String appendIfMissingIgnoreCase(String str, CharSequence suffix, CharSequence... suffixes) {
-        return StringUtils.appendIfMissingIgnoreCase(str, suffix, suffixes);
+    public final String appendIfMissingIgnoreCase(String str, CharSequence suffix, CharSequence... suffixes) {
+        return ContextUtil.appendIfMissingIgnoreCase(str, suffix, suffixes);
     }
 
-    public String prependIfMissing(String str, CharSequence prefix, CharSequence... prefixes) {
-        return StringUtils.prependIfMissing(str, prefix, prefixes);
+    public final String prependIfMissing(String str, CharSequence prefix, CharSequence... prefixes) {
+        return ContextUtil.prependIfMissing(str, prefix, prefixes);
     }
 
-    public String prependIfMissingIgnoreCase(String str, CharSequence prefix, CharSequence... prefixes) {
-        return StringUtils.prependIfMissingIgnoreCase(str, prefix, prefixes);
+    public final String prependIfMissingIgnoreCase(String str, CharSequence prefix, CharSequence... prefixes) {
+        return ContextUtil.prependIfMissingIgnoreCase(str, prefix, prefixes);
     }
 
     @Deprecated
-    public String toString(byte[] bytes, String charsetName) throws UnsupportedEncodingException {
-        return StringUtils.toString(bytes, charsetName);
+    public final String toString(byte[] bytes, String charsetName) throws UnsupportedEncodingException {
+        return ContextUtil.toString(bytes, charsetName);
     }
 
-    public String toEncodedString(byte[] bytes, Charset charset) {
-        return StringUtils.toEncodedString(bytes, charset);
+    public final String toEncodedString(byte[] bytes, Charset charset) {
+        return ContextUtil.toEncodedString(bytes, charset);
     }
 
-    public String wrap(String str, char wrapWith) {
-        return StringUtils.wrap(str, wrapWith);
+    public final String wrap(String str, char wrapWith) {
+        return ContextUtil.wrap(str, wrapWith);
     }
 
-    public String wrap(String str, String wrapWith) {
-        return StringUtils.wrap(str, wrapWith);
+    public final String wrap(String str, String wrapWith) {
+        return ContextUtil.wrap(str, wrapWith);
     }
 
-    /*-----  -----*/
+    public final int toInt(String str) {
+        return ContextUtil.toInt(str);
+    }
+
+    public final int toInt(String str, int defaultValue) {
+        return ContextUtil.toInt(str, defaultValue);
+    }
+
+    public final long toLong(String str) {
+        return ContextUtil.toLong(str);
+    }
+
+    public final long toLong(String str, long defaultValue) {
+        return ContextUtil.toLong(str, defaultValue);
+    }
+
+    public final float toFloat(String str) {
+        return ContextUtil.toFloat(str);
+    }
+
+    public final float toFloat(String str, float defaultValue) {
+        return ContextUtil.toFloat(str, defaultValue);
+    }
+
+    public final double toDouble(String str) {
+        return ContextUtil.toDouble(str);
+    }
+
+    public final double toDouble(String str, double defaultValue) {
+        return ContextUtil.toDouble(str, defaultValue);
+    }
+
+    public final byte toByte(String str) {
+        return ContextUtil.toByte(str);
+    }
+
+    public final byte toByte(String str, byte defaultValue) {
+        return ContextUtil.toByte(str, defaultValue);
+    }
+
+    public final short toShort(String str) {
+        return ContextUtil.toShort(str);
+    }
+
+    public final short toShort(String str, short defaultValue) {
+        return ContextUtil.toShort(str, defaultValue);
+    }
+
+    public final Number createNumber(String str) throws NumberFormatException {
+        return ContextUtil.createNumber(str);
+    }
+
+    public final Float createFloat(String str) {
+        return ContextUtil.createFloat(str);
+    }
+
+    public final Double createDouble(String str) {
+        return ContextUtil.createDouble(str);
+    }
+
+    public final Integer createInteger(String str) {
+        return ContextUtil.createInteger(str);
+    }
+
+    public final Long createLong(String str) {
+        return ContextUtil.createLong(str);
+    }
+
+    public final BigInteger createBigInteger(String str) {
+        return ContextUtil.createBigInteger(str);
+    }
+
+    public final BigDecimal createBigDecimal(String str) {
+        return ContextUtil.createBigDecimal(str);
+    }
+
+    public final long min(long... array) {
+        return ContextUtil.min(array);
+    }
+
+    public final int min(int... array) {
+        return ContextUtil.min(array);
+    }
+
+    public final short min(short... array) {
+        return ContextUtil.min(array);
+    }
+
+    public final byte min(byte... array) {
+        return ContextUtil.min(array);
+    }
+
+    public final double min(double... array) {
+        return ContextUtil.min(array);
+    }
+
+    public final float min(float... array) {
+        return ContextUtil.min(array);
+    }
+
+    public final long max(long... array) {
+        return ContextUtil.max(array);
+    }
+
+    public final int max(int... array) {
+        return ContextUtil.max(array);
+    }
+
+    public final short max(short... array) {
+        return ContextUtil.max(array);
+    }
+
+    public final byte max(byte... array) {
+        return ContextUtil.max(array);
+    }
+
+    public final double max(double... array) {
+        return ContextUtil.max(array);
+    }
+
+    public final float max(float... array) {
+        return ContextUtil.max(array);
+    }
+
+    public final long min(long a, long b, long c) {
+        return ContextUtil.min(a, b, c);
+    }
+
+    public final int min(int a, int b, int c) {
+        return ContextUtil.min(a, b, c);
+    }
+
+    public final short min(short a, short b, short c) {
+        return ContextUtil.min(a, b, c);
+    }
+
+    public final byte min(byte a, byte b, byte c) {
+        return ContextUtil.min(a, b, c);
+    }
+
+    public final double min(double a, double b, double c) {
+        return ContextUtil.min(a, b, c);
+    }
+
+    public final float min(float a, float b, float c) {
+        return ContextUtil.min(a, b, c);
+    }
+
+    public final long max(long a, long b, long c) {
+        return ContextUtil.max(a, b, c);
+    }
+
+    public final int max(int a, int b, int c) {
+        return ContextUtil.max(a, b, c);
+    }
+
+    public final short max(short a, short b, short c) {
+        return ContextUtil.max(a, b, c);
+    }
+
+    public final byte max(byte a, byte b, byte c) {
+        return ContextUtil.max(a, b, c);
+    }
+
+    public final double max(double a, double b, double c) {
+        return ContextUtil.max(a, b, c);
+    }
+
+    public final float max(float a, float b, float c) {
+        return ContextUtil.max(a, b, c);
+    }
+
+    public final boolean isDigits(String str) {
+        return ContextUtil.isDigits(str);
+    }
+
+    public final boolean isNumber(String str) {
+        return ContextUtil.isNumber(str);
+    }
+
+    public final boolean isParsable(String str) {
+        return ContextUtil.isParsable(str);
+    }
+
+    public final int compare(int x, int y) {
+        return ContextUtil.compare(x, y);
+    }
+
+    public final int compare(long x, long y) {
+        return ContextUtil.compare(x, y);
+    }
+
+    public final int compare(short x, short y) {
+        return ContextUtil.compare(x, y);
+    }
 
-    public int toInt(String str) {
-        return NumberUtils.toInt(str);
+    public final int compare(byte x, byte y) {
+        return ContextUtil.compare(x, y);
     }
 
-    public int toInt(String str, int defaultValue) {
-        return NumberUtils.toInt(str, defaultValue);
+    public final Boolean negate(Boolean bool) {
+        return ContextUtil.negate(bool);
     }
 
-    public long toLong(String str) {
-        return NumberUtils.toLong(str);
+    public final boolean isTrue(Boolean bool) {
+        return ContextUtil.isTrue(bool);
     }
 
-    public long toLong(String str, long defaultValue) {
-        return NumberUtils.toLong(str, defaultValue);
+    public final boolean isNotTrue(Boolean bool) {
+        return ContextUtil.isNotTrue(bool);
     }
 
-    public float toFloat(String str) {
-        return NumberUtils.toFloat(str);
+    public final boolean isFalse(Boolean bool) {
+        return ContextUtil.isFalse(bool);
     }
 
-    public float toFloat(String str, float defaultValue) {
-        return NumberUtils.toFloat(str, defaultValue);
+    public final boolean isNotFalse(Boolean bool) {
+        return ContextUtil.isNotFalse(bool);
     }
 
-    public double toDouble(String str) {
-        return NumberUtils.toDouble(str);
+    public final boolean toBoolean(Boolean bool) {
+        return ContextUtil.toBoolean(bool);
     }
 
-    public double toDouble(String str, double defaultValue) {
-        return NumberUtils.toDouble(str, defaultValue);
+    public final boolean toBooleanDefaultIfNull(Boolean bool, boolean valueIfNull) {
+        return ContextUtil.toBooleanDefaultIfNull(bool, valueIfNull);
     }
 
-    public byte toByte(String str) {
-        return NumberUtils.toByte(str);
+    public final boolean toBoolean(int value) {
+        return ContextUtil.toBoolean(value);
     }
 
-    public byte toByte(String str, byte defaultValue) {
-        return NumberUtils.toByte(str, defaultValue);
+    public final Boolean toBooleanObject(int value) {
+        return ContextUtil.toBooleanObject(value);
     }
 
-    public short toShort(String str) {
-        return NumberUtils.toShort(str);
+    public final Boolean toBooleanObject(Integer value) {
+        return ContextUtil.toBooleanObject(value);
     }
 
-    public short toShort(String str, short defaultValue) {
-        return NumberUtils.toShort(str, defaultValue);
+    public final boolean toBoolean(int value, int trueValue, int falseValue) {
+        return ContextUtil.toBoolean(value, trueValue, falseValue);
     }
 
-    public Number createNumber(String str) throws NumberFormatException {
-        return NumberUtils.createNumber(str);
+    public final boolean toBoolean(Integer value, Integer trueValue, Integer falseValue) {
+        return ContextUtil.toBoolean(value, trueValue, falseValue);
     }
 
-    public Float createFloat(String str) {
-        return NumberUtils.createFloat(str);
+    public final Boolean toBooleanObject(int value, int trueValue, int falseValue, int nullValue) {
+        return ContextUtil.toBooleanObject(value, trueValue, falseValue, nullValue);
     }
 
-    public Double createDouble(String str) {
-        return NumberUtils.createDouble(str);
+    public final Boolean toBooleanObject(Integer value, Integer trueValue, Integer falseValue, Integer nullValue) {
+        return ContextUtil.toBooleanObject(value, trueValue, falseValue, nullValue);
     }
 
-    public Integer createInteger(String str) {
-        return NumberUtils.createInteger(str);
+    public final int toInteger(boolean bool) {
+        return ContextUtil.toInteger(bool);
     }
 
-    public Long createLong(String str) {
-        return NumberUtils.createLong(str);
+    public final Integer toIntegerObject(boolean bool) {
+        return ContextUtil.toIntegerObject(bool);
     }
 
-    public BigInteger createBigInteger(String str) {
-        return NumberUtils.createBigInteger(str);
+    public final Integer toIntegerObject(Boolean bool) {
+        return ContextUtil.toIntegerObject(bool);
     }
 
-    public BigDecimal createBigDecimal(String str) {
-        return NumberUtils.createBigDecimal(str);
+    public final int toInteger(boolean bool, int trueValue, int falseValue) {
+        return ContextUtil.toInteger(bool, trueValue, falseValue);
     }
 
-    public long min(long... array) {
-        return NumberUtils.min(array);
+    public final int toInteger(Boolean bool, int trueValue, int falseValue, int nullValue) {
+        return ContextUtil.toInteger(bool, trueValue, falseValue, nullValue);
     }
 
-    public int min(int... array) {
-        return NumberUtils.min(array);
+    public final Integer toIntegerObject(boolean bool, Integer trueValue, Integer falseValue) {
+        return ContextUtil.toIntegerObject(bool, trueValue, falseValue);
     }
 
-    public short min(short... array) {
-        return NumberUtils.min(array);
+    public final Integer toIntegerObject(Boolean bool, Integer trueValue, Integer falseValue, Integer nullValue) {
+        return ContextUtil.toIntegerObject(bool, trueValue, falseValue, nullValue);
     }
 
-    public byte min(byte... array) {
-        return NumberUtils.min(array);
+    public final Boolean toBooleanObject(String str) {
+        return ContextUtil.toBooleanObject(str);
     }
 
-    public double min(double... array) {
-        return NumberUtils.min(array);
+    public final Boolean toBooleanObject(String str, String trueString, String falseString, String nullString) {
+        return ContextUtil.toBooleanObject(str, trueString, falseString, nullString);
     }
 
-    public float min(float... array) {
-        return NumberUtils.min(array);
+    public final boolean toBoolean(String str) {
+        return ContextUtil.toBoolean(str);
     }
 
-    public long max(long... array) {
-        return NumberUtils.max(array);
+    public final boolean toBoolean(String str, String trueString, String falseString) {
+        return ContextUtil.toBoolean(str, trueString, falseString);
     }
 
-    public int max(int... array) {
-        return NumberUtils.max(array);
+    public final String toStringTrueFalse(Boolean bool) {
+        return ContextUtil.toStringTrueFalse(bool);
     }
 
-    public short max(short... array) {
-        return NumberUtils.max(array);
+    public final String toStringOnOff(Boolean bool) {
+        return ContextUtil.toStringOnOff(bool);
     }
 
-    public byte max(byte... array) {
-        return NumberUtils.max(array);
+    public final String toStringYesNo(Boolean bool) {
+        return ContextUtil.toStringYesNo(bool);
     }
 
-    public double max(double... array) {
-        return NumberUtils.max(array);
+    public final String toString(Boolean bool, String trueString, String falseString, String nullString) {
+        return ContextUtil.toString(bool, trueString, falseString, nullString);
     }
 
-    public float max(float... array) {
-        return NumberUtils.max(array);
+    public final String toStringTrueFalse(boolean bool) {
+        return ContextUtil.toStringTrueFalse(bool);
     }
 
-    public long min(long a, long b, long c) {
-        return NumberUtils.min(a, b, c);
+    public final String toStringOnOff(boolean bool) {
+        return ContextUtil.toStringOnOff(bool);
     }
 
-    public int min(int a, int b, int c) {
-        return NumberUtils.min(a, b, c);
+    public final String toStringYesNo(boolean bool) {
+        return ContextUtil.toStringYesNo(bool);
     }
 
-    public short min(short a, short b, short c) {
-        return NumberUtils.min(a, b, c);
+    public final String toString(boolean bool, String trueString, String falseString) {
+        return ContextUtil.toString(bool, trueString, falseString);
     }
 
-    public byte min(byte a, byte b, byte c) {
-        return NumberUtils.min(a, b, c);
+    public final boolean and(boolean... array) {
+        return ContextUtil.and(array);
     }
 
-    public double min(double a, double b, double c) {
-        return NumberUtils.min(a, b, c);
+    public final Boolean and(Boolean... array) {
+        return ContextUtil.and(array);
     }
 
-    public float min(float a, float b, float c) {
-        return NumberUtils.min(a, b, c);
+    public final boolean or(boolean... array) {
+        return ContextUtil.or(array);
     }
 
-    public long max(long a, long b, long c) {
-        return NumberUtils.max(a, b, c);
+    public final Boolean or(Boolean... array) {
+        return ContextUtil.or(array);
     }
 
-    public int max(int a, int b, int c) {
-        return NumberUtils.max(a, b, c);
+    public final boolean xor(boolean... array) {
+        return ContextUtil.xor(array);
     }
 
-    public short max(short a, short b, short c) {
-        return NumberUtils.max(a, b, c);
+    public final Boolean xor(Boolean... array) {
+        return ContextUtil.xor(array);
     }
 
-    public byte max(byte a, byte b, byte c) {
-        return NumberUtils.max(a, b, c);
+    public final int compare(boolean x, boolean y) {
+        return ContextUtil.compare(x, y);
     }
 
-    public double max(double a, double b, double c) {
-        return NumberUtils.max(a, b, c);
+    public final boolean checkBoolean(Object _str) {
+        return ContextUtil.checkBoolean(_str);
     }
 
-    public float max(float a, float b, float c) {
-        return NumberUtils.max(a, b, c);
+    public final boolean checkBoolean(String _str) {
+        return ContextUtil.checkBoolean(_str);
     }
 
-    public boolean isDigits(String str) {
-        return NumberUtils.isDigits(str);
+    public final byte[] decodeHex(String data) throws DecoderException {
+        return ContextUtil.decodeHex(data);
     }
 
-    public boolean isNumber(String str) {
-        return NumberUtils.isNumber(str);
+    public final byte[] decodeHex(char[] data) throws DecoderException {
+        return ContextUtil.decodeHex(data);
     }
 
-    public boolean isParsable(String str) {
-        return NumberUtils.isParsable(str);
+    public final char[] encodeHex(byte[] data) {
+        return ContextUtil.encodeHex(data);
     }
 
-    public int compare(int x, int y) {
-        return NumberUtils.compare(x, y);
+    public final char[] encodeHex(byte[] data, boolean toLowerCase) {
+        return ContextUtil.encodeHex(data, toLowerCase);
     }
 
-    public int compare(long x, long y) {
-        return NumberUtils.compare(x, y);
+    public final String encodeHexString(byte[] data) {
+        return ContextUtil.encodeHexString(data);
     }
 
-    public int compare(short x, short y) {
-        return NumberUtils.compare(x, y);
+    public final String encodeHexString(byte[] data, boolean toLowerCase) {
+        return ContextUtil.encodeHexString(data, toLowerCase);
     }
 
-    public int compare(byte x, byte y) {
-        return NumberUtils.compare(x, y);
+    @SneakyThrows
+    public final String encodePercent(String _raw) {
+        return ContextUtil.encodePercent(_raw);
     }
 
-    public Boolean negate(Boolean bool) {
-        return BooleanUtils.negate(bool);
+    @SneakyThrows
+    public final String decodePercent(String _cooked) {
+        return ContextUtil.decodePercent(_cooked);
     }
 
-    public boolean isTrue(Boolean bool) {
-        return BooleanUtils.isTrue(bool);
+    @SneakyThrows
+    public final String encodeUrl(String _raw) {
+        return ContextUtil.encodeUrl(_raw);
     }
 
-    public boolean isNotTrue(Boolean bool) {
-        return BooleanUtils.isNotTrue(bool);
+    @SneakyThrows
+    public final String decodeUrl(String _cooked) {
+        return ContextUtil.decodeUrl(_cooked);
     }
 
-    public boolean isFalse(Boolean bool) {
-        return BooleanUtils.isFalse(bool);
+    public final boolean isSameDay(Date date1, Date date2) {
+        return ContextUtil.isSameDay(date1, date2);
     }
 
-    public boolean isNotFalse(Boolean bool) {
-        return BooleanUtils.isNotFalse(bool);
+    public final boolean isSameDay(Calendar cal1, Calendar cal2) {
+        return ContextUtil.isSameDay(cal1, cal2);
     }
 
-    public boolean toBoolean(Boolean bool) {
-        return BooleanUtils.toBoolean(bool);
+    public final boolean isSameInstant(Date date1, Date date2) {
+        return ContextUtil.isSameInstant(date1, date2);
     }
 
-    public boolean toBooleanDefaultIfNull(Boolean bool, boolean valueIfNull) {
-        return BooleanUtils.toBooleanDefaultIfNull(bool, valueIfNull);
+    public final boolean isSameInstant(Calendar cal1, Calendar cal2) {
+        return ContextUtil.isSameInstant(cal1, cal2);
     }
 
-    public boolean toBoolean(int value) {
-        return BooleanUtils.toBoolean(value);
+    public final boolean isSameLocalTime(Calendar cal1, Calendar cal2) {
+        return ContextUtil.isSameLocalTime(cal1, cal2);
     }
 
-    public Boolean toBooleanObject(int value) {
-        return BooleanUtils.toBooleanObject(value);
+    public final Date parseDate(String str, String... parsePatterns) throws ParseException {
+        return ContextUtil.parseDate(str, parsePatterns);
     }
 
-    public Boolean toBooleanObject(Integer value) {
-        return BooleanUtils.toBooleanObject(value);
+    public final Date parseDate(String str, Locale locale, String... parsePatterns) throws ParseException {
+        return ContextUtil.parseDate(str, locale, parsePatterns);
     }
 
-    public boolean toBoolean(int value, int trueValue, int falseValue) {
-        return BooleanUtils.toBoolean(value, trueValue, falseValue);
+    public final Date parseDateStrictly(String str, String... parsePatterns) throws ParseException {
+        return ContextUtil.parseDateStrictly(str, parsePatterns);
     }
 
-    public boolean toBoolean(Integer value, Integer trueValue, Integer falseValue) {
-        return BooleanUtils.toBoolean(value, trueValue, falseValue);
+    public final Date parseDateStrictly(String str, Locale locale, String... parsePatterns) throws ParseException {
+        return ContextUtil.parseDateStrictly(str, locale, parsePatterns);
     }
 
-    public Boolean toBooleanObject(int value, int trueValue, int falseValue, int nullValue) {
-        return BooleanUtils.toBooleanObject(value, trueValue, falseValue, nullValue);
+    public final Date addYears(Date date, int amount) {
+        return ContextUtil.addYears(date, amount);
     }
 
-    public Boolean toBooleanObject(Integer value, Integer trueValue, Integer falseValue, Integer nullValue) {
-        return BooleanUtils.toBooleanObject(value, trueValue, falseValue, nullValue);
+    public final Date addMonths(Date date, int amount) {
+        return ContextUtil.addMonths(date, amount);
     }
 
-    public int toInteger(boolean bool) {
-        return BooleanUtils.toInteger(bool);
+    public final Date addWeeks(Date date, int amount) {
+        return ContextUtil.addWeeks(date, amount);
     }
 
-    public Integer toIntegerObject(boolean bool) {
-        return BooleanUtils.toIntegerObject(bool);
+    public final Date addDays(Date date, int amount) {
+        return ContextUtil.addDays(date, amount);
     }
 
-    public Integer toIntegerObject(Boolean bool) {
-        return BooleanUtils.toIntegerObject(bool);
+    public final Date addHours(Date date, int amount) {
+        return ContextUtil.addHours(date, amount);
     }
 
-    public int toInteger(boolean bool, int trueValue, int falseValue) {
-        return BooleanUtils.toInteger(bool, trueValue, falseValue);
+    public final Date addMinutes(Date date, int amount) {
+        return ContextUtil.addMinutes(date, amount);
     }
 
-    public int toInteger(Boolean bool, int trueValue, int falseValue, int nullValue) {
-        return BooleanUtils.toInteger(bool, trueValue, falseValue, nullValue);
+    public final Date addSeconds(Date date, int amount) {
+        return ContextUtil.addSeconds(date, amount);
     }
 
-    public Integer toIntegerObject(boolean bool, Integer trueValue, Integer falseValue) {
-        return BooleanUtils.toIntegerObject(bool, trueValue, falseValue);
+    public final Date addMilliseconds(Date date, int amount) {
+        return ContextUtil.addMilliseconds(date, amount);
     }
 
-    public Integer toIntegerObject(Boolean bool, Integer trueValue, Integer falseValue, Integer nullValue) {
-        return BooleanUtils.toIntegerObject(bool, trueValue, falseValue, nullValue);
+    public final Date setYears(Date date, int amount) {
+        return ContextUtil.setYears(date, amount);
     }
 
-    public Boolean toBooleanObject(String str) {
-        return BooleanUtils.toBooleanObject(str);
+    public final Date setMonths(Date date, int amount) {
+        return ContextUtil.setMonths(date, amount);
     }
 
-    public Boolean toBooleanObject(String str, String trueString, String falseString, String nullString) {
-        return BooleanUtils.toBooleanObject(str, trueString, falseString, nullString);
+    public final Date setDays(Date date, int amount) {
+        return ContextUtil.setDays(date, amount);
     }
 
-    public boolean toBoolean(String str) {
-        return BooleanUtils.toBoolean(str);
+    public final Date setHours(Date date, int amount) {
+        return ContextUtil.setHours(date, amount);
     }
 
-    public boolean toBoolean(String str, String trueString, String falseString) {
-        return BooleanUtils.toBoolean(str, trueString, falseString);
+    public final Date setMinutes(Date date, int amount) {
+        return ContextUtil.setMinutes(date, amount);
     }
 
-    public String toStringTrueFalse(Boolean bool) {
-        return BooleanUtils.toStringTrueFalse(bool);
+    public final Date setSeconds(Date date, int amount) {
+        return ContextUtil.setSeconds(date, amount);
     }
 
-    public String toStringOnOff(Boolean bool) {
-        return BooleanUtils.toStringOnOff(bool);
+    public final Date setMilliseconds(Date date, int amount) {
+        return ContextUtil.setMilliseconds(date, amount);
     }
 
-    public String toStringYesNo(Boolean bool) {
-        return BooleanUtils.toStringYesNo(bool);
+    public final Calendar toCalendar(Date date) {
+        return ContextUtil.toCalendar(date);
     }
 
-    public String toString(Boolean bool, String trueString, String falseString, String nullString) {
-        return BooleanUtils.toString(bool, trueString, falseString, nullString);
+    public final Calendar toCalendar(Date date, TimeZone tz) {
+        return ContextUtil.toCalendar(date, tz);
     }
 
-    public String toStringTrueFalse(boolean bool) {
-        return BooleanUtils.toStringTrueFalse(bool);
+    public final Date dateRound(Date date, int field) {
+        return ContextUtil.dateRound(date, field);
     }
 
-    public String toStringOnOff(boolean bool) {
-        return BooleanUtils.toStringOnOff(bool);
+    public final Calendar dateRound(Calendar date, int field) {
+        return ContextUtil.dateRound(date, field);
     }
 
-    public String toStringYesNo(boolean bool) {
-        return BooleanUtils.toStringYesNo(bool);
+    public final Date dateRound(Object date, int field) {
+        return ContextUtil.dateRound(date, field);
     }
 
-    public String toString(boolean bool, String trueString, String falseString) {
-        return BooleanUtils.toString(bool, trueString, falseString);
+    public final Date dateTruncate(Date date, int field) {
+        return ContextUtil.dateTruncate(date, field);
     }
 
-    public boolean and(boolean... array) {
-        return BooleanUtils.and(array);
+    public final Calendar dateTruncate(Calendar date, int field) {
+        return ContextUtil.dateTruncate(date, field);
     }
 
-    public Boolean and(Boolean... array) {
-        return BooleanUtils.and(array);
+    public final Date dateTruncate(Object date, int field) {
+        return ContextUtil.dateTruncate(date, field);
     }
 
-    public boolean or(boolean... array) {
-        return BooleanUtils.or(array);
+    public final Date dateCeiling(Date date, int field) {
+        return ContextUtil.dateCeiling(date, field);
     }
 
-    public Boolean or(Boolean... array) {
-        return BooleanUtils.or(array);
+    public final Calendar dateCeiling(Calendar date, int field) {
+        return ContextUtil.dateCeiling(date, field);
     }
 
-    public boolean xor(boolean... array) {
-        return BooleanUtils.xor(array);
+    public final Date dateCeiling(Object date, int field) {
+        return ContextUtil.dateCeiling(date, field);
     }
 
-    public Boolean xor(Boolean... array) {
-        return BooleanUtils.xor(array);
+    public final Iterator<Calendar> dateIterator(Date focus, int rangeStyle) {
+        return ContextUtil.dateIterator(focus, rangeStyle);
     }
 
-    public int compare(boolean x, boolean y) {
-        return BooleanUtils.compare(x, y);
+    public final Iterator<Calendar> dateIterator(Calendar focus, int rangeStyle) {
+        return ContextUtil.dateIterator(focus, rangeStyle);
     }
 
-    /*-----  -----*/
+    public final Iterator<?> dateIterator(Object focus, int rangeStyle) {
+        return ContextUtil.dateIterator(focus, rangeStyle);
+    }
+
+    public final long getFragmentInMilliseconds(Date date, int fragment) {
+        return ContextUtil.getFragmentInMilliseconds(date, fragment);
+    }
+
+    public final long getFragmentInSeconds(Date date, int fragment) {
+        return ContextUtil.getFragmentInSeconds(date, fragment);
+    }
+
+    public final long getFragmentInMinutes(Date date, int fragment) {
+        return ContextUtil.getFragmentInMinutes(date, fragment);
+    }
+
+    public final long getFragmentInHours(Date date, int fragment) {
+        return ContextUtil.getFragmentInHours(date, fragment);
+    }
+
+    public final long getFragmentInDays(Date date, int fragment) {
+        return ContextUtil.getFragmentInDays(date, fragment);
+    }
+
+    public final long getFragmentInMilliseconds(Calendar calendar, int fragment) {
+        return ContextUtil.getFragmentInMilliseconds(calendar, fragment);
+    }
+
+    public final long getFragmentInSeconds(Calendar calendar, int fragment) {
+        return ContextUtil.getFragmentInSeconds(calendar, fragment);
+    }
+
+    public final long getFragmentInMinutes(Calendar calendar, int fragment) {
+        return ContextUtil.getFragmentInMinutes(calendar, fragment);
+    }
+
+    public final long getFragmentInHours(Calendar calendar, int fragment) {
+        return ContextUtil.getFragmentInHours(calendar, fragment);
+    }
+
+    public final long getFragmentInDays(Calendar calendar, int fragment) {
+        return ContextUtil.getFragmentInDays(calendar, fragment);
+    }
+
+    public final boolean dateTruncatedEquals(Calendar cal1, Calendar cal2, int field) {
+        return ContextUtil.dateTruncatedEquals(cal1, cal2, field);
+    }
+
+    public final boolean dateTruncatedEquals(Date date1, Date date2, int field) {
+        return ContextUtil.dateTruncatedEquals(date1, date2, field);
+    }
+
+    public final int dateTruncatedCompareTo(Calendar cal1, Calendar cal2, int field) {
+        return ContextUtil.dateTruncatedCompareTo(cal1, cal2, field);
+    }
+
+    public final int dateTruncatedCompareTo(Date date1, Date date2, int field) {
+        return ContextUtil.dateTruncatedCompareTo(date1, date2, field);
+    }
+
+    @SneakyThrows
+    public final Date dateToTime(String _format, String _text) {
+        return ContextUtil.dateToTime(_format, _text);
+    }
+
+    @SneakyThrows
+    public final Long dateToLong(String _format, String _text) {
+        return ContextUtil.dateToLong(_format, _text);
+    }
+
+    public final Date getDate() {
+        return ContextUtil.getDate();
+    }
+
+    public final Long getDateLong() {
+        return ContextUtil.getDateLong();
+    }
+
+    public final String timeToDate(String _format, Date _time) {
+        return ContextUtil.timeToDate(_format, _time);
+    }
+
+    public final String timeToDate(String _format, long _time) {
+        return ContextUtil.timeToDate(_format, _time);
+    }
+
+    public final String toBase(int _base, long _n) {
+        return ContextUtil.toBase(_base, _n);
+    }
+
+    public final String regReplace(String _text, String _expr, String _repl) {
+        return ContextUtil.regReplace(_text, _expr, _repl);
+    }
+
+    public final String regReplace(String _text, String _expr, String _repl, int _count) {
+        return ContextUtil.regReplace(_text, _expr, _repl, _count);
+    }
+
+    public final String decimalToAscii(String _text) {
+        return ContextUtil.decimalToAscii(_text);
+    }
+
+    public final String decimalToHex(String _text) {
+        return ContextUtil.decimalToHex(_text);
+    }
+
+    public final String decimalToHex(String _text, String _sep) {
+        return ContextUtil.decimalToHex(_text, _sep);
+    }
+
+    public final String decimalToHex(String _text, String _sep, String _delim) {
+        return ContextUtil.decimalToHex(_text, _sep, _delim);
+    }
+
+    public final String extract(String s, String rx) {
+        return ContextUtil.extract(s, rx);
+    }
+
+    public final String[] extractN(String s, String rx) {
+        return ContextUtil.extractN(s, rx);
+    }
+
+    public final String formatMsg(String _fmt, Object... _params) {
+        return ContextUtil.formatMsg(_fmt, _params);
+    }
+
+    public final String format(String _fmt, Object... _params) {
+        return ContextUtil.format(_fmt, _params);
+    }
+
+    public final boolean fnmatch(String a, String fx) {
+        return ContextUtil.fnmatch(a, fx);
+    }
+
+    public final boolean wcmatch(String expr, String value) {
+        return ContextUtil.wcmatch(expr, value);
+    }
+
+    public final String randomUUID() {
+        return ContextUtil.randomUUID();
+    }
+
+    public final String randomGUID() {
+        return ContextUtil.randomGUID();
+    }
+
+    public final String toGUID(long _n1, long _n2) {
+        return ContextUtil.toGUID(_n1, _n2);
+    }
+
+    public final String toGUID(long _n1, long _n2, long _n3) {
+        return ContextUtil.toGUID(_n1, _n2, _n3);
+    }
+
+    public final String toGUID(long _n1, long _n2, long _n3, long _n4) {
+        return ContextUtil.toGUID(_n1, _n2, _n3, _n4);
+    }
+
+    public final String toGUID(long _n1, long _n2, long _n3, long _n4, long _n5) {
+        return ContextUtil.toGUID(_n1, _n2, _n3, _n4, _n5);
+    }
+
+    public final String toGUID(String _name) {
+        return ContextUtil.toGUID(_name);
+    }
+
+    public final String toHashGUID(String _name) {
+        return ContextUtil.toHashGUID(_name);
+    }
+
+    public final String toGUID(String _name1, String _name2) {
+        return ContextUtil.toGUID(_name1, _name2);
+    }
+
+    public final String toGUID(String _name1, String _name2, String _name3) {
+        return ContextUtil.toGUID(_name1, _name2, _name3);
+    }
+
+    public final String toGUID(String _name1, String _name2, Long _l) {
+        return ContextUtil.toGUID(_name1, _name2, _l);
+    }
+
+    public final String toGUID(String _name1, String _name2, String _name3, Long _l) {
+        return ContextUtil.toGUID(_name1, _name2, _name3, _l);
+    }
+
+    public final String mformat(String _pattern, Object... _objs) {
+        return ContextUtil.mformat(_pattern, _objs);
+    }
 
-    public boolean checkBoolean(final Object _str)
-    {
-        if(_str==null)
-        {
-            return false;
-        }
+    public final String sformat(String _pattern, Object... _objs) {
+        return ContextUtil.sformat(_pattern, _objs);
+    }
 
-        return checkBoolean(_str.toString());
+    public final String toHashGUID(String _name1, String _name2) {
+        return ContextUtil.toHashGUID(_name1, _name2);
     }
 
-    public boolean checkBoolean(final String _str)
-    {
-        if (_str == null) {
-            return false;
-        }
+    public final String toHashGUID(String _name1, String _name2, String _name3) {
+        return ContextUtil.toHashGUID(_name1, _name2, _name3);
+    }
 
-        // any defined string is "true" unless it is a false indicator:
-        // false, off, none, no, null, nul, nil, 0
-        if (containsAny(_str.trim().toLowerCase(),
-                "false", "off", "none", "no", "null", "nul", "nil", "0"))
-        {
-            return false;
-        }
+    public final Map<String, Object> toMap(List<Object> _args) {
+        return ContextUtil.toMap(_args);
+    }
 
-        return true;
+    public final Map<String, Object> toMap(Object... _args) {
+        return ContextUtil.toMap(_args);
     }
 
+    public final Map<String, Object> toMap(String _k, Object _v) {
+        return ContextUtil.toMap(_k, _v);
+    }
 }

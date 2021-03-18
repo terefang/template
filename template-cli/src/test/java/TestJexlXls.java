@@ -3,9 +3,9 @@ import com.github.terefang.template_cli.TemplateCliMain;
 public class TestJexlXls {
     static String[] ARGS = {
             "-T", "JEXL", "-M", "STD",
-            "-D", "examples/jexl-dao2.txt",
-            "-S", "examples/dao2.jexl",
-            "--output-type", "TEXT"
+            "-D", "examples/jexl.xlsx",
+            "-S", "examples/dao.jexl",
+            "--output-type", "BIN"
 
     };
     public static void main(String[] args) {
