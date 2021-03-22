@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
@@ -57,16 +58,16 @@ public abstract class AbstractTemplateMojo extends AbstractTmpMojo
      * list of includes. ant-style/double wildcards.
      */
     @Parameter
-    private String[] includes;
+    private String includes;
 
     /**
      * list of excludes. ant-style/double wildcards.
      */
     @Parameter
-    private String[] excludes;
+    private String excludes;
 
-    @SneakyThrows
-    public void execute() throws MojoExecutionException
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException
     {
         if(!templateFile.exists())
         {
@@ -85,17 +86,17 @@ public abstract class AbstractTemplateMojo extends AbstractTmpMojo
 
         DirectoryScanner scanner = new DirectoryScanner();
 
-        if( resourcesDirectory.isDirectory()) {
-
+        if( resourcesDirectory.isDirectory())
+        {
             scanner.setBasedir(resourcesDirectory);
-            if (includes != null && includes.length != 0) {
-                scanner.setIncludes(includes);
+            if (StringUtils.isNotEmpty(includes)) {
+                scanner.setIncludes(StringUtils.split(includes));
             } else {
-                scanner.setIncludes(DEFAULT_SINGLE_DATA_FILTER);
+                scanner.setIncludes(new String[]{"**/*"});
             }
 
-            if (excludes != null && excludes.length != 0) {
-                scanner.setExcludes(excludes);
+            if (StringUtils.isNotEmpty(excludes)) {
+                scanner.setExcludes(StringUtils.split(excludes));
             }
 
             scanner.addDefaultExcludes();

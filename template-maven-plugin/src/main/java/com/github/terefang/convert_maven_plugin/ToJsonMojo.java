@@ -12,6 +12,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.io.*;
 import java.util.Arrays;
@@ -34,10 +35,10 @@ public class ToJsonMojo extends AbstractMojo
     private String destinationExtension;
 
     @Parameter
-    private String[] includes;
+    private String includes;
 
     @Parameter
-    private String[] excludes;
+    private String excludes;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
@@ -47,14 +48,14 @@ public class ToJsonMojo extends AbstractMojo
         if( resourcesDirectory.isDirectory())
         {
             scanner.setBasedir(resourcesDirectory);
-            if (includes != null && includes.length != 0) {
-                scanner.setIncludes(includes);
+            if (StringUtils.isNotEmpty(includes)) {
+                scanner.setIncludes(StringUtils.split(includes));
             } else {
                 scanner.setIncludes(new String[]{"**/*"});
             }
 
-            if (excludes != null && excludes.length != 0) {
-                scanner.setExcludes(excludes);
+            if (StringUtils.isNotEmpty(excludes)) {
+                scanner.setExcludes(StringUtils.split(excludes));
             }
 
             scanner.addDefaultExcludes();

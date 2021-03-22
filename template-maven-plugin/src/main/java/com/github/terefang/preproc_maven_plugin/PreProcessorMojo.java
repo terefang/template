@@ -54,10 +54,10 @@ public class PreProcessorMojo extends AbstractMojo
     private String marker;
 
     @Parameter
-    private String[] includes;
+    private String includes;
 
     @Parameter
-    private String[] excludes;
+    private String excludes;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
@@ -67,14 +67,14 @@ public class PreProcessorMojo extends AbstractMojo
         if( resourcesDirectory.isDirectory())
         {
             scanner.setBasedir(resourcesDirectory);
-            if (includes != null && includes.length != 0) {
-                scanner.setIncludes(includes);
+            if (StringUtils.isNotEmpty(includes)) {
+                scanner.setIncludes(StringUtils.split(includes));
             } else {
                 scanner.setIncludes(new String[]{"**/*"});
             }
 
-            if (excludes != null && excludes.length != 0) {
-                scanner.setExcludes(excludes);
+            if (StringUtils.isNotEmpty(excludes)) {
+                scanner.setExcludes(StringUtils.split(excludes));
             }
 
             scanner.addDefaultExcludes();

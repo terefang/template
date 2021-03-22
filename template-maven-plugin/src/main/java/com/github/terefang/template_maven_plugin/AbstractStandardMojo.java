@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
@@ -57,26 +58,26 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
     @Parameter(defaultValue = "local")
     protected String localContextRoot;
 
-    /**
-     * list of includes. ant-style/double wildcards.
-     */
-    @Parameter
-    protected String[] includes;
-
-    /**
-     * list of excludes. ant-style/double wildcards.
-     */
-    @Parameter
-    protected String[] excludes;
-
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     protected MavenProject project;
 
     public abstract String[] getDefaultIncludes();
 
+    /**
+     * list of includes. ant-style/double wildcards.
+     */
+    @Parameter
+    private String includes;
+
+    /**
+     * list of excludes. ant-style/double wildcards.
+     */
+    @Parameter
+    private String excludes;
+
+    @Override
     public void execute() throws MojoExecutionException
     {
-
         Map<String, Object> context = Maps.newHashMap();
 
         prepareStandardContext(context);
@@ -87,17 +88,17 @@ public abstract class AbstractStandardMojo extends AbstractTmpMojo {
 
         DirectoryScanner scanner = new DirectoryScanner();
 
-        if( resourcesDirectory.isDirectory()) {
-
+        if( resourcesDirectory.isDirectory())
+        {
             scanner.setBasedir(resourcesDirectory);
-            if (includes != null && includes.length != 0) {
-                scanner.setIncludes(includes);
+            if (StringUtils.isNotEmpty(includes)) {
+                scanner.setIncludes(StringUtils.split(includes));
             } else {
-                scanner.setIncludes(getDefaultIncludes());
+                scanner.setIncludes(new String[]{"**/*"});
             }
 
-            if (excludes != null && excludes.length != 0) {
-                scanner.setExcludes(excludes);
+            if (StringUtils.isNotEmpty(excludes)) {
+                scanner.setExcludes(StringUtils.split(excludes));
             }
 
             scanner.addDefaultExcludes();

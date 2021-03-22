@@ -71,6 +71,9 @@ public abstract class AbstractTmpMojo extends AbstractMojo
     @Parameter(defaultValue = "")
     protected String additionalVariables;
 
+    @Parameter(defaultValue = "")
+    protected String contextRoot;
+
     @Parameter
     protected String jdbcUrl;
     @Parameter
@@ -100,9 +103,10 @@ public abstract class AbstractTmpMojo extends AbstractMojo
 
     }
 
-    public void prepareStandardContext(Map<String, Object> context)
+    public void prepareStandardContext(Map<String, Object> stdContext)
     {
         try {
+            Map<String, Object> context = new HashMap<>();
             Model model = null;
             FileReader reader = null;
             MavenXpp3Reader mavenreader = new MavenXpp3Reader();
@@ -141,14 +145,24 @@ public abstract class AbstractTmpMojo extends AbstractMojo
                 model=null;
             }
 
+            if(StringUtils.isNotEmpty(jdbcUrl))
+            {
+                context.put("_dao", ContextUtil.daoFromJdbc(jdbcDriver, jdbcUrl, jdbcUsername, jdbcPassword));
+            }
+
+            if(StringUtils.isNotEmpty(this.contextRoot))
+            {
+                stdContext.put(this.contextRoot, context);
+            }
+            else
+            {
+                stdContext.putAll(context);
+            }
         } catch (Exception _xe) {
             getLog().error("error preparing context.", _xe);
         }
 
-        if(StringUtils.isNotEmpty(jdbcUrl))
-        {
-            context.put("_dao", ContextUtil.daoFromJdbc(jdbcDriver, jdbcUrl, jdbcUsername, jdbcPassword));
-        }
+
     }
 
     public TemplateContext prepareTemplateContext(File _template, Map<String, Object> _context, File _dest)

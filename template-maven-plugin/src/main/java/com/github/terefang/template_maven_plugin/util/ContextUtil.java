@@ -484,6 +484,36 @@ public class ContextUtil {
         _obj.writeTo(_out, _json ? Stringify.FORMATTED : Stringify.HJSON);
     }
 
+    public static String toHson(Map<String, Object> _res)
+    {
+        StringWriter _sw = new StringWriter();
+        writeAsHson(false, _sw, _res);
+        _sw.flush();
+        return _sw.getBuffer().toString();
+    }
+
+    public static String toJson(Map<String, Object> _res)
+    {
+        StringWriter _sw = new StringWriter();
+        writeAsHson(true, _sw, _res);
+        _sw.flush();
+        return _sw.getBuffer().toString();
+    }
+
+    @SneakyThrows
+    public static void writeAsPdata(Writer _out, Map<String, Object> _res)
+    {
+        PdxWriter.writeTo(_res,_out);
+    }
+
+    public static String toPdata(Map<String, Object> _res)
+    {
+        StringWriter _sw = new StringWriter();
+        writeAsPdata(_sw, _res);
+        _sw.flush();
+        return _sw.getBuffer().toString();
+    }
+
     private static JsonValue toJsonObject(Object _v) {
         if(_v instanceof Map)
         {
@@ -2588,6 +2618,10 @@ public class ContextUtil {
         return 0; // simple
     }
 
+    public static String toString(Object _o)
+    {
+        return Objects.toString(_o);
+    }
 
     public static String randomUUID() { return UUID.randomUUID().toString().toUpperCase(); }
     public static String randomGUID() {

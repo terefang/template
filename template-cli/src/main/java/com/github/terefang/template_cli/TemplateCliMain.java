@@ -15,6 +15,7 @@ import com.github.terefang.template_maven_plugin.rhino.RhinoTemplateMojo;
 import com.github.terefang.template_maven_plugin.thymeleaf.*;
 import com.github.terefang.template_maven_plugin.trimou.*;
 import com.github.terefang.template_maven_plugin.velocity.*;
+import lombok.SneakyThrows;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.StringUtils;
@@ -406,6 +407,7 @@ public class TemplateCliMain
         }
     }
 
+    @SneakyThrows
     public static void executeTemplateTemplateMojo(AbstractTemplateMojo _mojo, TemplateCliOptions _opts)
     {
         try

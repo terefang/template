@@ -41,6 +41,10 @@ public class ContextHelper {
         return ContextUtil.daoFromJdbc(_driver, _url, _user,_pass);
     }
 
+    public static String toString(Object _o)
+    {
+        return Objects.toString(_o);
+    }
 
     public final LuaValue lvalue(Object _o) {
         return ContextUtil.lvalue(_o);

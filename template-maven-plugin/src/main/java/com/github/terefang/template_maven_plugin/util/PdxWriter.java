@@ -45,6 +45,11 @@ public class PdxWriter
     @SneakyThrows
     public static void writeTo(int _level, Object _data, Writer _out)
     {
+        if(_data == null)
+        {
+            _out.write("null\n");
+        }
+        else
         if(_data instanceof Map)
         {
             writeTo(_level, (Map)_data, _out);

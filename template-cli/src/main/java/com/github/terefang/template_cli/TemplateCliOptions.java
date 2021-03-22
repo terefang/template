@@ -48,10 +48,10 @@ public class TemplateCliOptions
     /* shared Variables */
 
     @CommandLine.Option(order = 70, names = {"-I", "--include"}, paramLabel = "ANTPATH", description = "include specification", required = false)
-    private String[] includes;
+    private String includes;
 
     @CommandLine.Option(order = 80, names = {"-X", "--exclude"}, paramLabel = "ANTPATH", description = "exclude specification", required = false)
-    private String[] excludes;
+    private String excludes;
 
     @CommandLine.Option(order = 90, names = {"-S", "--src-dir", "--source-directory"}, paramLabel = "DIR", description = "source directory", required = false)
     private File resourcesDirectory;
