@@ -11,13 +11,21 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: com.github.terefang.jmelange:utils-jmelange:2021.1.1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.terefang.jmelange:commons-jmelange:2021.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.jfree:jfreesvg:3.4" level="project" />
+    <orderEntry type="library" name="Maven: de.rototor.pdfbox:graphics2d:0.31" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.pdfbox:pdfbox:2.0.22" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.pdfbox:fontbox:2.0.22" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:log4j-over-slf4j:1.7.30" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:jul-to-slf4j:1.7.30" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.7.30" level="project" />
     <orderEntry type="library" name="Maven: org.soulwing.snmp:tnm4j:1.0.11" level="project" />
     <orderEntry type="library" name="Maven: org.snmp4j:snmp4j:2.8.4" level="project" />
     <orderEntry type="library" name="Maven: net.percederberg.mibble:mibble:2.9.3" level="project" />
     <orderEntry type="library" name="Maven: net.percederberg.grammatica:grammatica:1.5" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: net.percederberg.mibble:mibble-mibs:2.9.3" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.slf4j:log4j-over-slf4j:1.7.7" level="project" />
     <orderEntry type="library" name="Maven: com.github.terefang:jdao:2021.1.1" level="project" />
     <orderEntry type="library" name="Maven: commons-dbutils:commons-dbutils:1.6" level="project" />
     <orderEntry type="library" name="Maven: commons-dbcp:commons-dbcp:1.4" level="project" />
@@ -95,9 +103,5 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.codehaus.plexus:plexus-interpolation:1.25" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.maven.wagon:wagon-provider-api:3.3.4" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-utils:3.3.0" level="project" />
-    <orderEntry type="library" name="Maven: org.jfree:jfreesvg:3.4" level="project" />
-    <orderEntry type="library" name="Maven: de.rototor.pdfbox:graphics2d:0.31" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.pdfbox:pdfbox:2.0.22" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.pdfbox:fontbox:2.0.22" level="project" />
   </component>
 </module>

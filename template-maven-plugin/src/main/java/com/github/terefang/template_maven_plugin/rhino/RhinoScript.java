@@ -1,6 +1,6 @@
 package com.github.terefang.template_maven_plugin.rhino;
 
-import com.github.terefang.imageutil.GfxInterface;
+import com.github.terefang.jmelange.image.GfxInterface;
 import com.github.terefang.template_maven_plugin.TemplateContext;
 import lombok.Data;
 import lombok.SneakyThrows;

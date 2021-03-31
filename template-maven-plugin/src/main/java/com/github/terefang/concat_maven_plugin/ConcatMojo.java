@@ -13,7 +13,6 @@ import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.*;
-import java.util.ArrayDeque;
 import java.util.Arrays;
 
 @Mojo(name = "concat", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)

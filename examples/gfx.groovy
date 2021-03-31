@@ -1,6 +1,6 @@
-import com.github.terefang.imageutil.PixelImage;
-import com.github.terefang.imageutil.SvgImage;
-import com.github.terefang.imageutil.ImageUtil;
+import com.github.terefang.jmelange.image.PixelImage;
+import com.github.terefang.jmelange.image.SvgImage;
+import com.github.terefang.jmelange.util.ImageUtil;
 
 
 SvgImage _im = SvgImage.create(200, 200);

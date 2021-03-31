@@ -1,0 +1,6 @@
+<#if _.checkBoolean('on')>
+ON
+</#if>
+<#if _.checkBoolean('off')>
+OFF
+</#if>

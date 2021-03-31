@@ -1,8 +1,8 @@
 package com.github.terefang.template_maven_plugin.util;
 
-import com.github.terefang.imageutil.PdfImage;
-import com.github.terefang.imageutil.PixelImage;
-import com.github.terefang.imageutil.SvgImage;
+import com.github.terefang.jmelange.image.PdfImage;
+import com.github.terefang.jmelange.image.PixelImage;
+import com.github.terefang.jmelange.image.SvgImage;
 import com.github.terefang.jdao.JDAO;
 import com.github.terefang.template_maven_plugin.TemplateContext;
 import lombok.SneakyThrows;

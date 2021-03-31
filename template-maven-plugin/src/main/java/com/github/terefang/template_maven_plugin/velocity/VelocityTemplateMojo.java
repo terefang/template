@@ -1,6 +1,6 @@
 package com.github.terefang.template_maven_plugin.velocity;
 
-import com.github.terefang.imageutil.GfxInterface;
+import com.github.terefang.jmelange.image.GfxInterface;
 import com.github.terefang.template_maven_plugin.AbstractTemplateMojo;
 import com.github.terefang.template_maven_plugin.TemplateContext;
 import lombok.SneakyThrows;

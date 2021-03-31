@@ -1,7 +1,7 @@
 package com.github.terefang.convert_maven_plugin;
 
+import com.github.terefang.jmelange.pdata.PdataWriter;
 import com.github.terefang.template_maven_plugin.util.ContextUtil;
-import com.github.terefang.template_maven_plugin.util.PdxWriter;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.apache.maven.plugin.AbstractMojo;
@@ -11,7 +11,6 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.*;
@@ -109,11 +108,11 @@ public class ToPdataMojo extends AbstractMojo
         Map<String, Object> _data = ContextUtil.loadContextFrom(_from);
         if(_to == null)
         {
-            PdxWriter.writeTo(_data, new OutputStreamWriter(System.out));
+            PdataWriter.writeTo(_data, new OutputStreamWriter(System.out));
         }
         else
         {
-            PdxWriter.writeTo(_data, _to);
+            PdataWriter.writeTo(_data, _to);
         }
     }
 }

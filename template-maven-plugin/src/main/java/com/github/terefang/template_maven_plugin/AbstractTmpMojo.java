@@ -1,8 +1,8 @@
 package com.github.terefang.template_maven_plugin;
 
-import com.github.terefang.imageutil.GfxInterface;
-import com.github.terefang.imageutil.PixelImage;
-import com.github.terefang.imageutil.SvgImage;
+import com.github.terefang.jmelange.image.GfxInterface;
+import com.github.terefang.jmelange.image.PixelImage;
+import com.github.terefang.jmelange.image.SvgImage;
 import com.github.terefang.template_maven_plugin.util.ContextHelper;
 import com.github.terefang.template_maven_plugin.util.ContextUtil;
 import lombok.Data;

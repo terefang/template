@@ -1,10 +1,12 @@
 package com.github.terefang.template_maven_plugin.util;
 
-import com.github.terefang.imageutil.PdfImage;
-import com.github.terefang.imageutil.PixelImage;
-import com.github.terefang.imageutil.SvgImage;
+import com.github.terefang.jmelange.image.PdfImage;
+import com.github.terefang.jmelange.image.PixelImage;
+import com.github.terefang.jmelange.image.SvgImage;
 import com.github.terefang.jdao.JDAO;
 import com.github.terefang.jdao.JdaoUtils;
+import com.github.terefang.jmelange.pdata.PdataParser;
+import com.github.terefang.jmelange.pdata.PdataWriter;
 import com.github.terefang.template_maven_plugin.luaj.LuaScriptContext;
 import com.moandjiezana.toml.Toml;
 import lombok.SneakyThrows;
@@ -422,7 +424,7 @@ public class ContextUtil {
     @SneakyThrows
     public static Map<String, Object> loadContextFromPdx(InputStream _source)
     {
-        return PdxParser.loadFrom(new InputStreamReader(_source));
+        return PdataParser.loadFrom(new InputStreamReader(_source));
     }
 
     @SneakyThrows
@@ -503,7 +505,7 @@ public class ContextUtil {
     @SneakyThrows
     public static void writeAsPdata(Writer _out, Map<String, Object> _res)
     {
-        PdxWriter.writeTo(_res,_out);
+        PdataWriter.writeTo(_res,_out);
     }
 
     public static String toPdata(Map<String, Object> _res)
@@ -2006,18 +2008,20 @@ public class ContextUtil {
         return checkBoolean(_str.toString());
     }
 
-    public static boolean checkBoolean(final String _str)
+    static final String [] _btests = {"false", "f", "off", "none", "no", "n", "null", "nul", "nil", "0"};
+    public static boolean checkBoolean(String _str)
     {
         if (_str == null) {
             return false;
         }
 
+        _str = _str.trim().toLowerCase();
         // any defined string is "true" unless it is a false indicator:
         // false, off, none, no, null, nul, nil, 0
-        if (containsAny(_str.trim().toLowerCase(),
-                "false", "off", "none", "no", "null", "nul", "nil", "0"))
+        for(String _test : _btests)
         {
-            return false;
+            if(_test.equalsIgnoreCase(_str))
+                return false;
         }
 
         return true;

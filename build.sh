@@ -10,23 +10,15 @@ while test ! -z "$1" ; do
   case "$1" in
     -major*)
       (cd $bDIR && mvn build-helper:parse-version versions:set \
-                -DnewVersion="\${parsedVersion.nextMajorVersion}.1.0" ) || exit 1
+                -DnewVersion="\${parsedVersion.nextMajorVersion}.1.\${parsedVersion.nextIncrementalVersion}" ) || exit 1
       ;;
     -minor*)
       (cd $bDIR && mvn build-helper:parse-version versions:set \
-                -DnewVersion="\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}.0" ) || exit 1
+                -DnewVersion="\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}.\${parsedVersion.nextIncrementalVersion}" ) || exit 1
       ;;
     -release*)
       (cd $bDIR && mvn -X build-helper:parse-version versions:set \
                 -DnewVersion="\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion}" ) || exit 1
-      ;;
-    -build*)
-      (cd $bDIR && mvn -X buildnumber:create build-helper:parse-version versions:set \
-                -DnewVersion="\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.incrementalVersion}-\${buildNumber}" ) || exit 1
-      ;;
-    -snapshot*)
-      (cd $bDIR && mvn -X buildnumber:create build-helper:parse-version versions:set \
-                -DnewVersion="\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.incrementalVersion}-rc$bDATE" ) || exit 1
       ;;
     -clean*)
       (cd $bDIR && mvn clean $OPTS -U) || exit 1
@@ -38,7 +30,8 @@ while test ! -z "$1" ; do
       (cd $bDIR && mvn -N versions:update-child-modules) || exit 1
       ;;
     -install*)
-      (cd $bDIR && mvn install $OPTS) || exit 1
+      (cd $bDIR && mvn clean install $OPTS) || exit 1
+      (test -e ~/bin/template-cli.sh && cd $bDIR && cp template-cli/target/bin/template-cli.*.sh.bin ~/bin/template-cli.sh)
       ;;
     *) echo "unknow option ..."
       ;;
