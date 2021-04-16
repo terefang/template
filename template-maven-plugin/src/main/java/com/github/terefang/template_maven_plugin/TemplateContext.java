@@ -13,4 +13,5 @@ public class TemplateContext {
     public Map<String, Object> processContext;
     public ContextHelper processContextHelper;
     public File processDest;
+    public String outputType;
 }

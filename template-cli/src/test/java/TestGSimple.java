@@ -1,10 +1,10 @@
 import com.github.terefang.template_cli.TemplateCliMain;
 
-public class TestLuaj {
+public class TestGSimple {
     static String[] ARGS = {
-            "-T", "LUAJ", "-M", "STD",
-            "-D", "examples/lua.out",
-            "-S", "examples/test.lua",
+            "-T", "GSIMPLE", "-M", "STD",
+            "-D", "examples/test.gst.out",
+            "-S", "examples/test.gst",
             "--additional-variables", "_out_dir=examples" };
     public static void main(String[] args) {
         TemplateCliMain.main(ARGS);

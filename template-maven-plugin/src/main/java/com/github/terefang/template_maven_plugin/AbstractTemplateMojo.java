@@ -4,18 +4,14 @@ import com.github.terefang.template_maven_plugin.util.ContextUtil;
 import com.google.common.collect.Maps;
 import lombok.Data;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.maven.model.Plugin;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Map;

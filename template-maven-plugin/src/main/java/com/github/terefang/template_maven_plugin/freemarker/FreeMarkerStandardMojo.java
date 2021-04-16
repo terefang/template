@@ -1,9 +1,6 @@
 package com.github.terefang.template_maven_plugin.freemarker;
 
-import com.github.terefang.jmelange.image.GfxInterface;
 import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
-import com.github.terefang.template_maven_plugin.TemplateContext;
-import lombok.SneakyThrows;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
@@ -18,14 +15,7 @@ public class FreeMarkerStandardMojo extends AbstractStandardMojo {
     }
 
     @Override
-    public GfxInterface processToImage(TemplateContext _context) {
-        return null;
-    }
-
-    @Override
-    @SneakyThrows
-    public String processToString(TemplateContext _context)
-    {
-        return FreeMarkerUtil.process(_context, this.outputType);
+    public String getEngine() {
+        return "freemarker";
     }
 }

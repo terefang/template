@@ -6,15 +6,12 @@ import com.github.terefang.preproc_maven_plugin.PreProcessorMojo;
 import com.github.terefang.template_maven_plugin.*;
 import com.github.terefang.template_maven_plugin.freemarker.*;
 import com.github.terefang.template_maven_plugin.groovy.*;
-import com.github.terefang.template_maven_plugin.handlebars.*;
 import com.github.terefang.template_maven_plugin.jexl.*;
 import com.github.terefang.template_maven_plugin.jinjava.*;
-import com.github.terefang.template_maven_plugin.luaj.*;
 import com.github.terefang.template_maven_plugin.rhino.RhinoStandardMojo;
 import com.github.terefang.template_maven_plugin.rhino.RhinoTemplateMojo;
 import com.github.terefang.template_maven_plugin.thymeleaf.*;
 import com.github.terefang.template_maven_plugin.trimou.*;
-import com.github.terefang.template_maven_plugin.velocity.*;
 import lombok.SneakyThrows;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -136,27 +133,10 @@ public class TemplateCliMain
                     || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
             {
                 _smojo = new GroovyStandardMojo();
-                ((GroovyStandardMojo)_smojo).setIncludePath(_opts.getIncludePath());
             }
             else
             {
                 _tmojo = new GroovyTemplateMojo();
-                ((GroovyTemplateMojo)_tmojo).setIncludePath(_opts.getIncludePath());
-            }
-        }
-        else
-        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.LUAJ))
-        {
-            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
-                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
-            {
-                _smojo = new LuajStandardMojo();
-                ((LuajStandardMojo)_smojo).setIncludePath(_opts.getIncludePath());
-            }
-            else
-            {
-                _tmojo = new LuajTemplateMojo();
-                ((LuajTemplateMojo)_tmojo).setIncludePath(_opts.getIncludePath());
             }
         }
         else
@@ -166,12 +146,10 @@ public class TemplateCliMain
                     || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
             {
                 _smojo = new RhinoStandardMojo();
-                ((RhinoStandardMojo)_smojo).setIncludePath(_opts.getIncludePath());
             }
             else
             {
                 _tmojo = new RhinoTemplateMojo();
-                ((RhinoTemplateMojo)_tmojo).setIncludePath(_opts.getIncludePath());
             }
         }
         else
@@ -211,32 +189,6 @@ public class TemplateCliMain
             else
             {
                 _tmojo = new TrimouTemplateMojo();
-            }
-        }
-        else
-        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.HANDLEBARS))
-        {
-            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
-                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
-            {
-                _smojo = new HandlebarsStandardMojo();
-            }
-            else
-            {
-                _tmojo = new HandlebarsTemplateMojo();
-            }
-        }
-        else
-        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.VELOCITY))
-        {
-            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
-                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
-            {
-                _smojo = new VelocityStandardMojo();
-            }
-            else
-            {
-                _tmojo = new VelocityTemplateMojo();
             }
         }
         else
@@ -377,6 +329,7 @@ public class TemplateCliMain
 
     public static void setSharedMojoParameters(AbstractTmpMojo _mojo, TemplateCliOptions _opts)
     {
+        _mojo.setIncludePath(_opts.getIncludePath());
         _mojo.setOutputType(_opts.getOutputType().toString());
         _mojo.setAdditionalContext(_opts.getAdditionalContext());
         _mojo.setAdditionalContextRoot(_opts.getAdditionalContextRoot());

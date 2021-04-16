@@ -21,21 +21,7 @@ public class JexlStandardMojo extends AbstractStandardMojo {
     }
 
     @Override
-    public GfxInterface processToImage(TemplateContext _context)
-    {
-        return JexlUtil.processImageScript(_context);
-    }
-
-    @Override
-    public boolean processToFile(TemplateContext _context)
-    {
-        return JexlUtil.processFileScript(_context);
-    }
-
-    @Override
-    @SneakyThrows
-    public String processToString(TemplateContext _context)
-    {
-        return JexlUtil.processScript(_context);
+    public String getEngine() {
+        return "jexl";
     }
 }

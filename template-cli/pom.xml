@@ -5,7 +5,7 @@
     <parent>
         <artifactId>template</artifactId>
         <groupId>com.github.terefang.template</groupId>
-        <version>2021.4.29</version>
+        <version>2021.4.349</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -113,6 +113,30 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${project.artifactId}-shaded</finalName>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Main-Class>com.github.terefang.template_cli.TemplateCliMain</Main-Class>
+                                        <Build-Number>${project.version}</Build-Number>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>de.ntcomputer</groupId>
                 <artifactId>executable-packer-maven-plugin</artifactId>
                 <version>1.0.1</version>
@@ -153,34 +177,27 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <target xmlns:comp="antlib:org.apache.ant.compress">
-                                <taskdef uri="antlib:org.apache.ant.compress"
-                                         resource="org/apache/ant/compress/antlib.xml"/>
-
+                            <target>
                                 <mkdir dir="${project.build.directory}/bin"/>
 
-                                <concat destfile="${project.build.directory}/bin/${project.artifactId}.r${buildNumber}.sh.bin"
+                                <concat destfile="${project.build.directory}/bin/${project.artifactId}-${project.version}.sh.bin"
                                         binary="true">
                                     <fileset file="${project.basedir}/src/main/dist/stub.sh"/>
                                     <fileset
                                             file="${project.build.directory}/${project.artifactId}-${project.version}-pkg.jar"/>
                                 </concat>
 
+                                <concat destfile="${project.build.directory}/bin/${project.artifactId}-${project.version}.shaded.sh.bin"
+                                        binary="true">
+                                    <fileset file="${project.basedir}/src/main/dist/stub.sh"/>
+                                    <fileset
+                                            file="${project.build.directory}/${project.artifactId}-shaded.jar"/>
+                                </concat>
+
                                 <chmod perm="ugo+rx">
                                     <fileset dir="${project.build.directory}/bin/"
                                              includes="${project.artifactId}.*.bin"/>
                                 </chmod>
-
-                                <comp:tar
-                                        destfile="${project.build.directory}/${project.artifactId}.r${buildNumber}.tar">
-                                    <comp:tarfileset
-                                            prefix="${project.artifactId}.r${buildNumber}/bin"
-                                            filemode='755'
-                                            dir="${project.build.directory}/bin/"/>
-                                </comp:tar>
-                                <comp:gzip
-                                        src="${project.build.directory}/${project.artifactId}.r${buildNumber}.tar"
-                                        destfile="${project.build.directory}/${project.artifactId}.r${buildNumber}.tar.gz"/>
                             </target>
                         </configuration>
                     </execution>

@@ -5,16 +5,16 @@ function()
 
     if(_output_type == 'pdf')
     {
-    _im = _.pdfImage(200, 200);
+    _im = _.pdf(200, 200);
     }
     else
     if(_output_type == 'svg')
     {
-    _im = _.svgImage(200, 200);
+    _im = _.svg(200, 200);
     }
     else
     {
-    _im = _.pngImage(200, 200);
+    _im = _.png(200, 200);
     }
 
 

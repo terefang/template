@@ -9,13 +9,9 @@ various template files using various data files.
 * thymeleaf (.tl)
 * freemarker (.fm)
 * jexl -- ie. apache commons jexl jxt (.jxt) or plain jexl (.jx)
-* ecma -- ie. mozilla rhino javascript (.js/.ecma) or asp-style (.esp)
 * gsimple -- ie. groovy simple-template-engine (.gst)
 * groovy -- ie. groovy script with redirected stdout (.groovy)
-* luaj -- ie. lua script with out printwriter (.lua)
-* handlebars -- (.hbs)
 * trimou -- ie. advanced handlebars (.tri)
-* apache velocity -- (.vm, .vt)
 
 **Gfx Formats**
 
@@ -65,7 +61,7 @@ struct2 = {
 eg. render many templates with one data context with optional local context data
 
 ```
---template-engine [THYMELEAF, JINJAVA, JXLT, JEXL, GSIMPLE, GROOVY, LUAJ, FREEMARKER, TRIMOU, HANDLEBARS, VELOCITY]
+--template-engine [THYMELEAF, JINJAVA, JXLT, JEXL, GSIMPLE, GROOVY, FREEMARKER, TRIMOU]
 --engine-mode STANDARD
 --output-type [TEXT, XML, HTML, JAVASCRIPT, SVG, PNG]
 --additional-context-file FILE
@@ -84,7 +80,7 @@ eg. render many templates with one data context with optional local context data
 eg. render one template against many data contexts
 
 ```
---template-engine [THYMELEAF, JINJAVA, JXLT, JEXL, GSIMPLE, GROOVY, LUAJ, FREEMARKER, TRIMOU, HANDLEBARS, VELOCITY]
+--template-engine [THYMELEAF, JINJAVA, JXLT, JEXL, GSIMPLE, GROOVY, FREEMARKER, TRIMOU]
 --engine-mode TEMPLATE
 --output-type [TEXT, XML, HTML, JAVASCRIPT, SVG, PNG]
 --additional-context-file FILE

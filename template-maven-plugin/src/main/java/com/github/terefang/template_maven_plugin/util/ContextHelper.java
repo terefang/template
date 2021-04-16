@@ -8,7 +8,6 @@ import com.github.terefang.template_maven_plugin.TemplateContext;
 import lombok.SneakyThrows;
 
 import org.apache.commons.codec.DecoderException;
-import org.luaj.vm2.LuaValue;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -34,6 +33,9 @@ public class ContextHelper {
         return ContextUtil.loadContextFrom(new File(this.context.processParent, _file));
     }
 
+
+
+
     /*----- dao helper -----*/
 
     public final JDAO daoFromJdbc(String _driver, String _url, String _user, String _pass)
@@ -44,10 +46,6 @@ public class ContextHelper {
     public static String toString(Object _o)
     {
         return Objects.toString(_o);
-    }
-
-    public final LuaValue lvalue(Object _o) {
-        return ContextUtil.lvalue(_o);
     }
 
     public final PixelImage pixImage(int _w, int _h) {
@@ -1770,5 +1768,25 @@ public class ContextHelper {
 
     public final Map<String, Object> toMap(String _k, Object _v) {
         return ContextUtil.toMap(_k, _v);
+    }
+
+    public final Map<String, Object> fromYaml(String _source)
+    {
+        return ContextUtil.fromYaml(_source);
+    }
+
+    public final Map<String, Object> fromJson(String _source)
+    {
+        return ContextUtil.fromJson(_source);
+    }
+
+    public final Map<String, Object> fromHjson(String _source)
+    {
+        return ContextUtil.fromHjson(_source);
+    }
+
+    public final Map<String, Object> fromPdata(String _source)
+    {
+        return ContextUtil.fromPdata(_source);
     }
 }

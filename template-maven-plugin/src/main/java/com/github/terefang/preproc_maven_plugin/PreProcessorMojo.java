@@ -1,12 +1,6 @@
 package com.github.terefang.preproc_maven_plugin;
 
-import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
-import com.github.terefang.template_maven_plugin.TemplateContext;
-import com.github.terefang.template_maven_plugin.freemarker.FreeMarkerUtil;
-import com.github.terefang.template_maven_plugin.util.ContextUtil;
-import com.google.common.collect.Maps;
 import lombok.Data;
-import lombok.SneakyThrows;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -14,16 +8,12 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.*;
-import java.text.MessageFormat;
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
 
 @Mojo(name = "pre-processor", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 @Data

@@ -1,20 +1,9 @@
 package com.github.terefang.template_maven_plugin.thymeleaf;
 
-import com.github.terefang.jmelange.image.GfxInterface;
 import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
-import com.github.terefang.template_maven_plugin.TemplateContext;
-import lombok.SneakyThrows;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.TemplateSpec;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.FileTemplateResolver;
-
-import java.io.File;
-import java.util.Map;
 
 @Mojo(name = "thymeleaf-standard", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class ThymeleafStandardMojo extends AbstractStandardMojo {
@@ -27,14 +16,7 @@ public class ThymeleafStandardMojo extends AbstractStandardMojo {
     }
 
     @Override
-    public GfxInterface processToImage(TemplateContext _context) {
-        return null;
-    }
-
-    @Override
-    @SneakyThrows
-    public String processToString(TemplateContext _context)
-    {
-        return ThymeleafUtil.process(_context, this.outputType);
+    public String getEngine() {
+        return "thymeleaf";
     }
 }

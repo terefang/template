@@ -1,9 +1,5 @@
-import com.github.terefang.jmelange.image.PixelImage;
-import com.github.terefang.jmelange.image.SvgImage;
-import com.github.terefang.jmelange.util.ImageUtil;
 
-
-SvgImage _im = SvgImage.create(200, 200);
+def _im = _.svg(200, 200);
 
 def _font = _im.getTTFont('/data/fredo/_fontz/_pub/Arimo/Arimo-Regular.ttf', (int)10);
 

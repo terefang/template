@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class TemplateCliOptions
 {
-    public static enum TemplateEngineName { THYMELEAF, JINJAVA, JXLT, JEXL, GSIMPLE, GROOVY, LUAJ, ECMA, FREEMARKER, TRIMOU, HANDLEBARS, VELOCITY, PREPROCESSOR, CONCAT, ToJSON, ToHSON, ToPDATA}
+    public static enum TemplateEngineName { THYMELEAF, JINJAVA, ECMA, JXLT, JEXL, GSIMPLE, GROOVY, FREEMARKER, TRIMOU, PREPROCESSOR, CONCAT, ToJSON, ToHSON, ToPDATA}
 
     @CommandLine.Option(order = 10, names = {"-T", "--template-engine"}, paramLabel = "ENGINE", description = "name of the templating engine, ${COMPLETION-CANDIDATES}", required = true)
     public TemplateEngineName doEngine;

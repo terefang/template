@@ -6,7 +6,7 @@
 
     <groupId>com.github.terefang.template</groupId>
     <artifactId>template</artifactId>
-    <version>2021.4.29</version>
+    <version>2021.4.349</version>
     <modules>
         <module>template-cli</module>
         <module>template-maven-plugin</module>
@@ -29,7 +29,7 @@
         <maven.version>3.6.3</maven.version>
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyyMMdd'.'HHmm</maven.build.timestamp.format>
-        <version.jmelange>2021.1.1</version.jmelange>
+        <version.jmelange>2021.4.115</version.jmelange>
     </properties>
 
     <scm>
@@ -53,34 +53,5 @@
         </repository>
     </repositories>
     
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>1.4</version>
-                <executions>
-                    <execution>
-                        <id>buildnumber</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>create</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <format>{0,number}</format>
-                    <items>
-                        <item>buildNumber</item>
-                    </items>
-                    <doCheck>false</doCheck>
-                    <doUpdate>false</doUpdate>
-                    <revisionOnScmFailure>unknownbuild</revisionOnScmFailure>
-                    <useLastCommittedRevision>true</useLastCommittedRevision>
-                    <shortRevisionLength>6</shortRevisionLength>
-                    <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+
 </project>

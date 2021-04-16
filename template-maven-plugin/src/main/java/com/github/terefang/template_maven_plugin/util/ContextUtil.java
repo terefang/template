@@ -7,7 +7,6 @@ import com.github.terefang.jdao.JDAO;
 import com.github.terefang.jdao.JdaoUtils;
 import com.github.terefang.jmelange.pdata.PdataParser;
 import com.github.terefang.jmelange.pdata.PdataWriter;
-import com.github.terefang.template_maven_plugin.luaj.LuaScriptContext;
 import com.moandjiezana.toml.Toml;
 import lombok.SneakyThrows;
 
@@ -37,7 +36,6 @@ import org.hjson.JsonObject;
 import org.hjson.JsonValue;
 import org.hjson.Stringify;
 import org.ini4j.Ini;
-import org.luaj.vm2.LuaValue;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -428,6 +426,24 @@ public class ContextUtil {
     }
 
     @SneakyThrows
+    public static Map<String, Object> loadContextFromPdata(InputStream _source)
+    {
+        return PdataParser.loadFrom(new InputStreamReader(_source));
+    }
+
+    @SneakyThrows
+    public static Map<String, Object> fromPdx(String _source)
+    {
+        return PdataParser.loadFrom(new StringReader(_source));
+    }
+
+    @SneakyThrows
+    public static Map<String, Object> fromPdata(String _source)
+    {
+        return PdataParser.loadFrom(new StringReader(_source));
+    }
+
+    @SneakyThrows
     public static Map<String,?> loadContextFromProperties(InputStream _source) {
         InputStreamReader _rd = new InputStreamReader(_source);
         Properties _props = new Properties();
@@ -444,6 +460,14 @@ public class ContextUtil {
     {
         Yaml _y = new Yaml();
         HashMap<String, Object> _obj = _y.loadAs(new InputStreamReader(_source), HashMap.class);
+        return _obj;
+    }
+
+    @SneakyThrows
+    public static Map<String, Object> fromYaml(String _source)
+    {
+        Yaml _y = new Yaml();
+        HashMap<String, Object> _obj = _y.loadAs(_source, HashMap.class);
         return _obj;
     }
 
@@ -621,6 +645,30 @@ public class ContextUtil {
         return _obj;
     }
 
+    @SneakyThrows
+    public static Map<String, Object> fromJson(String _source)
+    {
+        HashMap<String, Object> _obj = new HashMap<>();
+        JsonValue _hson = JsonValue.readJSON(_source);
+        for(Map.Entry<String, Object> _entry : hjsonToMap(_hson).entrySet())
+        {
+            _obj.put(_entry.getKey(), _entry.getValue());
+        }
+        return _obj;
+    }
+
+    @SneakyThrows
+    public static Map<String, Object> fromHjson(String _source)
+    {
+        HashMap<String, Object> _obj = new HashMap<>();
+        JsonValue _hson = JsonValue.readHjson(_source);
+        for(Map.Entry<String, Object> _entry : hjsonToMap(_hson).entrySet())
+        {
+            _obj.put(_entry.getKey(), _entry.getValue());
+        }
+        return _obj;
+    }
+
     static Map<String, Object> hjsonToMap(JsonValue _v)
     {
         Map<String, Object> _ret = new HashMap<>();
@@ -677,13 +725,6 @@ public class ContextUtil {
         List _ret = new Vector();
         value.asArray().forEach(m -> _ret.add(hjsonToValue(m)));
         return _ret;
-    }
-
-    /*----- lua helper -----*/
-
-    public static LuaValue lvalue(Object _o)
-    {
-        return LuaScriptContext.wrapJava(_o);
     }
 
     /*----- image helper -----*/

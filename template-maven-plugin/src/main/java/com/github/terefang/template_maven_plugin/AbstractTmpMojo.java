@@ -5,6 +5,7 @@ import com.github.terefang.jmelange.image.PixelImage;
 import com.github.terefang.jmelange.image.SvgImage;
 import com.github.terefang.template_maven_plugin.util.ContextHelper;
 import com.github.terefang.template_maven_plugin.util.ContextUtil;
+import com.github.terefang.template_maven_plugin.util.ProcessingUtil;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,9 @@ public abstract class AbstractTmpMojo extends AbstractMojo
 
     @Parameter(defaultValue = "text")
     protected String outputType;
+
+    @Parameter(defaultValue = "")
+    List<String> includePath;
 
     /**
      * additional global context
@@ -111,6 +115,7 @@ public abstract class AbstractTmpMojo extends AbstractMojo
             FileReader reader = null;
             MavenXpp3Reader mavenreader = new MavenXpp3Reader();
             try {
+                Map<String, Object> _maven = new HashMap<>();
                 reader = new FileReader(new File("pom.xml"));
                 model = mavenreader.read(reader);
                 model.setPomFile(new File("pom.xml"));
@@ -121,7 +126,7 @@ public abstract class AbstractTmpMojo extends AbstractMojo
                 details.put("artifactId", mavenProject.getModel().getArtifactId());
                 details.put("description", mavenProject.getModel().getDescription());
                 details.put("name", mavenProject.getModel().getName());
-                context.put("project", details);
+                _maven.put("project", details);
 
                 List<Map<String, String>> dependencies = new ArrayList<Map<String, String>>();
                 for (Dependency dependency : mavenProject.getDependencies()) {
@@ -132,14 +137,14 @@ public abstract class AbstractTmpMojo extends AbstractMojo
                     map.put("version", dependency.getVersion());
                     dependencies.add(map);
                 }
-                context.put("dependencies", dependencies);
+                _maven.put("dependencies", dependencies);
 
                 Map<String, String> properties = new HashMap<String, String>();
                 for (Map.Entry<Object, Object> property : mavenProject.getProperties().entrySet()) {
                     properties.put(property.getKey().toString(), property.getValue().toString());
                 }
-                context.put("properties", properties);
-
+                _maven.put("properties", properties);
+                context.put("_maven", _maven);
             } catch (Exception _xe) {
                 getLog().warn("error setting pom.xml in config.");
                 model=null;
@@ -190,12 +195,12 @@ public abstract class AbstractTmpMojo extends AbstractMojo
     {
         try
         {
+            _context.setOutputType(this.outputType.toLowerCase());
             if("bin".equalsIgnoreCase(this.outputType)
                     || "csv".equalsIgnoreCase(this.outputType)
                     || "xls".equalsIgnoreCase(this.outputType)
                     || "xlsx".equalsIgnoreCase(this.outputType))
             {
-                _context.processContext.put("_output_type", this.outputType.toLowerCase());
                 return this.processToFile(_context);
             }
             else
@@ -203,7 +208,6 @@ public abstract class AbstractTmpMojo extends AbstractMojo
                     || "svg".equalsIgnoreCase(this.outputType)
                     || "png".equalsIgnoreCase(this.outputType))
             {
-                _context.processContext.put("_output_type", this.outputType.toLowerCase());
                 GfxInterface _img = this.processToImage(_context);
                 _img.save(_context.processDest);
             }
@@ -219,9 +223,20 @@ public abstract class AbstractTmpMojo extends AbstractMojo
         }
     }
 
-    public boolean processToFile(TemplateContext _context) { return false; }
+    public abstract String getEngine();
 
-    public abstract GfxInterface processToImage(TemplateContext _context);
+    public GfxInterface processToImage(TemplateContext _context) {
+        return ProcessingUtil.processImageScript(this.getEngine(), _context, this.getIncludePath());
+    }
 
-    public abstract String processToString(TemplateContext _context);
+    @SneakyThrows
+    public String processToString(TemplateContext _context)
+    {
+        return ProcessingUtil.processScript(this.getEngine(), _context, this.getIncludePath());
+    }
+
+    public boolean processToFile(TemplateContext _context) {
+        return ProcessingUtil.processFileScript(this.getEngine(), _context, this.getIncludePath());
+    }
+
 }
