@@ -1,13 +1,17 @@
 package com.github.terefang.template_maven_plugin.util;
 
+import com.github.terefang.jmelange.commons.CommonUtil;
+import com.github.terefang.jmelange.dao.JDAO;
+import com.github.terefang.jmelange.dao.utils.JdaoUtils;
+import com.github.terefang.jmelange.data.DataReadWriteFactory;
+import com.github.terefang.jmelange.data.ObjectDataReader;
+import com.github.terefang.jmelange.data.ObjectDataWriter;
+import com.github.terefang.jmelange.data.RowDataWriter;
+import com.github.terefang.jmelange.data.util.CsvUtil;
 import com.github.terefang.jmelange.image.PdfImage;
 import com.github.terefang.jmelange.image.PixelImage;
 import com.github.terefang.jmelange.image.SvgImage;
-import com.github.terefang.jdao.JDAO;
-import com.github.terefang.jdao.JdaoUtils;
-import com.github.terefang.jmelange.pdata.PdataParser;
-import com.github.terefang.jmelange.pdata.PdataWriter;
-import com.moandjiezana.toml.Toml;
+
 import lombok.SneakyThrows;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +35,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
-import org.hjson.JsonArray;
-import org.hjson.JsonObject;
-import org.hjson.JsonValue;
-import org.hjson.Stringify;
-import org.ini4j.Ini;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -107,12 +106,6 @@ public class ContextUtil {
             _ret.putAll(loadContextFromHjson(_fh));
         }
         else
-        if(_fn.endsWith(".tml")
-                || _fn.endsWith(".toml"))
-        {
-            _ret.putAll(loadContextFromToml(_fh));
-        }
-        else
         if(_fn.endsWith(".ini"))
         {
             _ret.putAll(loadContextFromIni(_fh));
@@ -159,6 +152,29 @@ public class ContextUtil {
         }
         IOUtil.close(_fh);
         return _ret;
+    }
+
+    public static Map<String,Object> loadContextFromIni(InputStream _fh)
+    {
+        return loadContextFromType("ini", _fh);
+    }
+
+    public static Map<String,Object> loadContextFromType(String _type, InputStream _fh)
+    {
+        try
+        {
+            ObjectDataReader _rd = DataReadWriteFactory.findByName(_type, ObjectDataReader.class);
+            return _rd.readObject(_fh);
+        }
+        finally {
+            CommonUtil.close(_fh);
+        }
+    }
+
+    public static Map<String,Object> loadContextFromType(String _type, File _fh)
+    {
+        ObjectDataReader _rd = DataReadWriteFactory.findByName(_type, ObjectDataReader.class);
+        return _rd.readObject(_fh);
     }
 
     public static String unCompressedFilename(File _res)
@@ -219,23 +235,6 @@ public class ContextUtil {
         return _stream;
     }
 
-    @SneakyThrows
-    public static Map<String, Object> loadContextFromIni(InputStream _source)
-    {
-        Ini _ini = new Ini();
-        _ini.load(new InputStreamReader(_source));
-        Map<String, Object> _ret = new HashMap<>();
-        for(String _key : _ini.keySet())
-        {
-            Map<String, Object> _set = new HashMap<>();
-            for(String _k : _ini.get(_key).keySet())
-            {
-                _set.put(_k, _ini.get(_key, _k));
-            }
-            _ret.put(_key, _set);
-        }
-        return _ret;
-    }
 
     public static final CSVFormat _SCSV = CSVFormat.newFormat(';')
             .withAllowDuplicateHeaderNames()
@@ -346,168 +345,115 @@ public class ContextUtil {
     @SneakyThrows
     public static List<Map<String, Object>> readFileCsv(String _infmt, InputStream _in, Charset _cs)
     {
-        List<Map<String, Object>> _res = new Vector<>();
-        List<String> _hs = new Vector<>();
-
-        BufferedReader _inr = new BufferedReader(new InputStreamReader(_in,_cs), 65536);
-        CSVParser parser = null;
-        if("scsv".equalsIgnoreCase(_infmt))
-        {
-            parser = new CSVParser(_inr, _SCSV);
-        }
-        else
-        if("sqlite-csv".equalsIgnoreCase(_infmt))
-        {
-            parser = new CSVParser(_inr, _SQLITECSV);
-        }
-        else
-        if("sqlite-list".equalsIgnoreCase(_infmt))
-        {
-            parser = new CSVParser(_inr, _SQLITELIST);
-        }
-        else
-        {
-            parser = new CSVParser(_inr, CSVFormat.valueOf(_infmt));
-        }
-
-        boolean _first = true;
-        for(CSVRecord _row : parser.getRecords())
-        {
-            if(_first)
-            {
-                for(int _i = 0; _i<_row.size(); _i++)
-                {
-                    String _k = _row.get(_i);
-                    if(StringUtils.isNotEmpty(_k) && StringUtils.isNotBlank(_k))
-                    {
-                        _hs.add(_k);
-                    }
-                    else
-                    {
-                        _hs.add(String.format("_%04d", _i));
-                    }
-                }
-                _first = false;
-            }
-            else
-            {
-                Map<String,Object> _map = new LinkedHashMap<>();
-                for(int _i = 0; _i<_hs.size(); _i++)
-                {
-                    try
-                    {
-                        String _v = _row.get(_i);
-                        String _h = _hs.get(_i);
-                        if(_v!=null) _map.put(_h, _v);
-                    }
-                    catch (Exception _xe)
-                    {
-                        log.error(_xe.getMessage()+" on row="+_row.toString());
-                    }
-                }
-                if(_map.size()==0) {
-                    log.error(_row.toString());
-                }
-                else
-                {
-                    _res.add(_map);
-                }
-            }
-        }
-        IOUtil.close(_inr);
-
-        return _res;
+        return CsvUtil.readFileCsv(_infmt, _in, _cs);
     }
 
     @SneakyThrows
     public static Map<String, Object> loadContextFromPdx(InputStream _source)
     {
-        return PdataParser.loadFrom(new InputStreamReader(_source));
+        return loadContextFromType("pdata", _source);
     }
 
     @SneakyThrows
     public static Map<String, Object> loadContextFromPdata(InputStream _source)
     {
-        return PdataParser.loadFrom(new InputStreamReader(_source));
+        return loadContextFromType("pdata", _source);
     }
 
     @SneakyThrows
     public static Map<String, Object> fromPdx(String _source)
     {
-        return PdataParser.loadFrom(new StringReader(_source));
+        return loadContextFromType("pdata", new StringBufferInputStream(_source));
     }
 
     @SneakyThrows
     public static Map<String, Object> fromPdata(String _source)
     {
-        return PdataParser.loadFrom(new StringReader(_source));
+        return loadContextFromType("pdata", new StringBufferInputStream(_source));
     }
 
     @SneakyThrows
-    public static Map<String,?> loadContextFromProperties(InputStream _source) {
-        InputStreamReader _rd = new InputStreamReader(_source);
-        Properties _props = new Properties();
-        _props.load(_rd);
-        IOUtil.close(_rd);
-        HashMap<String, String> _ret = new HashMap<String, String>();
-        for (final String name : _props.stringPropertyNames())
-            _ret.put(name, _props.getProperty(name));
-        return _ret;
+    public static Map<String,?> loadContextFromProperties(InputStream _source)
+    {
+        return loadContextFromType("properties", _source);
     }
 
     @SneakyThrows
     public static Map<String, Object> loadContextFromYaml(InputStream _source)
     {
-        Yaml _y = new Yaml();
-        HashMap<String, Object> _obj = _y.loadAs(new InputStreamReader(_source), HashMap.class);
-        return _obj;
+        return loadContextFromType("yaml", _source);
     }
 
     @SneakyThrows
     public static Map<String, Object> fromYaml(String _source)
     {
-        Yaml _y = new Yaml();
-        HashMap<String, Object> _obj = _y.loadAs(_source, HashMap.class);
-        return _obj;
+        return loadContextFromType("yaml", new StringBufferInputStream(_source));
     }
 
-    @SneakyThrows
-    public static Map<String, Object> loadContextFromToml(InputStream _source)
+    public static void writeContextAsType(String _type, Map<String,Object> _data, OutputStream _fh)
     {
-        Toml _toml = new Toml();
-        _toml.read(new InputStreamReader(_source));
-        return _toml.toMap();
+        try
+        {
+            ObjectDataWriter _rd = DataReadWriteFactory.findByName(_type, ObjectDataWriter.class);
+            _rd.writeObject(_data, _fh);
+        }
+        finally {
+            CommonUtil.close(_fh);
+        }
+    }
+
+    public static void writeContextAsType(String _type, Map<String,Object> _data, File _fh)
+    {
+        ObjectDataWriter _rd = DataReadWriteFactory.findByName(_type, ObjectDataWriter.class);
+        _rd.writeObject(_data, _fh);
+    }
+
+    public static void writeRowsAsType(String _type, List<Map<String,Object>> _data, OutputStream _fh)
+    {
+        try
+        {
+        RowDataWriter _rd = DataReadWriteFactory.findByName(_type, RowDataWriter.class);
+        _rd.writeRows(_data, _fh);
+        }
+        finally {
+            CommonUtil.close(_fh);
+        }
+    }
+
+    public static void writeRowsAsType(String _type, List<Map<String,Object>> _data, File _fh)
+    {
+        RowDataWriter _rd = DataReadWriteFactory.findByName(_type, RowDataWriter.class);
+        _rd.writeRows(_data, _fh);
     }
 
     @SneakyThrows
     public static void writeAsHson(boolean _json, Writer _out, List<Map<String, Object>> _res)
     {
-        JsonArray _arr = new JsonArray();
-        for(Map<String, Object> _row : _res)
+        ByteArrayOutputStream _baos = new ByteArrayOutputStream();
+        if(_json)
         {
-            JsonObject _obj = new JsonObject();
-            for(Map.Entry<String, Object> _entry : _row.entrySet())
-            {
-                Object _v = _entry.getValue();
-                if(_v==null) _v= "";
-                _obj.set(_entry.getKey(), _v.toString());
-            }
-            _arr.add(_obj);
+            writeRowsAsType("json", _res, _baos);
         }
-        _arr.writeTo(_out, _json ? Stringify.FORMATTED : Stringify.HJSON);
+        else
+        {
+            writeRowsAsType("hson", _res, _baos);
+        }
+        _out.write(_baos.toString("UTF-8"));
     }
 
     @SneakyThrows
     public static void writeAsHson(boolean _json, Writer _out, Map<String, Object> _res)
     {
-        JsonObject _obj = new JsonObject();
-        for(Map.Entry<String, Object> _entry : _res.entrySet())
+        ByteArrayOutputStream _baos = new ByteArrayOutputStream();
+        if(_json)
         {
-            Object _v = _entry.getValue();
-            if(_v==null) _v= "";
-            _obj.set(_entry.getKey(), toJsonObject(_v));
+            writeContextAsType("json", _res, _baos);
         }
-        _obj.writeTo(_out, _json ? Stringify.FORMATTED : Stringify.HJSON);
+        else
+        {
+            writeContextAsType("hson", _res, _baos);
+        }
+        _out.write(_baos.toString("UTF-8"));
     }
 
     public static String toHson(Map<String, Object> _res)
@@ -529,7 +475,9 @@ public class ContextUtil {
     @SneakyThrows
     public static void writeAsPdata(Writer _out, Map<String, Object> _res)
     {
-        PdataWriter.writeTo(_res,_out);
+        ByteArrayOutputStream _baos = new ByteArrayOutputStream();
+        writeContextAsType("pdata", _res, _baos);
+        _out.write(_baos.toString("UTF-8"));
     }
 
     public static String toPdata(Map<String, Object> _res)
@@ -540,191 +488,22 @@ public class ContextUtil {
         return _sw.getBuffer().toString();
     }
 
-    private static JsonValue toJsonObject(Object _v) {
-        if(_v instanceof Map)
-        {
-            return toJsonObject((Map)_v);
-        }
-        else
-        if(_v instanceof List)
-        {
-            return toJsonObject((List)_v);
-        }
-        else
-        if(_v instanceof String)
-        {
-            return JsonValue.valueOf((String)_v);
-        }
-        else
-        if(_v instanceof Integer)
-        {
-            return JsonValue.valueOf((Integer)_v);
-        }
-        else
-        if(_v instanceof Long)
-        {
-            return JsonValue.valueOf((Long)_v);
-        }
-        else
-        if(_v instanceof Boolean)
-        {
-            return JsonValue.valueOf((Boolean)_v);
-        }
-        else
-        if(_v instanceof Double)
-        {
-            return JsonValue.valueOf((Double)_v);
-        }
-        else
-        if(_v instanceof Float)
-        {
-            return JsonValue.valueOf((Float)_v);
-        }
-        else
-        if(_v.getClass().isArray())
-        {
-            return toJsonObject((List)Arrays.asList((Object[])_v));
-        }
-        return JsonValue.valueOf(_v.toString());
-    }
-
-    private static JsonValue toJsonObject(String _v) {
-        return JsonValue.valueOf(_v);
-    }
-
-    private static JsonValue toJsonObject(int _v) {
-        return JsonValue.valueOf(_v);
-    }
-
-    private static JsonValue toJsonObject(long _v) {
-        return JsonValue.valueOf(_v);
-    }
-
-    private static JsonValue toJsonObject(boolean _v) {
-        return JsonValue.valueOf(_v);
-    }
-
-    private static JsonValue toJsonObject(double _v) {
-        return JsonValue.valueOf(_v);
-    }
-
-    private static JsonValue toJsonObject(float _v) {
-        return JsonValue.valueOf(_v);
-    }
-
-    private static JsonValue toJsonObject(Map<String,Object> _v) {
-        JsonObject _obj = new JsonObject();
-        for(Map.Entry<String,Object> _entry : _v.entrySet())
-        {
-            Object _v1 = _entry.getValue();
-            if(_v1==null) _v1= "";
-            _obj.set(_entry.getKey(), toJsonObject(_v1));
-        }
-        return _obj;
-    }
-
-    private static JsonValue toJsonObject(List<Object> _v) {
-        JsonArray _obj = new JsonArray();
-        for(Object _entry : _v)
-        {
-            if(_entry==null) _entry= "";
-            _obj.add(toJsonObject(_entry));
-        }
-        return _obj;
-    }
-
     @SneakyThrows
     public static Map<String, Object> loadContextFromHjson(InputStream _source)
     {
-        HashMap<String, Object> _obj = new HashMap<>();
-        JsonValue _hson = JsonValue.readHjson(new InputStreamReader(_source));
-        for(Map.Entry<String, Object> _entry : hjsonToMap(_hson).entrySet())
-        {
-            _obj.put(_entry.getKey(), _entry.getValue());
-        }
-        return _obj;
+        return loadContextFromType("hson", _source);
     }
 
     @SneakyThrows
     public static Map<String, Object> fromJson(String _source)
     {
-        HashMap<String, Object> _obj = new HashMap<>();
-        JsonValue _hson = JsonValue.readJSON(_source);
-        for(Map.Entry<String, Object> _entry : hjsonToMap(_hson).entrySet())
-        {
-            _obj.put(_entry.getKey(), _entry.getValue());
-        }
-        return _obj;
+        return loadContextFromType("json", new StringBufferInputStream(_source));
     }
 
     @SneakyThrows
     public static Map<String, Object> fromHjson(String _source)
     {
-        HashMap<String, Object> _obj = new HashMap<>();
-        JsonValue _hson = JsonValue.readHjson(_source);
-        for(Map.Entry<String, Object> _entry : hjsonToMap(_hson).entrySet())
-        {
-            _obj.put(_entry.getKey(), _entry.getValue());
-        }
-        return _obj;
-    }
-
-    static Map<String, Object> hjsonToMap(JsonValue _v)
-    {
-        Map<String, Object> _ret = new HashMap<>();
-        if(_v.isObject())
-        {
-            _v.asObject().forEach(m -> _ret.put(m.getName(), hjsonToValue(m.getValue())));
-        }
-        else
-        {
-            _ret.put("data", hjsonToValue(_v));
-        }
-        return _ret;
-    }
-
-    static Object hjsonToValue(JsonValue value)
-    {
-        if(value.isObject())
-        {
-            return hjsonToMap(value);
-        }
-        else
-        if(value.isArray())
-        {
-            return hjsonToArray(value);
-        }
-        else
-        if(value.isString())
-        {
-            return value.asString();
-        }
-        else
-        if(value.isNumber())
-        {
-            return Double.valueOf(value.asDouble());
-        }
-        else
-        if(value.isBoolean())
-        {
-            return Boolean.valueOf(value.asBoolean());
-        }
-        else
-        if(value.isNull())
-        {
-            return null;
-        }
-        else
-        {
-            return value.toString();
-        }
-    }
-
-    static List hjsonToArray(JsonValue value)
-    {
-        List _ret = new Vector();
-        value.asArray().forEach(m -> _ret.add(hjsonToValue(m)));
-        return _ret;
+        return loadContextFromType("hson", new StringBufferInputStream(_source));
     }
 
     /*----- image helper -----*/
@@ -760,38 +539,20 @@ public class ContextUtil {
 
     /*----- digest -----*/
 
-    public static String md2Hex(String data) {
-        return DigestUtils.md2Hex(data);
-    }
     public static String md5Hex(String data) {
         return DigestUtils.md5Hex(data);
     }
     public static String sha1Hex(String data) {
-        return DigestUtils.sha1Hex(data);
+        return CommonUtil.sha1Hex(data);
     }
     public static String sha256Hex(String data) {
-        return DigestUtils.sha256Hex(data);
-    }
-    public static String sha3_256Hex(String data) {
-        return DigestUtils.sha3_256Hex(data);
-    }
-    public static String sha3_384Hex(String data) {
-        return DigestUtils.sha3_384Hex(data);
-    }
-    public static String sha3_512Hex(String data) {
-        return DigestUtils.sha3_512Hex(data);
+        return CommonUtil.sha256Hex(data);
     }
     public static String sha384Hex(String data) {
-        return DigestUtils.sha384Hex(data);
-    }
-    public static String sha512_224Hex(String data) {
-        return DigestUtils.sha512_224Hex(data);
-    }
-    public static String sha512_256Hex(String data) {
-        return DigestUtils.sha512_256Hex(data);
+        return CommonUtil.sha384Hex(data);
     }
     public static String sha512Hex(String data) {
-        return DigestUtils.sha512Hex(data);
+        return CommonUtil.sha512Hex(data);
     }
 
     /*----- WordUtils -----*/
@@ -2071,7 +1832,7 @@ public class ContextUtil {
     // Hex
 
     public static byte[] decodeHex(String data) throws DecoderException {
-        return Hex.decodeHex(data);
+        return Hex.decodeHex(data.toCharArray());
     }
 
     public static byte[] decodeHex(char[] data) throws DecoderException {
@@ -2091,7 +1852,8 @@ public class ContextUtil {
     }
 
     public static String encodeHexString(byte[] data, boolean toLowerCase) {
-        return Hex.encodeHexString(data, toLowerCase);
+        String _str = Hex.encodeHexString(data);
+        return (toLowerCase ? _str.toLowerCase() : _str.toUpperCase());
     }
 
     //

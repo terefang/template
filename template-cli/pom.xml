@@ -5,7 +5,7 @@
     <parent>
         <artifactId>template</artifactId>
         <groupId>com.github.terefang.template</groupId>
-        <version>2021.4.349</version>
+        <version>2021.5.351</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -137,22 +137,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>de.ntcomputer</groupId>
-                <artifactId>executable-packer-maven-plugin</artifactId>
-                <version>1.0.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>pack-executable-jar</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.github.terefang.template_cli.TemplateCliMain</mainClass>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.8</version>
@@ -184,19 +168,12 @@
                                         binary="true">
                                     <fileset file="${project.basedir}/src/main/dist/stub.sh"/>
                                     <fileset
-                                            file="${project.build.directory}/${project.artifactId}-${project.version}-pkg.jar"/>
-                                </concat>
-
-                                <concat destfile="${project.build.directory}/bin/${project.artifactId}-${project.version}.shaded.sh.bin"
-                                        binary="true">
-                                    <fileset file="${project.basedir}/src/main/dist/stub.sh"/>
-                                    <fileset
                                             file="${project.build.directory}/${project.artifactId}-shaded.jar"/>
                                 </concat>
 
                                 <chmod perm="ugo+rx">
                                     <fileset dir="${project.build.directory}/bin/"
-                                             includes="${project.artifactId}.*.bin"/>
+                                             includes="${project.artifactId}*.bin"/>
                                 </chmod>
                             </target>
                         </configuration>

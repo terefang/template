@@ -1,9 +1,9 @@
 package com.github.terefang.template_maven_plugin.util;
 
+import com.github.terefang.jmelange.dao.JDAO;
 import com.github.terefang.jmelange.image.PdfImage;
 import com.github.terefang.jmelange.image.PixelImage;
 import com.github.terefang.jmelange.image.SvgImage;
-import com.github.terefang.jdao.JDAO;
 import com.github.terefang.template_maven_plugin.TemplateContext;
 import lombok.SneakyThrows;
 
@@ -23,7 +23,7 @@ public class ContextHelper {
     {
         ContextHelper _h = new ContextHelper();
         _h.context = _tc;
-        _tc.processContext.put("_", _h);
+        _tc.processContext.put("__", _h);
         return _h;
     }
 
@@ -32,9 +32,6 @@ public class ContextHelper {
     {
         return ContextUtil.loadContextFrom(new File(this.context.processParent, _file));
     }
-
-
-
 
     /*----- dao helper -----*/
 
@@ -80,10 +77,6 @@ public class ContextHelper {
         return ContextUtil.hmacSha512Hex(key, valueToDigest);
     }
 
-    public final String md2Hex(String data) {
-        return ContextUtil.md2Hex(data);
-    }
-
     public final String md5Hex(String data) {
         return ContextUtil.md5Hex(data);
     }
@@ -96,28 +89,8 @@ public class ContextHelper {
         return ContextUtil.sha256Hex(data);
     }
 
-    public final String sha3_256Hex(String data) {
-        return ContextUtil.sha3_256Hex(data);
-    }
-
-    public final String sha3_384Hex(String data) {
-        return ContextUtil.sha3_384Hex(data);
-    }
-
-    public final String sha3_512Hex(String data) {
-        return ContextUtil.sha3_512Hex(data);
-    }
-
     public final String sha384Hex(String data) {
         return ContextUtil.sha384Hex(data);
-    }
-
-    public final String sha512_224Hex(String data) {
-        return ContextUtil.sha512_224Hex(data);
-    }
-
-    public final String sha512_256Hex(String data) {
-        return ContextUtil.sha512_256Hex(data);
     }
 
     public final String sha512Hex(String data) {

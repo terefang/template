@@ -3,6 +3,7 @@ package com.github.terefang.template_cli;
 import com.github.terefang.concat_maven_plugin.ConcatMojo;
 import com.github.terefang.convert_maven_plugin.*;
 import com.github.terefang.preproc_maven_plugin.PreProcessorMojo;
+import com.github.terefang.script_maven_plugin.ScriptMojo;
 import com.github.terefang.template_maven_plugin.*;
 import com.github.terefang.template_maven_plugin.freemarker.*;
 import com.github.terefang.template_maven_plugin.groovy.*;
@@ -75,6 +76,12 @@ public class TemplateCliMain
         AbstractStandardMojo _smojo = null;
         AbstractTemplateMojo _tmojo = null;
 
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.SCRIPT))
+        {
+            executeScript(_log, _opts);
+            return;
+        }
+        else
         if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.JINJAVA))
         {
             if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
@@ -222,6 +229,25 @@ public class TemplateCliMain
         {
             _tmojo.setLog(_log);
             executeTemplateTemplateMojo(_tmojo, _opts);
+        }
+    }
+
+    public static void executeScript(TemplateCliLogger _log, TemplateCliOptions _opts)
+    {
+        try
+        {
+            ScriptMojo _sm = new ScriptMojo();
+            _sm.setLog(_log);
+            _sm.setScriptFile(_opts.getResourcesDirectory());
+            _sm.setDataFile(_opts.getAdditionalContext());
+            _sm.setDataContextRoot(_opts.getAdditionalContextRoot());
+            _sm.setOutputDirectory(_opts.getResourcesOutput());
+            _sm.setAdditionalVariables(_opts.getAdditionalVariables());
+            _sm.execute();
+        }
+        catch (MojoExecutionException _me)
+        {
+            _log.error(_me.getMessage(), _me);
         }
     }
 

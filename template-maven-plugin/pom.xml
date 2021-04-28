@@ -5,7 +5,7 @@
     <parent>
         <artifactId>template</artifactId>
         <groupId>com.github.terefang.template</groupId>
-        <version>2021.4.349</version>
+        <version>2021.5.351</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -24,69 +24,26 @@
             <artifactId>scripted-jmelange</artifactId>
             <version>${version.jmelange}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.soulwing.snmp/tnm4j -->
         <dependency>
-            <groupId>org.soulwing.snmp</groupId>
-            <artifactId>tnm4j</artifactId>
-            <version>1.0.11</version>
+            <groupId>com.github.terefang.jmelange</groupId>
+            <artifactId>dao-jmelange</artifactId>
+            <version>${version.jmelange}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.terefang</groupId>
-            <artifactId>jdao</artifactId>
-            <version>2021.1.1</version>
+            <groupId>com.github.terefang.jmelange</groupId>
+            <artifactId>data-jmelange</artifactId>
+            <version>${version.jmelange}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.14</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>RELEASE</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hjson</groupId>
-            <artifactId>hjson</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.28</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.moandjiezana.toml</groupId>
-            <artifactId>toml4j</artifactId>
-            <version>0.7.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ini4j</groupId>
-            <artifactId>ini4j</artifactId>
-            <version>0.5.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>4.4</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.8.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>1.9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-csv</artifactId>
-            <version>1.8</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.14</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>

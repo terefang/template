@@ -100,7 +100,7 @@ public abstract class AbstractTmpMojo extends AbstractMojo
             String[] entries = StringUtils.split(additionalVariables);
             for(String entry : entries)
             {
-                String[] keyValue = StringUtils.split(entry, "=");
+                String[] keyValue = StringUtils.split(entry, "=",2);
                 context.put(keyValue[0], keyValue[1]);
             }
         }
