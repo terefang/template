@@ -24,7 +24,6 @@ various template files using various data files.
 
 * java properties
 * yaml/yml -- ie. YAML 1.1 -- https://yaml.org/spec/1.1/current.html
-* toml/tml -- ie. TOML 0.4 -- https://github.com/toml-lang/toml/blob/master/versions/en/toml-v0.4.0.md
 * json -- ie. JSON -- https://www.json.org/json-en.html
 * hson/hjson -- ie. human JSON -- https://hjson.github.io/
 * ini -- simple windows ini file format

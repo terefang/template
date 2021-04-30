@@ -40,6 +40,9 @@ public class ToJsonMojo extends AbstractMojo
     @Parameter
     private String excludes;
 
+    @Parameter
+    boolean singleFileOutput;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
@@ -89,10 +92,18 @@ public class ToJsonMojo extends AbstractMojo
                 {
                     file = new File(resourcesOutput, file.getName());
                 }
-                file.getParentFile().mkdirs();
 
                 File localFile = new File(resourcesDirectory, key);
 
+                if(resourcesDirectory.isFile())
+                {
+                    localFile = resourcesDirectory;
+                }
+
+                if(singleFileOutput) {
+                    file = resourcesOutput;
+                }
+                file.getParentFile().mkdirs();
                 convertToJson(localFile, file);
             }
 

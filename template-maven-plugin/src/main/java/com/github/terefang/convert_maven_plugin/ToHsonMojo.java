@@ -42,6 +42,9 @@ public class ToHsonMojo extends AbstractMojo
     @Parameter
     private String excludes;
 
+    @Parameter
+    boolean singleFileOutput;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
