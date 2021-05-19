@@ -232,7 +232,7 @@ public abstract class AbstractTmpMojo extends AbstractMojo
     @SneakyThrows
     public String processToString(TemplateContext _context)
     {
-        return ProcessingUtil.processScript(this.getEngine(), _context, this.getIncludePath());
+        return ProcessingUtil.processTemplate(this.getEngine(), _context);
     }
 
     public boolean processToFile(TemplateContext _context) {
