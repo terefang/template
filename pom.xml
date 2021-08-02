@@ -6,7 +6,7 @@
 
     <groupId>com.github.terefang.template</groupId>
     <artifactId>template</artifactId>
-    <version>2021.5.360</version>
+    <version>2021.5.361</version>
     <modules>
         <module>template-cli</module>
         <module>template-maven-plugin</module>
