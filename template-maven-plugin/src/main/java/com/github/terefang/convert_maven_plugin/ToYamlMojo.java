@@ -1,6 +1,5 @@
 package com.github.terefang.convert_maven_plugin;
 
-import com.github.terefang.jmelange.pdata.PdataWriter;
 import com.github.terefang.template_maven_plugin.util.ContextUtil;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -12,14 +11,18 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.StringUtils;
+import org.yaml.snakeyaml.Yaml;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.Map;
 
-@Mojo(name = "convert-to-pdata", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
+@Mojo(name = "convert-to-yaml", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 @Data
-public class ToPdataMojo extends AbstractMojo
+public class ToYamlMojo extends AbstractMojo
 {
     @Parameter(defaultValue = "${project.build.scriptSourceDirectory}")
     protected File resourcesDirectory;
@@ -30,7 +33,7 @@ public class ToPdataMojo extends AbstractMojo
     @Parameter(defaultValue = "false")
     private boolean flattenOutput;
 
-    @Parameter(defaultValue = ".pdata")
+    @Parameter(defaultValue = ".yml")
     private String destinationExtension;
 
     @Parameter
@@ -103,7 +106,7 @@ public class ToPdataMojo extends AbstractMojo
                     file = resourcesOutput;
                 }
                 file.getParentFile().mkdirs();
-                convertToPdata(localFile, file);
+                convertToYaml(localFile, file);
             }
 
         }
@@ -114,16 +117,28 @@ public class ToPdataMojo extends AbstractMojo
     }
 
     @SneakyThrows
-    public static void convertToPdata(File _from, File _to)
+    public static void convertToYaml(File _from, File _to)
     {
         Map<String, Object> _data = ContextUtil.loadContextFrom(_from);
+        Yaml _y = new Yaml();
         if(_to == null)
         {
-            PdataWriter.writeTo(false, _data, new OutputStreamWriter(System.out));
+            _y.dump(_data, new OutputStreamWriter(System.out) {
+                @Override
+                public void close() throws IOException { super.flush(); }
+            });
         }
         else
         {
-            PdataWriter.writeTo(false, _data, _to);
+            FileWriter _fw = new FileWriter(_to);
+            try
+            {
+                _y.dump(_data, _fw);
+            }
+            finally {
+                _fw.flush();
+                _fw.close();
+            }
         }
     }
 }

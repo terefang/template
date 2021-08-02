@@ -57,6 +57,12 @@ public class TemplateCliMain
             System.exit(0);
         }
         else
+        if(_args.length == 3 && "--to-yaml".equalsIgnoreCase(_args[0]))
+        {
+            ToYamlMojo.convertToYaml(new File(_args[1]), new File(_args[2]));
+            System.exit(0);
+        }
+        else
         if(_args.length == 3 && "--to-pdata".equalsIgnoreCase(_args[0]))
         {
             ToPdataMojo.convertToPdata(new File(_args[1]), new File(_args[2]));

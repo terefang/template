@@ -1,7 +1,7 @@
 package com.github.terefang.template_maven_plugin.util;
 
 import com.github.terefang.jmelange.commons.CommonUtil;
-import com.github.terefang.jmelange.image.GfxInterface;
+import com.github.terefang.jmelange.gfx.GfxInterface;
 import com.github.terefang.jmelange.scripted.AbstractScript;
 import com.github.terefang.jmelange.scripted.JMelangeScriptFactoryLoader;
 import com.github.terefang.jmelange.scripted.util.SimpleVariableProvider;

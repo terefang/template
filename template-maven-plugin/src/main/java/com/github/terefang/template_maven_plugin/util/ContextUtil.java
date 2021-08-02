@@ -3,9 +3,9 @@ package com.github.terefang.template_maven_plugin.util;
 import com.github.terefang.jmelange.dao.JDAO;
 import com.github.terefang.jmelange.dao.utils.JdaoUtils;
 import com.github.terefang.jmelange.data.*;
-import com.github.terefang.jmelange.image.PdfImage;
-import com.github.terefang.jmelange.image.PixelImage;
-import com.github.terefang.jmelange.image.SvgImage;
+import com.github.terefang.jmelange.gfx.impl.PdfImage;
+import com.github.terefang.jmelange.gfx.impl.PixelImage;
+import com.github.terefang.jmelange.gfx.impl.SvgImage;
 
 import com.github.terefang.jmelange.scripted.util.ScriptHelper;
 import lombok.SneakyThrows;
@@ -133,6 +133,10 @@ public class ContextUtil extends ScriptHelper
         DataUtil.writeContextAsType(_type, _data, _fh);
     }
 
+    public static void writeContextAsType(String _type, Map<String, Object> _data, Writer _fh) {
+        DataUtil.writeContextAsType(_type, _data, _fh);
+    }
+
     public static void writeContextAsType(String _type, Map<String, Object> _data, File _fh) {
         DataUtil.writeContextAsType(_type, _data, _fh);
     }
@@ -179,6 +183,21 @@ public class ContextUtil extends ScriptHelper
 
     public static Map<String, Object> fromHjson(String _source) {
         return DataUtil.fromHjson(_source);
+    }
+
+    public static void writeAsYaml(OutputStream _out, Map<String, Object> _res)
+    {
+        writeContextAsType("yaml", _res, _out);
+    }
+
+    public static void writeAsYaml(Writer _out, Map<String, Object> _res)
+    {
+        writeContextAsType("yaml", _res, _out);
+    }
+
+    public static void writeAsYaml(File _out, Map<String, Object> _res)
+    {
+        writeContextAsType("yaml", _res, _out);
     }
 
     public static void writeAsJsonPerLine(Writer _out, List<Map<String, Object>> _res) {
@@ -309,6 +328,13 @@ public class ContextUtil extends ScriptHelper
     public static JDAO mysqlDao(String _hostPortDb, String _user, String _pass)
     {
         JDAO _dao = daoFromJdbc("com.mysql.jdbc.Driver", "jdbc:mysql://"+_hostPortDb, _user, _pass);
+        _dao.setDbType(JDAO.DB_TYPE_MYSQL);
+        return _dao;
+    }
+
+    public static JDAO mysqlDao(boolean mysqlCJvsMariaDb, String _hostPortDb, String _user, String _pass)
+    {
+        JDAO _dao = daoFromJdbc(mysqlCJvsMariaDb ? "com.mysql.cj.jdbc.Driver" : "org.mariadb.jdbc.Driver", "jdbc:mysql://"+_hostPortDb, _user, _pass);
         _dao.setDbType(JDAO.DB_TYPE_MYSQL);
         return _dao;
     }
