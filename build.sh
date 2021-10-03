@@ -31,7 +31,7 @@ while test ! -z "$1" ; do
       ;;
     -install*)
       (cd $bDIR && mvn clean install $OPTS) || exit 1
-      (test -e ~/bin/template-cli.sh && cd $bDIR && cp template-cli/target/bin/template-cli*.sh.bin ~/bin/template-cli.sh)
+      (test -e ~/bin/template-cli.sh && cd $bDIR && cp template-cli/target/bin/template-cli*.bin ~/bin/template-cli.sh)
       ;;
     -deps)
       (cd $bDIR && mvn org.apache.maven.plugins:maven-dependency-plugin:tree) || exit 1

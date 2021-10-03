@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class TemplateCliOptions
 {
-    public static enum TemplateEngineName { THYMELEAF, JINJAVA, ECMA, JXLT, JEXL, GSIMPLE, GROOVY, FREEMARKER, TRIMOU, PREPROCESSOR, CONCAT, ToJSON, ToHSON, ToPDATA, SCRIPT}
+    public static enum TemplateEngineName { THYMELEAF, JINJAVA, ECMA, RHINO, JXLT, JEXL, GSIMPLE, GROOVY, JRUBY, JEXL_ESP, JRUBY_ESP, RHINO_ESP, FREEMARKER, TRIMOU, PREPROCESSOR, CONCAT, ToJSON, ToHSON, ToPDATA, SCRIPT}
 
     @CommandLine.Option(order = 10, names = {"-T", "--template-engine"}, paramLabel = "ENGINE", description = "name of the templating engine, ${COMPLETION-CANDIDATES}", required = true)
     public TemplateEngineName doEngine;
@@ -42,7 +42,7 @@ public class TemplateCliOptions
     @CommandLine.Option(order = 65, names = {"--jdbc-pass"}, paramLabel = "PASS", defaultValue = "", required = false)
     public String jdbcPassWord;
 
-    @CommandLine.Option(order = 65, names = {"--jdbc-driver"}, paramLabel = "PASS", defaultValue = "", required = false)
+    @CommandLine.Option(order = 65, names = {"--jdbc-driver"}, paramLabel = "DRIVER", defaultValue = "", required = false)
     public String jdbcDriver;
 
     /* shared Variables */
@@ -102,4 +102,7 @@ public class TemplateCliOptions
 
     @CommandLine.Option(order = 150, names = {"--inc-path", "--include-path"}, description = "include paths for groovy/luaj script (default: ${DEFAULT-VALUE})", required = false, defaultValue = ".")
     protected List<String> includePath;
+
+    @CommandLine.Unmatched
+    protected List<String> arguments;
 }

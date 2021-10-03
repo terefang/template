@@ -57,6 +57,8 @@ public abstract class AbstractTmpMojo extends AbstractMojo
     @Parameter(defaultValue = "")
     List<String> includePath;
 
+    List<String> arguments;
+
     /**
      * additional global context
      */
@@ -226,7 +228,7 @@ public abstract class AbstractTmpMojo extends AbstractMojo
     public abstract String getEngine();
 
     public GfxInterface processToImage(TemplateContext _context) {
-        return ProcessingUtil.processImageScript(this.getEngine(), _context, this.getIncludePath());
+        return ProcessingUtil.processImageScript(this.getEngine(), _context, this.getIncludePath(), this.getArguments());
     }
 
     @SneakyThrows
@@ -236,7 +238,7 @@ public abstract class AbstractTmpMojo extends AbstractMojo
     }
 
     public boolean processToFile(TemplateContext _context) {
-        return ProcessingUtil.processFileScript(this.getEngine(), _context, this.getIncludePath());
+        return ProcessingUtil.processFileScript(this.getEngine(), _context, this.getIncludePath(), this.getArguments());
     }
 
 }

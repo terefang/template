@@ -38,6 +38,8 @@ public class ScriptMojo extends AbstractMojo
     @Parameter(defaultValue = "")
     protected String additionalVariables;
 
+    protected List<String> arguments = Collections.EMPTY_LIST;
+
     @Override
     public void execute() throws MojoExecutionException
     {
@@ -71,10 +73,10 @@ public class ScriptMojo extends AbstractMojo
                     _type = "groovy";
                 }
                 else
-                if(scriptFile.getName().endsWith(".py")
-                    ||scriptFile.getName().endsWith(".jy"))
+                if(scriptFile.getName().endsWith(".rb")
+                        ||scriptFile.getName().endsWith(".jrb"))
                 {
-                    _type = "jython";
+                    _type = "jruby";
                 }
                 else
                 {
@@ -83,7 +85,7 @@ public class ScriptMojo extends AbstractMojo
 
                 TemplateContext _tc = prepareTemplateContext(scriptFile, context, outputDirectory);
                 _tc.setOutputType(_type);
-                if(ProcessingUtil.processFileScript(_type, _tc, Collections.EMPTY_LIST))
+                if(ProcessingUtil.processFileScript(_type, _tc, Collections.EMPTY_LIST, this.getArguments()))
                 {
                     getLog().info(MessageFormat.format("script {0} returned OK", scriptFile.getName()));
                 }

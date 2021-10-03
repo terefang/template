@@ -9,6 +9,12 @@ import com.github.terefang.template_maven_plugin.freemarker.*;
 import com.github.terefang.template_maven_plugin.groovy.*;
 import com.github.terefang.template_maven_plugin.jexl.*;
 import com.github.terefang.template_maven_plugin.jinjava.*;
+import com.github.terefang.template_maven_plugin.jruby.JRubyEspStandardMojo;
+import com.github.terefang.template_maven_plugin.jruby.JRubyEspTemplateMojo;
+import com.github.terefang.template_maven_plugin.jruby.JRubyStandardMojo;
+import com.github.terefang.template_maven_plugin.jruby.JRubyTemplateMojo;
+import com.github.terefang.template_maven_plugin.rhino.RhinoEspStandardMojo;
+import com.github.terefang.template_maven_plugin.rhino.RhinoEspTemplateMojo;
 import com.github.terefang.template_maven_plugin.rhino.RhinoStandardMojo;
 import com.github.terefang.template_maven_plugin.rhino.RhinoTemplateMojo;
 import com.github.terefang.template_maven_plugin.thymeleaf.*;
@@ -19,6 +25,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.StringUtils;
 import picocli.CommandLine;
 import java.io.File;
+import java.util.Collections;
 
 public class TemplateCliMain
 {
@@ -127,6 +134,19 @@ public class TemplateCliMain
             }
         }
         else
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.JRUBY))
+        {
+            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
+                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
+            {
+                _smojo = new JRubyStandardMojo();
+            }
+            else
+            {
+                _tmojo = new JRubyTemplateMojo();
+            }
+        }
+        else
         if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.GSIMPLE))
         {
             if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
@@ -153,7 +173,8 @@ public class TemplateCliMain
             }
         }
         else
-        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.ECMA))
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.ECMA)
+                ||_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.RHINO))
         {
             if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
                     || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
@@ -163,6 +184,45 @@ public class TemplateCliMain
             else
             {
                 _tmojo = new RhinoTemplateMojo();
+            }
+        }
+        else
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.RHINO_ESP))
+        {
+            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
+                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
+            {
+                _smojo = new RhinoEspStandardMojo();
+            }
+            else
+            {
+                _tmojo = new RhinoEspTemplateMojo();
+            }
+        }
+        else
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.JRUBY_ESP))
+        {
+            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
+                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
+            {
+                _smojo = new JRubyEspStandardMojo();
+            }
+            else
+            {
+                _tmojo = new JRubyEspTemplateMojo();
+            }
+        }
+        else
+        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.JEXL_ESP))
+        {
+            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
+                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
+            {
+                _smojo = new JexlEspStandardMojo();
+            }
+            else
+            {
+                _tmojo = new JexlEspTemplateMojo();
             }
         }
         else
@@ -243,12 +303,15 @@ public class TemplateCliMain
         try
         {
             ScriptMojo _sm = new ScriptMojo();
+
             _sm.setLog(_log);
             _sm.setScriptFile(_opts.getResourcesDirectory());
             _sm.setDataFile(_opts.getAdditionalContext());
             _sm.setDataContextRoot(_opts.getAdditionalContextRoot());
             _sm.setOutputDirectory(_opts.getResourcesOutput());
             _sm.setAdditionalVariables(_opts.getAdditionalVariables());
+            _sm.setArguments(_opts.getArguments()!=null ? _opts.getArguments() : Collections.EMPTY_LIST);
+
             _sm.execute();
         }
         catch (MojoExecutionException _me)
@@ -363,9 +426,12 @@ public class TemplateCliMain
     {
         _mojo.setIncludePath(_opts.getIncludePath());
         _mojo.setOutputType(_opts.getOutputType().toString());
+
         _mojo.setAdditionalContext(_opts.getAdditionalContext());
         _mojo.setAdditionalContextRoot(_opts.getAdditionalContextRoot());
         _mojo.setAdditionalVariables(_opts.getAdditionalVariables());
+
+        _mojo.setArguments(_opts.getArguments()!=null ? _opts.getArguments() : Collections.EMPTY_LIST);
 
         if(StringUtils.isNotEmpty(_opts.getJdbcUrl()))
         {
