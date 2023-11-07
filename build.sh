@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 bDATE=$(date '+%Y%m%d%H%M%S')
-bDIR=$(dirname $0)
-bDIR=$(cd $bDIR && pwd)
+yDATE=$(date '+%Y')
+mDATE=$(date '+%-m')
+bDIR=$(cd $(dirname $0) && pwd)
 
 #OPTS="-DskipTests=true -DproxySet=true -DproxyHost=127.0.0.1 -DproxyPort=3128 -Dhttps.nonProxyHosts=127.0.0.1"
 OPTS="-DskipTests=true"
 
 while test ! -z "$1" ; do
   case "$1" in
+    -drel*)
+        (cd $bDIR && mvn -X build-helper:parse-version versions:set \
+                  -DnewVersion="${yDATE}.${mDATE}.\${parsedVersion.nextIncrementalVersion}" ) || exit 1
+        ;;
     -setversion*)
       VALUE="${2}"
       (cd $bDIR && mvn build-helper:parse-version versions:set \

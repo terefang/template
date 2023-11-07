@@ -6,10 +6,11 @@
 
     <groupId>com.github.terefang.template</groupId>
     <artifactId>template</artifactId>
-    <version>2022.8.377</version>
+    <version>2023.11.378</version>
     <modules>
         <module>template-cli</module>
         <module>template-maven-plugin</module>
+        <module>preproc-maven-plugin</module>
     </modules>
 
     <packaging>pom</packaging>

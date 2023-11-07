@@ -9,31 +9,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>template-maven-plugin</artifactId>
+    <artifactId>preproc-maven-plugin</artifactId>
 
     <packaging>maven-plugin</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>com.github.terefang.jmelange</groupId>
-            <artifactId>utils-jmelange</artifactId>
-            <version>${version.jmelange}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.terefang.jmelange</groupId>
-            <artifactId>scripted-jmelange</artifactId>
-            <version>${version.jmelange}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.terefang.jmelange</groupId>
-            <artifactId>dao-jmelange</artifactId>
-            <version>${version.jmelange}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.terefang.jmelange</groupId>
-            <artifactId>data-jmelange</artifactId>
-            <version>${version.jmelange}</version>
-        </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
