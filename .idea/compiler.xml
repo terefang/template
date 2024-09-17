@@ -9,9 +9,13 @@
         <outputRelativeToContentRoot value="true" />
         <module name="template-cli" />
         <module name="template-maven-plugin" />
+        <module name="preproc-maven-plugin" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="8" />
+    <bytecodeTargetLevel target="8">
+      <module name="template-maven-plugin (1)" target="1.8" />
+      <module name="template-maven-plugin (2)" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="GENERATE_NO_WARNINGS" value="true" />

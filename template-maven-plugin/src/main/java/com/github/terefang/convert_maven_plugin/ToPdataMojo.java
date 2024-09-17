@@ -1,6 +1,6 @@
 package com.github.terefang.convert_maven_plugin;
 
-import com.github.terefang.jmelange.pdata.PdataWriter;
+import com.github.terefang.jmelange.data.pdata.PdataWriter;
 import com.github.terefang.template_maven_plugin.util.ContextUtil;
 import lombok.Data;
 import lombok.SneakyThrows;

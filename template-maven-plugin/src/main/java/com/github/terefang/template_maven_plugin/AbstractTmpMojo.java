@@ -206,14 +206,6 @@ public abstract class AbstractTmpMojo extends AbstractMojo
                 return this.processToFile(_context);
             }
             else
-            if("pdf".equalsIgnoreCase(this.outputType)
-                    || "svg".equalsIgnoreCase(this.outputType)
-                    || "png".equalsIgnoreCase(this.outputType))
-            {
-                GfxInterface _img = this.processToImage(_context);
-                _img.save(_context.processDest);
-            }
-            else
             {
                 FileUtils.write(_context.processDest, processToString(_context), StandardCharsets.UTF_8);
             }
@@ -227,9 +219,6 @@ public abstract class AbstractTmpMojo extends AbstractMojo
 
     public abstract String getEngine();
 
-    public GfxInterface processToImage(TemplateContext _context) {
-        return ProcessingUtil.processImageScript(this.getEngine(), _context, this.getIncludePath(), this.getArguments());
-    }
 
     @SneakyThrows
     public String processToString(TemplateContext _context)

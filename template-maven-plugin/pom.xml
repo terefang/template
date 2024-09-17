@@ -5,7 +5,7 @@
     <parent>
         <artifactId>template</artifactId>
         <groupId>com.github.terefang.template</groupId>
-        <version>2023.11.378</version>
+        <version>2024.9.379</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -21,7 +21,12 @@
         </dependency>
         <dependency>
             <groupId>com.github.terefang.jmelange</groupId>
-            <artifactId>scripted-jmelange</artifactId>
+            <artifactId>scripted-jmelange-groovy</artifactId>
+            <version>${version.jmelange}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.terefang.jmelange</groupId>
+            <artifactId>scripted-jmelange-freemarker</artifactId>
             <version>${version.jmelange}</version>
         </dependency>
         <dependency>
@@ -32,6 +37,11 @@
         <dependency>
             <groupId>com.github.terefang.jmelange</groupId>
             <artifactId>data-jmelange</artifactId>
+            <version>${version.jmelange}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.terefang.jmelange</groupId>
+            <artifactId>gfx-jmelange</artifactId>
             <version>${version.jmelange}</version>
         </dependency>
         <dependency>
@@ -66,15 +76,15 @@
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
-            <version>3.5.1</version>
+            <version>3.14.0</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-compat</artifactId>
             <version>${maven.version}</version>
             <scope>test</scope>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-utils</artifactId>
@@ -87,7 +97,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.14.0</version>
                 <configuration>
                     <!-- <goalPrefix>maven-archetype-plugin</goalPrefix> -->
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>

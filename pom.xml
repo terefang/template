@@ -6,7 +6,7 @@
 
     <groupId>com.github.terefang.template</groupId>
     <artifactId>template</artifactId>
-    <version>2023.11.378</version>
+    <version>2024.9.379</version>
     <modules>
         <module>template-cli</module>
         <module>template-maven-plugin</module>
@@ -25,12 +25,12 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <maven.version>3.6.3</maven.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.version>3.9.7</maven.version>
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyyMMdd'.'HHmm</maven.build.timestamp.format>
-        <version.jmelange>2021.9.157</version.jmelange>
+        <version.jmelange>2024.4.241</version.jmelange>
         <version.slf4j>1.7.30</version.slf4j>
     </properties>
 
@@ -46,12 +46,20 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </pluginRepository>
+        <pluginRepository>
+            <id>local</id>
+            <url>file:///u/fredo/.m2/repository/</url>
+        </pluginRepository>
     </pluginRepositories>
 
     <repositories>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>local</id>
+            <url>file:///u/fredo/.m2/repository/</url>
         </repository>
     </repositories>
     

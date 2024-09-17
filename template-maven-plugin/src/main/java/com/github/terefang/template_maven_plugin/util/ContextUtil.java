@@ -7,7 +7,7 @@ import com.github.terefang.jmelange.gfx.impl.PdfImage;
 import com.github.terefang.jmelange.gfx.impl.PixelImage;
 import com.github.terefang.jmelange.gfx.impl.SvgImage;
 
-import com.github.terefang.jmelange.scripted.util.ScriptHelper;
+import com.github.terefang.jmelange.script.ScriptHelper;
 import lombok.SneakyThrows;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,7 @@ import org.codehaus.plexus.util.StringUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Slf4j
@@ -74,7 +75,7 @@ public class ContextUtil extends ScriptHelper
     }
 
     public static List<String> loadFileLines(InputStream _source) {
-        return DataUtil.loadFileLines(_source);
+        return DataUtil.loadFileLines(_source, StandardCharsets.UTF_8);
     }
 
     public static Map<String, Object> loadContextFromTsv(InputStream _source) {
@@ -217,13 +218,13 @@ public class ContextUtil extends ScriptHelper
     }
 
     /*----- image helper -----*/
-
+    /* TODO
     public static PixelImage pixImage(int _w, int _h) { return png(_w,_h); }
 
     public static SvgImage svgImage(int _w, int _h) { return svg(_w,_h); }
 
     public static PdfImage pdfImage(int _w, int _h) { return pdf(_w,_h); }
-
+    */
 
     /*----- WordUtils -----*/
 
