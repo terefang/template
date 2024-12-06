@@ -1,14 +1,14 @@
-package com.github.terefang.template_maven_plugin.jruby;
+package com.github.terefang.template_maven_plugin.basictemplate;
 
 import com.github.terefang.template_maven_plugin.AbstractStandardMojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
+@Mojo(name = "basic-standard", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
+public class BasicStandardMojo
+        extends AbstractStandardMojo {
 
-@Mojo(name = "jruby-standard", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
-public class JRubyStandardMojo extends AbstractStandardMojo {
-
-    private static final String[] DEFAULT_INCLUDES = new String[]{"**/*.rb", "**/*.jrb"};
+    private static final String[] DEFAULT_INCLUDES = new String[]{"**/*.bt"};
 
     public String[] getDefaultIncludes()
     {
@@ -17,6 +17,6 @@ public class JRubyStandardMojo extends AbstractStandardMojo {
 
     @Override
     public String getEngine() {
-        return "jruby";
+        return "basicTemplate";
     }
 }

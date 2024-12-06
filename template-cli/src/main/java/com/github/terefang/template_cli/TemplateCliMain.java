@@ -9,14 +9,6 @@ import com.github.terefang.template_maven_plugin.freemarker.*;
 import com.github.terefang.template_maven_plugin.groovy.*;
 import com.github.terefang.template_maven_plugin.jexl.*;
 import com.github.terefang.template_maven_plugin.jinjava.*;
-import com.github.terefang.template_maven_plugin.jruby.JRubyEspStandardMojo;
-import com.github.terefang.template_maven_plugin.jruby.JRubyEspTemplateMojo;
-import com.github.terefang.template_maven_plugin.jruby.JRubyStandardMojo;
-import com.github.terefang.template_maven_plugin.jruby.JRubyTemplateMojo;
-import com.github.terefang.template_maven_plugin.rhino.RhinoEspStandardMojo;
-import com.github.terefang.template_maven_plugin.rhino.RhinoEspTemplateMojo;
-import com.github.terefang.template_maven_plugin.rhino.RhinoStandardMojo;
-import com.github.terefang.template_maven_plugin.rhino.RhinoTemplateMojo;
 import com.github.terefang.template_maven_plugin.thymeleaf.*;
 import com.github.terefang.template_maven_plugin.trimou.*;
 import lombok.SneakyThrows;
@@ -134,19 +126,6 @@ public class TemplateCliMain
             }
         }
         else
-        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.JRUBY))
-        {
-            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
-                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
-            {
-                _smojo = new JRubyStandardMojo();
-            }
-            else
-            {
-                _tmojo = new JRubyTemplateMojo();
-            }
-        }
-        else
         if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.GSIMPLE))
         {
             if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
@@ -170,46 +149,6 @@ public class TemplateCliMain
             else
             {
                 _tmojo = new GroovyTemplateMojo();
-            }
-        }
-        else
-        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.ECMA)
-                ||_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.RHINO))
-        {
-            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
-                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
-            {
-                _smojo = new RhinoStandardMojo();
-            }
-            else
-            {
-                _tmojo = new RhinoTemplateMojo();
-            }
-        }
-        else
-        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.RHINO_ESP))
-        {
-            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
-                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
-            {
-                _smojo = new RhinoEspStandardMojo();
-            }
-            else
-            {
-                _tmojo = new RhinoEspTemplateMojo();
-            }
-        }
-        else
-        if(_opts.getDoEngine().equals(TemplateCliOptions.TemplateEngineName.JRUBY_ESP))
-        {
-            if(_opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STANDARD)
-                    || _opts.getDoMode().equals(TemplateCliOptions.TemplateEngineMode.STD))
-            {
-                _smojo = new JRubyEspStandardMojo();
-            }
-            else
-            {
-                _tmojo = new JRubyEspTemplateMojo();
             }
         }
         else

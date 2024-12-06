@@ -6,7 +6,7 @@
 
     <groupId>com.github.terefang.template</groupId>
     <artifactId>template</artifactId>
-    <version>2024.9.379</version>
+    <version>2024.12.387</version>
     <modules>
         <module>template-cli</module>
         <module>template-maven-plugin</module>
@@ -30,7 +30,7 @@
         <maven.version>3.9.7</maven.version>
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyyMMdd'.'HHmm</maven.build.timestamp.format>
-        <version.jmelange>2024.4.241</version.jmelange>
+        <version.jmelange>2024.10.247</version.jmelange>
         <version.slf4j>1.7.30</version.slf4j>
     </properties>
 

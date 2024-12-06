@@ -3,9 +3,6 @@ package com.github.terefang.template_maven_plugin.util;
 import com.github.terefang.jmelange.dao.JDAO;
 import com.github.terefang.jmelange.dao.utils.JdaoUtils;
 import com.github.terefang.jmelange.data.*;
-import com.github.terefang.jmelange.gfx.impl.PdfImage;
-import com.github.terefang.jmelange.gfx.impl.PixelImage;
-import com.github.terefang.jmelange.gfx.impl.SvgImage;
 
 import com.github.terefang.jmelange.script.ScriptHelper;
 import lombok.SneakyThrows;
